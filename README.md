@@ -5,7 +5,7 @@
 
   
 
-We offer a tool to automatically generate paraphrases. The tool first generate paraphrases using different Translation API, remove bad and de-duplicate paraphrases by applying **cosine similarity** on **word embedding vector** of different embedding model[[1]](#1).
+We offer a tool to automatically generate paraphrases. The tool first generate paraphrases using different Translation API, remove bad and de-duplicate paraphrases by applying **cosine similarity** on **word embedding vector** of different embedding model as proposed by Parikh[[1]](#1).
 
   
 
@@ -19,21 +19,12 @@ We offer a tool to automatically generate paraphrases. The tool first generate p
 
 - Remove deduplicate through [Hugging Face's transformers BERT model](https://huggingface.co/transformers/model_doc/bert.html#bertmodel)
 
-  
-
-## Requirements
-
-  
-  
+ 
 
 Installation & Usage
-
 ---------------
-
 In order to generate paraphrases, follow these steps:
-
   
-
 1. Create and activate a virtual environment using **Python 3** version:
 
 *  `Linux`
@@ -89,3 +80,4 @@ This will save the generated paraphrases in the **result** folder. The **result*
 ## References
 
 ><a id="1">[1]</a> Parikh, Soham, Quaizar Vohra, and Mitul Tiwari. "Automated Utterance Generation." _arXiv preprint arXiv:2004.03484_ (2020).
+
