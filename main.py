@@ -19,12 +19,6 @@ def write_to_folder(data,message,file_name):
     """
     f = open("./result/"+file_name, "a")
     f.write(message+'\n\t'+str(data)+'\n')
-    # f.write("\n\t"+message+"\n")
-    # for key,values in data.items():
-    #     f.write("  "+key+":\n")
-    #     for sent in values:
-    #         f.write("\t   "+sent+"\n")
-
     f.close()
 
 if __name__ == "__main__":
@@ -64,8 +58,6 @@ if __name__ == "__main__":
     except Exception as e:
         print(str(e))
         exit()
-
-    # "dataset/COVID19_data.txt"
 
     file_path = os.path.join(os.path.dirname(__file__), ".", "dataset/"+args.f) # data to paraphrase
     print("Start translation")
