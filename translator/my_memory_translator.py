@@ -99,11 +99,3 @@ def translateFile(filePath,valid_mail):
         response[text.rstrip("\n")]=final
 
     return response
-
-if __name__ == "__main__":
-    print("Start")
-    a = translateFile("COVID19_data.txt","validmail@gmail.com")
-    for k,v in a.items():
-        print(k)
-        for i in v:
-            print("\t",i)
