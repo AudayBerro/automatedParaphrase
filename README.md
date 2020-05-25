@@ -20,10 +20,12 @@ In order to generate paraphrases, follow these steps:
 1. Create and activate a virtual environment using **Python 3** version:
 
 *  `Linux`
+
    Create the virtual environment: ```virtualenv -p python3 venv ``` 
    Activate the virtual environment: ``` source ./env/bin/activate ```
 
 *  `Windows`
+
    Create the virtual environment: ``` c:\>c:\Python35\python -m venv c:\path\to\myenv ```
 
    >Unlike most Unix systems and services, Windows does not include a system supported installation of Python. [#Windows Python installation and Creation of virtual environments](https://docs.python.org/3/using/windows.html#using-on-windows)
@@ -31,18 +33,20 @@ In order to generate paraphrases, follow these steps:
     Activate the virtual environment: ``` .\env\Scripts\activate.bat ```
 
 2. Install the required packages inside the environment:
-``` 
-pip install -r requirements.txt
-```
 
-4. Download Spacy models, for more models see [Spacy Models & Languages](https://spacy.io/models/en).
+   ``` 
+   pip install -r requirements.txt
+   ```
+
+3. Download Spacy models, for more models see [Spacy Models & Languages](https://spacy.io/models/en).
+
    ```
    python -m spacy download en_core_web_sm
    ```
 
 4. Open **config.ini** configuration file and update the values.
 
->  **Note**: Please make sure you fulfilled the required configs in **config.ini** file - especially YANDEX and MYMEMORY.
+   >  **Note**: Please make sure you fulfilled the required configs in **config.ini** file - especially YANDEX and MYMEMORY.
 
   
 
