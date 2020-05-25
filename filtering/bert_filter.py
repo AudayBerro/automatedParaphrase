@@ -194,10 +194,3 @@ def ukplab_filtering(pool):#embeddings using UKPLab sentence_transformers librar
                 print(key,",",candidate,"= ",cos_sim)
         result[key] = paraphrases
     return result
-        
-def main():
-    data = {'How does COVID-19 spread?': ['As COVID-19 distribution?', 'How COVID-19 wait for you? ', 'How COVID-19 waiting for? ', 'As you ago in COVENT 19 spreads', 'How COVID-19 Spreads', 'How does COVID-19 to spread?', 'What COVID-19 spread', 'As COVID-19 cover? ', 'How do you COVID-19 spread?', 'How is the virus spreading between people?', 'As you ago in COVENT 19 spreads?', 'How does COVID-19 spread?', 'How COVID-19 spread?', 'How does COVID-19 the distribution', 'How COVID-19 spread', 'How COVID-19 the propagation of', 'As COVID-19.', 'What COVID-19 extends to.', 'How COVID-19 the spread of', 'How is COVID-19 spread?', 'How does COVID-19 dissemination of', 'How do you COVID-19 spread', 'As COVID-19 cover?', 'How does COVID-19 to broadcast?', 'How COVID-19 dissemination of', 'How does COVID-19 Dissemination', 'How is it spreading?'], 'What are the symptoms of COVID-19?': ['What are the symptoms COVID-19?', 'What are the symptoms of GERD?', 'What are the Symptoms of COVID-19?', 'What the symptoms of COVID-19?', 'Symptoms of COVID-19', 'What are the symptoms of COVE-19', 'What are the symptoms COVID-19', 'Do you know the symptoms of Covid-19?', 'What are COVID-19 Symptoms?', 'What are the symptoms of COVID-19?', 'What are the symptoms of COVID-19', 'What are the Symptoms COVID-19', 'What the symptoms of COVID-19', 'What are the symptoms COVID-19 ', 'What are the symptoms of COVE-19?']}
-    print(bert_filtering(data))
-
-if __name__ == "__main__":
-    main()
