@@ -1,0 +1,4 @@
+#ignore pucahe file
+__pycache__
+*.pyc
+
