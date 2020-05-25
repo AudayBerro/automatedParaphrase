@@ -38,7 +38,3 @@ def translate(sentence,target,api_key):
         # extracting data in json format 
         data = r.json()
         return data['data']['translations'][0]['translatedText']
-
-if __name__ == "__main__":
-    print(translate_wrapper("This is a test sentence","fr"))
-    print(translate("This is a test sentence","fr","myGoogleTranslateAPICredential"))
