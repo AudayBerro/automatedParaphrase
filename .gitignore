@@ -1,3 +1,4 @@
 #ignore pucahe file
 __pycache__
 *.pyc
+./dataset/COVID19_data.txt
