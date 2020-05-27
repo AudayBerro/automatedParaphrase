@@ -80,8 +80,6 @@ def main():
     use_filtered_paraphrases = use.get_embedding(result)
     write_to_folder(use_filtered_paraphrases,"Universal Sentence Encoder Filtering:","paraphrases.txt")
 
-    # print("Spacy filtering:\n",paraphrases)
-
     # apply BERT filtering after USE filtering
     print("Start BERT filtering")
     bert_filtered_paraphrases = bert.bert_filtering(use_filtered_paraphrases)
