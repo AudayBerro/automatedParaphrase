@@ -21,7 +21,7 @@ def write_to_folder(data,message,file_name):
     f.write(message+'\n\t'+str(data)+'\n')
     f.close()
 
-if __name__ == "__main__":
+def main():
     # required arg
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', required=True) # -f data set file name argument
@@ -89,3 +89,6 @@ if __name__ == "__main__":
     print("Start BERT deduplication")
     bert_deduplicate_paraphrases = bert.bert_deduplication(bert_filtered_paraphrases)
     write_to_folder(bert_deduplicate_paraphrases,"BERT deduplication:","paraphrases.txt")
+
+if __name__ == "__main__":
+    main()
