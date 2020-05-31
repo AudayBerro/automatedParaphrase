@@ -1,7 +1,7 @@
 
   
 
-# Automated Paraphrasing API
+# Automated Paraphrasing Tool
 
 We offer a tool to automatically generate paraphrases. The tool first generate paraphrases using different Translation API, remove bad and de-duplicate paraphrases by applying **cosine similarity** on **word embedding vector** of different embedding model as proposed by Parikh[[1]](#1).
 
