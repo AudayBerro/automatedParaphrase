@@ -41,7 +41,7 @@ In order to generate paraphrases, follow these steps:
 3. Download Spacy models, for more models see [Spacy Models & Languages](https://spacy.io/models/en).
 
    ```
-   python -m spacy download en_core_web_sm
+   python -m spacy download en_core_web_lg
    ```
 
 4. Open **config.ini** configuration file and update the values.
