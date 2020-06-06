@@ -111,18 +111,9 @@ def main(word,pos_tag):
     """
     # nltk.download() #import nltk  run this command at the first time to download the wordnet corpus
     syn = wm.synsets(word)
-    # print(len(syn))
-
-    # #synset
-    # print(syn)
-
-    # #synset definition
-    # print(syn[0].definition())
     
     syn_list = set()
     for token in syn:
-        #print("\n\t",token.definition()," - ",token.name()," - ",token.lemmas()," - ",token.lemmas()[0].name())
-        # print(token.examples()[0])
         a = str(token.lemmas()[0]).split('.')#lemmas is of form (synonym,Part-of-speech,meaning)
         # print(a[0]," - ",a[1]," - ",a[2])
         if a[1] in pos_tag:
@@ -131,7 +122,6 @@ def main(word,pos_tag):
                 if '_' in sent:
                     sent = sent.replace('_'," ") 
                 syn_list.add(sent)
-        # syn_list.add(token.lemmas()[0].name()) # or token.lemma_names() will get list of token lemmas ex: ['fail', 'go_bad', 'give_way', 'die','break_down']
     
     return list(syn_list)
 
@@ -140,7 +130,7 @@ if __name__ == "__main__":
     import sys
     sys.path.append("..")
     from pos import pos_extraction as ps
-    # sent = ps.pos_extraction2("../dataset/dataset.txt",['VERB','NOUN']) # get pos tags
+    
     tags = ['VERB','NOUN'] #list of tag to extract from sentence using spacy
 
     f=open("../dataset/dataset.txt", "r")
