@@ -47,16 +47,16 @@ def checkMatch(utterance):
         return False
     return True
 
-def translateFile(filePath,valid_mail):
+def translateFile(file_path,valid_mail):
     """
     Translate a file
-    :param filePath: file path
+    :param file_path: file path
     :param valid_mail: valid email address to reach a translation rate of 10000 words/day in MyMemory API. https://mymemory.translated.net/doc/usagelimits.php
     :return Python dictionary containing translsation, Key are initial sentence and vaule are a set of translations
     """
 
     response = dict()
-    f=open(filePath, "r")
+    f=open(file_path, "r")
     while True: 
         # Get next line from file 
         text = f.readline()

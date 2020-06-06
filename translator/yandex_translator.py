@@ -146,10 +146,10 @@ def multiTranslate(utterance,api_key,pivot_level):
   return response
 
 
-def translateFile(filePath,api_key,pivot_level):
+def translateFile(file_path,api_key,pivot_level):
   """
   Translate a file
-  :param filePath: file path
+  :param file_path: file path
   :param api_key: Yandex Translate API token https://translate.yandex.com/developers/keys
   :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
   :return Python dictionary containing translsation, Key are initial sentence and vaule are a set of translations
@@ -157,7 +157,7 @@ def translateFile(filePath,api_key,pivot_level):
 
   paraphrases = dict()
   #import data from COVID19_data file
-  f=open(filePath, "r")
+  f=open(file_path, "r")
   while True: 
       # Get next line from file 
       line = f.readline()
