@@ -3,6 +3,7 @@ from translator import yandex_translator as yandex
 from pos import pos_extraction as pos
 from filtering import bert_filter as bert
 from filtering import use_filter as use
+from synonym import nltk_wordnet as nlt
 import os
 import configparser
 #import spacy
@@ -20,6 +21,18 @@ def write_to_folder(data,message,file_name):
     f = open("./result/"+file_name, "a")
     f.write(message+'\n\t'+str(data)+'\n')
     f.close()
+
+def merge_data(dataset1,dataset2):
+    """
+    Merge dataset1 with dataset2
+    :param dataset1: python dictionary
+    :param dataset2: python dictionary
+    :return a Python dictionary, Key is the initial expression and value is a list of paraphrases
+    """
+    for (k,v), (k2,v2) in zip(dataset1.items(), dataset2.items()):
+        v.add(k2) # add key of dataset2 to dataset1 list of paraphrases
+        v.update(v2) # add dataset2 paraphrases list to dataset1 paraphrases list
+    return dataset1
 
 def main():
     # required arg
@@ -60,16 +73,54 @@ def main():
         exit()
 
     file_path = os.path.join(os.path.dirname(__file__), ".", "dataset/"+args.f) # data to paraphrase
+
+    #wordnet
+    print("Start weak supervision data generation")
+    # Generate data by Replacing only word with VERB pos-tags by synonym
+    spacy_tags = ['VERB'] #list of tag to extract from sentence using spacy
+    wm_tags = ['v'] #wordnet select only lemmas which pos-taggs is in wm_tags
+    data1 = nlt.main(file_path,spacy_tags,wm_tags)
+    # Generate data by Replacing only word with NOUN pos-tags by synonym 
+    spacy_tags = ['NOUN'] #list of tag to extract from sentence using spacy
+    wm_tags = ['n'] #wordnet select only lemmas which pos-taggs is in wm_tags
+    data2 = nlt.main(file_path,spacy_tags,wm_tags)
+    # Generate data by Replacing only word with NOUN and VERB pos-tags by synonym
+    spacy_tags = ['VERB','NOUN'] #list of tag to extract from sentence using spacy
+    wm_tags = ['v','n'] #wordnet select only lemmas which pos-taggs is in wm_tags
+    data3 = nlt.main(file_path,spacy_tags,wm_tags)
+
     print("Start translation")
-    result = memory.translateFile(file_path,valid_mail)
+    # generate paraphrases with MyMemory API
+    memory_result1 = memory.translate_list(data1,valid_mail)
+    memory_result2 = memory.translate_list(data2,valid_mail)
+    memory_result3 = memory.translate_list(data3,valid_mail)
+    
+    result = memory.translate_file(file_path,valid_mail)
 
-    yandexResult = yandex.translateFile(file_path,yandex_api_key,pivot_level)
+    # merge memory_result1, memory_result2, memory_result3 with result
+    result= merge_data(result,memory_result1)
+    result= merge_data(result,memory_result2)
+    result= merge_data(result,memory_result3)
 
-    extracted_pos = pos.postExtraction(file_path)
-    yandex_paraphrases = yandex.translateDict(extracted_pos,yandex_api_key,pivot_level)
+    # generate paraphrases with Yandex Translator API
+    yandex_result1 = yandex.translate_list(data1,yandex_api_key,pivot_level)
+    yandex_result2 = yandex.translate_list(data2,yandex_api_key,pivot_level)
+    yandex_result3 = yandex.translate_list(data3,yandex_api_key,pivot_level)
 
+    # merge memory_result1, memory_result2, memory_result3 with result
+    result= merge_data(result,yandex_result1)
+    result= merge_data(result,yandex_result2)
+    result= merge_data(result,yandex_result3)
+
+    yandex_result = yandex.translate_file(file_path,yandex_api_key,pivot_level)
+
+    extracted_pos = pos.pos_extraction(file_path)
+    yandex_paraphrases = yandex.translate_dict(extracted_pos,yandex_api_key,pivot_level)
+    
+    
+    #create a function that take a list of dataset and merge them togheteherset
     for key,values in result.items():
-        values.update(yandexResult[key])
+        values.update(yandex_result[key])
         values.update(yandex_paraphrases[key])
         result[key] = values
 
