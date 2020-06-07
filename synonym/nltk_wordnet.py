@@ -145,23 +145,3 @@ def main(file_path,pos_tags,wordnet_tags):
         result.append(sentence)
     
     return result
-
-if __name__ == "__main__":
-    print("Replace only VERB:")
-    spacy_tags = ['VERB'] #list of tag to extract from sentence using spacy
-    wm_tags = ['v'] #wordnet select only lemmas which pos-taggs is in wm_tags
-    i = main("../dataset/dataset.txt",spacy_tags,wm_tags)
-    for s in i:
-        print("\t",s)
-    print("Replace only NOUN:")
-    spacy_tags = ['NOUN'] #list of tag to extract from sentence using spacy
-    wm_tags = ['v','n'] #wordnet select only lemmas which pos-taggs is in wm_tags
-    i = main("../dataset/dataset.txt",spacy_tags,wm_tags)
-    for s in i:
-        print("\t",s)
-    print("Replace VERB and NOUN:")
-    spacy_tags = ['VERB','NOUN'] #list of tag to extract from sentence using spacy
-    wm_tags = ['v','n'] #wordnet select only lemmas which pos-taggs is in wm_tags
-    i = main("../dataset/dataset.txt",spacy_tags,wm_tags)
-    for s in i:
-        print("\t",s)
