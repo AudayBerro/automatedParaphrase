@@ -57,26 +57,6 @@ def ignore_stop_words(sentence):
     print("## : ",sent)
     # if word in stopwords.words():
     #    pass
-def get_synonym(word,pos_tag):
-    """
-    Get List of sentence synonym
-    :param word: get a list of word synonym
-    :param pos_tag: part-of-speech tag, only extract synonym that have the same part-of-speech tag from wordnet e.g: dog synset[Synset('dog.n.01'),Synset('chase.v.01')]; n=noun - v=verb
-    :return a list of synonym that have the same part-of-speech tag with word
-    """
-
-    syn = wm.synsets(word)
-
-    syn_list = set()
-    for token in syn:
-        #print("\n\t",token.definition()," - ",token.name()," - ",token.lemmas()," - ",token.lemmas()[0].name())
-        print(token.examples()[0])
-        syn_list.add(token.lemmas()[0].name()) # or token.lemma_names() will get list of token lemmas ex: ['fail', 'go_bad', 'give_way', 'die','break_down']
-    
-    for i in syn_list:
-        print(i)
-    
-    return syn_list
 
 def get_best_synonym(word,sentence,synonyms):
     """
@@ -91,18 +71,16 @@ def get_best_synonym(word,sentence,synonyms):
     sent1 = nlp(sentence)
     max_score = 0
     for candidate in synonyms:
-        sent2 = sentence.replace(word,candidate)
+        sent2 = sentence.replace(word,candidate) #replace word by candidate synonym
         sent2 = nlp(sent2)
-        score = sent1.similarity(sent2)
-        print("\n\n",sent1," - ",sent2)
-        print("candidate: ",candidate," - score: ",score)
+        score = sent1.similarity(sent2) #compute word mover distance to select the best synonym, we can also use cosine similarity on BERT embedding
         if score > max_score:
             result = candidate
             max_score =score
     
-    return candidate
+    return result
 
-def main(word,pos_tag):
+def get_synonym(word,pos_tag):
     """
     Get List of sentence synonym
     :param word: get a list of word synonym
@@ -115,56 +93,75 @@ def main(word,pos_tag):
     syn_list = set()
     for token in syn:
         a = str(token.lemmas()[0]).split('.')#lemmas is of form (synonym,Part-of-speech,meaning)
-        # print(a[0]," - ",a[1]," - ",a[2])
         if a[1] in pos_tag:
             sent = a[0].replace("Lemma('","")# remove #Lemma(' form the string: Lemma('spread
             if sent != word:
-                if '_' in sent:
+                if '_' in sent: #remove underscore if exist e.g: go_arround -> go arround
                     sent = sent.replace('_'," ") 
                 syn_list.add(sent)
     
     return list(syn_list)
 
-if __name__ == "__main__":
+def main(file_path,pos_tags,wordnet_tags):
+    """
+    Apply part-of-speech taging, replace detected token defined in tags by appropriate wordnet synonym
+    :param file_path: file path
+    :param pos_tags: select only token which pos-tags is in pos_tags as candidate token to replace with wordnet synonym
+    :param pos_tags: select wordnet synset lemmas which pos-tags is in wordnet_tags
+    :return a new dataset where words selected from a list of tags are replaced by a synonymous word.
+    """
     # wordnet_spacy()
     import sys
     sys.path.append("..")
     from pos import pos_extraction as ps
     
-    tags = ['VERB','NOUN'] #list of tag to extract from sentence using spacy
-
-    f=open("../dataset/dataset.txt", "r")
-    s = []
+    f=open(file_path, "r")
+    result = []
     while True: 
         # Get next line from file 
         line = f.readline()
         if not line: 
             break
         line = line.rstrip('\n')
-        print("Line: ",line)
         line = ps.expand_contractions(line)  #expand contraction e.g can't -> can not
 
-        Candidate,tokenized_list = ps.sentence_pos(line,tags)
-        
-        result = []
+        Candidate,tokenized_list = ps.sentence_pos(line,pos_tags)
+        sentence = []
 
         for token in tokenized_list:
             if token in Candidate:
-                wordnet_synonym = main(token,['v','n'])
-                print(">",token," - ",wordnet_synonym)
+                wordnet_synonym = get_synonym(token,wordnet_tags)
 
                 if wordnet_synonym:
                     best_synonym = get_best_synonym(token,line,wordnet_synonym) #get best synonym
-                    result.append(best_synonym)
+                    sentence.append(best_synonym)
                 else:
-                    result.append(token)
+                    sentence.append(token)
             else:
-                result.append(token)
+                sentence.append(token)
         
-        result = " ".join(result)
-        s.append(line+" - "+result)
+        sentence = " ".join(sentence)
+        # s.append(line+" - "+sentence)
+        result.append(sentence)
     
-    
-    print("\n\n===========================================================")
-    for i in s:
-        print(i)
+    return result
+
+if __name__ == "__main__":
+    print("Replace only VERB:")
+    spacy_tags = ['VERB'] #list of tag to extract from sentence using spacy
+    wm_tags = ['v'] #wordnet select only lemmas which pos-taggs is in wm_tags
+    i = main("../dataset/dataset.txt",spacy_tags,wm_tags)
+    for s in i:
+        print("\t",s)
+    print("Replace only NOUN:")
+    spacy_tags = ['NOUN'] #list of tag to extract from sentence using spacy
+    wm_tags = ['v','n'] #wordnet select only lemmas which pos-taggs is in wm_tags
+    i = main("../dataset/dataset.txt",spacy_tags,wm_tags)
+    for s in i:
+        print("\t",s)
+    print("Replace VERB and NOUN:")
+    spacy_tags = ['VERB','NOUN'] #list of tag to extract from sentence using spacy
+    wm_tags = ['v','n'] #wordnet select only lemmas which pos-taggs is in wm_tags
+    i = main("../dataset/dataset.txt",spacy_tags,wm_tags)
+    for s in i:
+        print("\t",s)
