@@ -8,7 +8,7 @@ We offer a tool to automatically generate paraphrases. The tool first generate p
 ## Features
 
 - Automated translation using [Yandex Translate API](https://tech.yandex.com/translate/) and [MyMemory API](https://mymemory.translated.net/doc/)
-- Apply **Weak Supervision Approach**[[2gi]](#2) to generate more data
+- Apply **Weak Supervision Approach**[[2]](#2) to generate more data
 - Filter out bad paraphrases through [Hugging Face's transformers BERT model](https://huggingface.co/transformers/model_doc/bert.html#bertmodel) and [Universal Sentence Encoding](https://tfhub.dev/google/universal-sentence-encoder/4) semantic similarity
 - Remove deduplicate through [Hugging Face's transformers BERT model](https://huggingface.co/transformers/model_doc/bert.html#bertmodel)
 
