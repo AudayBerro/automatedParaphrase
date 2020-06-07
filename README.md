@@ -68,5 +68,5 @@ This will save the generated paraphrases in the **result** folder. The **result*
 
 
 ## References
-><a id="1">[1]</a> Parikh, Soham, Quaizar Vohra, and Mitul Tiwari. "Automated Utterance Generation." _arXiv preprint arXiv:2004.03484_ (2020).
-><a id="2">[2]</a> Weir, Nathaniel and Crotty, Andrew and Galakatos, Alex and others. "DBPal: Weak Supervision for Learning a Natural Language Interface to Databases." _arXiv preprint arXiv:1909.06182_ (2019).
+<a id="1">[1]</a> Parikh, Soham, Quaizar Vohra, and Mitul Tiwari. "Automated Utterance Generation." _arXiv preprint arXiv:2004.03484_ (2020).
+<a id="2">[2]</a> Weir, Nathaniel and Crotty, Andrew and Galakatos, Alex and others. "DBPal: Weak Supervision for Learning a Natural Language Interface to Databases." _arXiv preprint arXiv:1909.06182_ (2019).
