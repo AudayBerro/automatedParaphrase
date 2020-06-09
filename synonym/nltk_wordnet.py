@@ -1,49 +1,9 @@
 from nltk.corpus import wordnet as wm
 from nltk.tokenize import word_tokenize
 import spacy
-from spacy_wordnet.wordnet_annotator import WordnetAnnotator
 import wmd
 
 """ Get token synonym using NLTK wordnet Corpus """
-
-def wordnet_spacy():
-    # Load an spacy model (supported models are "es" and "en") 
-    nlp = spacy.load('en')
-    nlp.add_pipe(WordnetAnnotator(nlp.lang), after='tagger')
-    token = nlp('prices')[0]
-
-    # wordnet object link spacy token with nltk wordnet interface by giving acces to
-    # synsets and lemmas 
-    token._.wordnet.synsets()
-    token._.wordnet.lemmas()
-
-    # And automatically tags with wordnet domains
-    token._.wordnet.wordnet_domains()
-
-    # Imagine we want to enrich the following sentence with synonyms
-    sentence = nlp('I want to withdraw 5,000 euros')
-
-    # spaCy WordNet lets you find synonyms by domain of interest
-    # for example economy
-    economy_domains = ['finance']
-    enriched_sentence = []
-
-    # For each token in the sentence
-    for token in sentence:
-        # We get those synsets within the desired domains
-        synsets = token._.wordnet.wordnet_synsets_for_domain(economy_domains)
-        if synsets:
-            lemmas_for_synset = []
-            for s in synsets:
-                # If we found a synset in the economy domains
-                # we get the variants and add them to the enriched sentence
-                lemmas_for_synset.extend(s.lemma_names())
-                enriched_sentence.append('({})'.format('|'.join(set(lemmas_for_synset))))
-        else:
-            enriched_sentence.append(token.text)
-
-    # Let's see our enriched sentence
-    print(' '.join(enriched_sentence))
 
 def get_best_synonym(word,sentence,synonyms):
     """
@@ -97,7 +57,7 @@ def main(file_path,pos_tags,wordnet_tags):
     :param pos_tags: select wordnet synset lemmas which pos-tags is in wordnet_tags
     :return a new dataset where words selected from a list of tags are replaced by a synonymous word.
     """
-    # wordnet_spacy()
+
     import sys
     sys.path.append("..")
     from pos import pos_extraction as ps
