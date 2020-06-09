@@ -11,6 +11,7 @@ def get_best_synonym(word,sentence,synonyms,nlp):
     :param 
     :param sentence: sentence 
     :param synonyms: list of synonym
+    :param nlp: spacy model
     :return a sentence where word is replaced by the best synonym
     """
 
