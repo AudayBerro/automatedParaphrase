@@ -1,6 +1,5 @@
 from nltk.corpus import wordnet as wm
 from nltk.tokenize import word_tokenize
-from nltk.tokenize import TweetTokenizer
 import spacy
 from spacy_wordnet.wordnet_annotator import WordnetAnnotator
 import wmd
@@ -45,18 +44,6 @@ def wordnet_spacy():
 
     # Let's see our enriched sentence
     print(' '.join(enriched_sentence))
-
-def ignore_stop_words(sentence):
-    """
-    Replace stop words by a mask token
-    :param sentence: sentence 
-    :return a string where stop words are replaced with XXXSTOPXXX Mask and a list containing the replaced stop words
-    """
-    tknzr = TweetTokenizer()
-    sent = tknzr.tokenize(sentence)#tokenize the sentence
-    print("## : ",sent)
-    # if word in stopwords.words():
-    #    pass
 
 def get_best_synonym(word,sentence,synonyms):
     """
