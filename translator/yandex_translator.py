@@ -6,7 +6,7 @@ from translator import google_translator as google
 """ This code translate sentence using Yandex Translator API """
 
 
-def replaceQuote(utterance):
+def replace_quote(utterance):
     """
     Replace &quot; by \" and &#39 by \' returned in Yandex translation
     :return Utterance without Yandex quot tags
@@ -37,7 +37,7 @@ def translate(utterance,source,target,api_key):
     rep = tr.translate()
     return rep.rstrip("\n")
 
-def multiTranslate(utterance,api_key,pivot_level):
+def multi_translate(utterance,api_key,pivot_level):
   """
   Translate sentence
   :param utterance: sentence to translate
@@ -146,7 +146,7 @@ def multiTranslate(utterance,api_key,pivot_level):
   return response
 
 
-def translateFile(file_path,api_key,pivot_level):
+def translate_file(file_path,api_key,pivot_level):
   """
   Translate a file
   :param file_path: file path
@@ -163,13 +163,13 @@ def translateFile(file_path,api_key,pivot_level):
       line = f.readline()
       if not line: 
           break
-      tmp = multiTranslate(line,api_key,pivot_level)
+      tmp = multi_translate(line,api_key,pivot_level)
       line = line.rstrip("\n")
       paraphrases[line]=tmp
 
   return paraphrases
 
-def translateDict(data,api_key,pivot_level):
+def translate_dict(data,api_key,pivot_level):
   """
   Translate a dictionary
   :param data: data in python dictionary, Key initial expression and value is a set of translations
@@ -180,6 +180,21 @@ def translateDict(data,api_key,pivot_level):
   paraphrases = dict()
  
   for key,value in data.items():
-    tmp = multiTranslate(value,api_key,pivot_level)
+    tmp = multi_translate(value,api_key,pivot_level)
     paraphrases[key]=tmp
+  return paraphrases
+
+def translate_list(data,api_key,pivot_level):
+  """
+  Translate a List of sentences
+  :param data: data in python List, list of sentences
+  :param api_key: Yandex Translate API token https://translate.yandex.com/developers/keys
+  :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
+  :return Python dictionary containing translsation, Key are initial sentence and vaule are a set of translations
+  """
+  paraphrases = dict()
+ 
+  for sentence in data:
+    tmp = multi_translate(sentence,api_key,pivot_level)
+    paraphrases[sentence]=tmp
   return paraphrases
