@@ -71,7 +71,8 @@ def main(file_path,pos_tags,wordnet_tags):
             break
         line = line.rstrip('\n')
         line = ps.expand_contractions(line)  #expand contraction e.g can't -> can not
-
+        line = line.lower() #lowercase the sentence help to avoid wordnet word confusion. Wordnet consider Can as the beverage bottle and not the verb
+        
         Candidate,tokenized_list = ps.sentence_pos(line,pos_tags)
         sentence = []
 
