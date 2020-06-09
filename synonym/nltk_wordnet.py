@@ -5,16 +5,16 @@ import wmd
 
 """ Get token synonym using NLTK wordnet Corpus """
 
-def get_best_synonym(word,sentence,synonyms):
+def get_best_synonym(word,sentence,synonyms,nlp):
     """
-    Select appropriate synonym to word from synonyms list based on sentence
+    Select appropriate synonym to word from synonyms list based on sentence (Select the best word synonym)
     :param 
     :param sentence: sentence 
     :param synonyms: list of synonym
     :return a sentence where word is replaced by the best synonym
     """
 
-    nlp = spacy.load('en_core_web_lg', create_pipeline=wmd.WMD.create_spacy_pipeline)
+    # nlp = spacy.load('en_core_web_lg', create_pipeline=wmd.WMD.create_spacy_pipeline)
     sent1 = nlp(sentence)
     max_score = 0
     for candidate in synonyms:
@@ -23,7 +23,7 @@ def get_best_synonym(word,sentence,synonyms):
         score = sent1.similarity(sent2) #compute word mover distance to select the best synonym, we can also use cosine similarity on BERT embedding
         if score > max_score:
             result = candidate
-            max_score =score
+            max_score = score
     
     return result
 
@@ -61,6 +61,8 @@ def main(file_path,pos_tags,wordnet_tags):
     import sys
     sys.path.append("..")
     from pos import pos_extraction as ps
+
+    nlp = spacy.load('en_core_web_lg', create_pipeline=wmd.WMD.create_spacy_pipeline) # load spacy model, add Word Mover Distance pipeline
     
     f=open(file_path, "r")
     result = []
@@ -72,7 +74,7 @@ def main(file_path,pos_tags,wordnet_tags):
         line = line.rstrip('\n')
         line = ps.expand_contractions(line)  #expand contraction e.g can't -> can not
         line = line.lower() #lowercase the sentence help to avoid wordnet word confusion. Wordnet consider Can as the beverage bottle and not the verb
-        
+
         Candidate,tokenized_list = ps.sentence_pos(line,pos_tags)
         sentence = []
 
@@ -81,7 +83,7 @@ def main(file_path,pos_tags,wordnet_tags):
                 wordnet_synonym = get_synonym(token,wordnet_tags)
 
                 if wordnet_synonym:
-                    best_synonym = get_best_synonym(token,line,wordnet_synonym) #get best synonym
+                    best_synonym = get_best_synonym(token,line,wordnet_synonym,nlp) #get best synonym
                     sentence.append(best_synonym)
                 else:
                     sentence.append(token)
