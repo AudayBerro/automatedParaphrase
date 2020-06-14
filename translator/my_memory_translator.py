@@ -4,6 +4,15 @@ from yandex import Translater as yandex_trans
 
 """" Thi code translate sentence using Mymemory API and Yandex Translator API """
 
+
+def normalize_text(text):
+    """
+    Remove line break and lowercase all words
+    :param text: sentence to normalize
+    :return return a sentence without line break and lowercased 
+    """
+    return text.replace('\n', ' ').replace('\r', '').lower()
+
 def yandex_translate(utterance,source,target,api_key):
     """
     Translate a sentence
@@ -20,7 +29,7 @@ def yandex_translate(utterance,source,target,api_key):
     tr.set_to_lang(target)
     tr.set_text(utterance) #text_to_translate
     response = tr.translate()
-    return response.rstrip("\n")
+    return normalize_text(response)
 
 def replace_quote(utterance):
     """
@@ -33,7 +42,7 @@ def replace_quote(utterance):
     if "&#39;" in utterance:
       utterance = utterance.replace('&#39;','\'')
     
-    return utterance
+    return normalize_text(utterance)
 
 def check_match(utterance):
     """
@@ -62,8 +71,8 @@ def translate_file(file_path,valid_mail):
         text = f.readline()
         if not text: 
             break
-
-        # api-endpoint 
+        text = normalize_text(text)
+        # api-endpoint
         URL = "https://api.mymemory.translated.net/get?de="+valid_mail+"&q="+text+"&langpair=en|fr"
 
         # sending get request and saving the response as response object 
@@ -83,8 +92,6 @@ def translate_file(file_path,valid_mail):
 
         final = set()
         for sourceText in rep:
-            #    yanTrans = yandex_translate(sentence,'fr','en')
-            #    final.add(yanTrans)
             URL = "https://api.mymemory.translated.net/get?de="+valid_mail+"&q="+sourceText+"&langpair=fr|en"
             # sending get request and saving the response as response object 
             r = requests.get(url = URL)
@@ -95,8 +102,8 @@ def translate_file(file_path,valid_mail):
             for i in tmp:
                 sentence = replace_quote(i['translation'])
                 if check_match(i):
-                    final.add(sentence.rstrip("\n"))
-        response[text.rstrip("\n")]=final
+                    final.add(sentence)
+        response[text]=final
 
     return response
 
@@ -110,7 +117,6 @@ def translate_list(data_set,valid_mail):
 
     response = dict()
     for utterance in data_set:
-
         # api-endpoint
         URL = "https://api.mymemory.translated.net/get?de="+valid_mail+"&q="+utterance+"&langpair=en|fr"
 
@@ -131,8 +137,6 @@ def translate_list(data_set,valid_mail):
 
         final = set()
         for sourceText in rep:
-            #    yanTrans = yandex_translate(sentence,'fr','en')
-            #    final.add(yanTrans)
             URL = "https://api.mymemory.translated.net/get?de="+valid_mail+"&q="+sourceText+"&langpair=fr|en"
             # sending get request and saving the response as response object 
             r = requests.get(url = URL)
@@ -143,7 +147,7 @@ def translate_list(data_set,valid_mail):
             for i in tmp:
                 sentence = replace_quote(i['translation'])
                 if check_match(i):
-                    final.add(sentence.rstrip("\n"))
-        response[utterance.rstrip("\n")]=final
+                    final.add(normalize_text(sentence))
+        response[utterance] = final
 
     return response
