@@ -5,6 +5,14 @@ import wmd
 
 """ Get token synonym using NLTK wordnet Corpus """
 
+def normalize_text(text):
+    """
+    Remove line break and lowercase all words
+    :param text: sentence to normalize
+    :return return a sentence without line break and lowercased 
+    """
+    return text.replace('\n', ' ').replace('\r', '').lower()
+
 def get_best_synonym(word,sentence,synonyms,nlp):
     """
     Select appropriate synonym to word from synonyms list based on sentence (Select the best word synonym)
@@ -14,8 +22,6 @@ def get_best_synonym(word,sentence,synonyms,nlp):
     :param nlp: spacy model
     :return a sentence where word is replaced by the best synonym
     """
-
-    # nlp = spacy.load('en_core_web_lg', create_pipeline=wmd.WMD.create_spacy_pipeline)
     sent1 = nlp(sentence)
     max_score = 0
     for candidate in synonyms:
@@ -72,15 +78,15 @@ def main(file_path,pos_tags,wordnet_tags):
         line = f.readline()
         if not line: 
             break
-        line = line.rstrip('\n')
-        line = ps.expand_contractions(line)  #expand contraction e.g can't -> can not
-        line = line.lower() #lowercase the sentence help to avoid wordnet word confusion. Wordnet consider Can as the beverage bottle and not the verb
 
-        Candidate,tokenized_list = ps.sentence_pos(line,pos_tags)
+        line = ps.expand_contractions(line)  #expand contraction e.g can't -> can not
+        line = normalize_text(line) #lowercase the sentence help to avoid wordnet word confusion. Wordnet consider Can as the beverage bottle and not the verb
+
+        candidate,tokenized_list = ps.sentence_pos(line,pos_tags)
         sentence = []
 
         for token in tokenized_list:
-            if token in Candidate:
+            if token in candidate:
                 wordnet_synonym = get_synonym(token,wordnet_tags)
 
                 if wordnet_synonym:
@@ -92,7 +98,6 @@ def main(file_path,pos_tags,wordnet_tags):
                 sentence.append(token)
         
         sentence = " ".join(sentence)
-        # s.append(line+" - "+sentence)
         result.append(sentence)
     
     return result
