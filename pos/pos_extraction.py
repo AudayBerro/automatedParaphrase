@@ -72,7 +72,7 @@ def pos_extraction2(file_name,tags):
     value = " ".join(para)
     response.append(value)
   
-  return response
+  return responsegit
 
 def sentence_pos(sentence,tags):
   """
