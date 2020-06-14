@@ -1,6 +1,15 @@
 import requests
 from googletrans import Translator
 
+def normalize_text(text):
+    """
+    Remove line break and lowercase all words
+    :param text: sentence to normalize
+    :return return a sentence without line break and lowercased 
+    """
+    # mystring.replace('\n', ' ').replace('\r', '')
+    return text.replace('\n', ' ').replace('\r', '').lower()
+
 def translate_wrapper(sentence,target):
     """
     Translate sentence to target language using googletrans library which is a Google Translate API wrapper,
@@ -19,7 +28,7 @@ def translate_wrapper(sentence,target):
         response = "Probably Google has banned your client IP addres"+str(e)
         return response
     
-    return response.text
+    return normalize_text(response.text)
 
 def translate(sentence,target,api_key):
     """
