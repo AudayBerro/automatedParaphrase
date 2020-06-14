@@ -1,8 +1,15 @@
 import spacy
-import contractions
 from spacy.lang.en.stop_words import STOP_WORDS
 
 """ Part of Speech extraction using Spacy library """
+
+def normalize_text(text):
+    """
+    Remove line break and lowercase all words
+    :param text: sentence to normalize
+    :return return a sentence without line break and lowercased 
+    """
+    return text.replace('\n', ' ').replace('\r', '').lower()
 
 
 def pos_extraction(file_name):
@@ -23,6 +30,7 @@ def pos_extraction(file_name):
     line = f.readline()
     if not line: 
       break
+    line = normalize_text(line)
 
     sentences = nlp(line)
     para = [] 
@@ -32,7 +40,7 @@ def pos_extraction(file_name):
       if token.pos_ in pos_list:#Part of speech tagging to extract NOUN,VERB,ADV,ADJ
         para.append(token.text)
     value = " ".join(para)
-    response[line.rstrip('\n')] = value
+    response[line] = value
   
   return response
 
@@ -53,7 +61,7 @@ def pos_extraction2(file_name,tags):
     line = f.readline()
     if not line: 
       break
-
+    line = normalize_text(line)
     sentences = nlp(line)
     para = [] 
     for token in sentences:
@@ -66,20 +74,6 @@ def pos_extraction2(file_name,tags):
   
   return response
 
-def expand_contractions(text):
-    """ expand shortened words, e.g. don't to do not """
-
-    #pycontraction library
-    # Choose model accordingly for contractions function
-    # model = api.load("glove-twitter-25")
-    # # model = api.load("glove-twitter-100")
-    # # model = api.load("word2vec-google-news-300")cont = Contractions(kv_model=model)
-    # cont.load_models()
-    # text = list(cont.expand_texts([text], precise=True))[0]
-
-    result = contractions.fix(text)
-    return result
-
 def sentence_pos(sentence,tags):
   """
   Specific Part of Speech extraction to generate new data corpus (apply Weak supervision approach)
@@ -88,10 +82,9 @@ def sentence_pos(sentence,tags):
   :return a list containg word that have the same POS tags defined by tags and the sentence in a form of list after tokenization
   """
   
-  nlp = spacy.load('en_core_web_lg') # en_core_web_lg
+  nlp = spacy.load('en_core_web_lg') # en_core_web_sm
 
-  # sentence = expand_contractions(sentence) #expand contraction e.g can't -> can not
-
+  sentence = normalize_text(sentence)
   sentences = nlp(sentence)
   candidate = []
   tokenized_sentence = []
