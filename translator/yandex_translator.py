@@ -5,6 +5,13 @@ from translator import google_translator as google
 
 """ This code translate sentence using Yandex Translator API """
 
+def normalize_text(text):
+    """
+    Remove line break and lowercase all words
+    :param text: sentence to normalize
+    :return return a sentence without line break and lowercased 
+    """
+    return text.replace('\n', ' ').replace('\r', '').lower()
 
 def replace_quote(utterance):
     """
@@ -17,7 +24,7 @@ def replace_quote(utterance):
     if "&#39;" in utterance:
       utterance = utterance.replace('&#39;','\'')
     
-    return utterance
+    return normalize_text(utterance)
 
 def translate(utterance,source,target,tr):
     """
@@ -33,7 +40,7 @@ def translate(utterance,source,target,tr):
     tr.set_to_lang(target)
     tr.set_text(utterance) #text_to_translate
     rep = tr.translate()
-    return rep.rstrip("\n")
+    return normalize_text(rep)
 
 def multi_translate(utterance,api_key,pivot_level):
   """
@@ -158,15 +165,15 @@ def translate_file(file_path,api_key,pivot_level):
   """
 
   paraphrases = dict()
-  #import data from COVID19_data file
+  #import data from file_path
   f=open(file_path, "r")
   while True: 
       # Get next line from file 
       line = f.readline()
       if not line: 
           break
+      line = normalize_text(line)
       tmp = multi_translate(line,api_key,pivot_level)
-      line = line.rstrip("\n")
       paraphrases[line]=tmp
 
   return paraphrases
