@@ -1,4 +1,5 @@
 import spacy
+import contractions
 from spacy.lang.en.stop_words import STOP_WORDS
 
 """ Part of Speech extraction using Spacy library """
@@ -72,7 +73,21 @@ def pos_extraction2(file_name,tags):
     value = " ".join(para)
     response.append(value)
   
-  return responsegit
+  return response
+
+def expand_contractions(text):
+    """ expand shortened words, e.g. don't to do not """
+
+    #pycontraction library
+    # Choose model accordingly for contractions function
+    # model = api.load("glove-twitter-25")
+    # # model = api.load("glove-twitter-100")
+    # # model = api.load("word2vec-google-news-300")cont = Contractions(kv_model=model)
+    # cont.load_models()
+    # text = list(cont.expand_texts([text], precise=True))[0]
+
+    result = contractions.fix(text)
+    return result
 
 def sentence_pos(sentence,tags):
   """
