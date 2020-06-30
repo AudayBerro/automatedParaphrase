@@ -142,6 +142,13 @@ def load_model():
     es2ru_tok = MarianTokenizer.from_pretrained(mname)
     response['es2ru']=[es2ru_model,es2ru_tok]
 
+    #load French to Russian model
+    mname = 'Helsinki-NLP/opus-mt-fr-ru'
+    print("load French to Russian model")
+    fr2ru_model = MarianMTModel.from_pretrained(mname)
+    fr2ru_tok = MarianTokenizer.from_pretrained(mname)
+    response['fr2ru']=[fr2ru_model,fr2ru_tok]
+
     return response
 
 if __name__ == "__main__":
