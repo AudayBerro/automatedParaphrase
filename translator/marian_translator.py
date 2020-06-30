@@ -90,12 +90,8 @@ def multi_translate(utterance,model,pivot_level=1):
 
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="fr")
     print("translate en-fr: ",tmp)
-    tmp = translate(utterance,model['romance2en'][0],model['romance2en'][1])
-    print("translate fr-en: ",tmp)
-    response.add(tmp)
-
-    tmp = translate(utterance,model['en2ru'][0],model['en2ru'][1])
-    print("translate en-ru: ",tmp)
+    tmp = translate(utterance,model['fr2ru'][0],model['fr2ru'][1])
+    print("translate fr-ru: ",tmp)
     tmp = translate(utterance,model['ru2en'][0],model['ru2en'][1])
     print("translate ru-en: ",tmp)
     response.add(tmp)
