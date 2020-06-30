@@ -45,78 +45,112 @@ def translate(utterance,model,tok,trg="NONE"):
     return result[0]
 
 
-def multi_translate(utterance,pivot_level=1):
+def multi_translate(utterance,model,pivot_level=1):
   """
   Translate sentence
   :param utterance: sentence to translate
+  :param model_list: dictionary containing marianMT model, key: model name - value: list containing respectively  Model and tokenizer.  e.g. {'en2ROMANCE':[model,tekenizer]}
   :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
   :return list of utterance translations
   """
-  #'>>fr<< Comment la COVID-19 se propage-t-elle?',
-  #     '>>pt<< Isto deve ir para o português.',
-  #     '>>es<< Y esto al español'
-
-  #en-ROMANCE supported language: #['>>fr<<', '>>es<<', '>>it<<', '>>pt<<']
   response = set()
-  if pivot_level == 0 or pivot_level == 1:
-    #load model to translate from en to ['French','Spanish','Italian','Portuguese']
-    mname1 = f'Helsinki-NLP/opus-mt-en-ROMANCE'
-    en_romance_model = MarianMTModel.from_pretrained(mname1) #load model
-    en_romance_tok = MarianTokenizer.from_pretrained(mname1) #load tokenizer
-
-    #load model to translate from ['French','Spanish','Italian','Portuguese'] to english
-    mname2 = f'Helsinki-NLP/opus-mt-ROMANCE-en'
-    romance_en_model = MarianMTModel.from_pretrained(mname2) #load model
-    romance_en_tok = MarianTokenizer.from_pretrained(mname2) #load tokenizer
-    
-    tmp = translate(utterance,en_romance_model,en_romance_tok,trg="it")
-    print("trnaslate en-it: ",tmp)
-    tmp = translate(utterance,romance_en_model,romance_en_tok)
-    print("trnaslate it-en: ",tmp)
+  if pivot_level == 0 or pivot_level == 1:  
+    tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="it")
+    print("translate en-it: ",tmp)
+    tmp = translate(utterance,model['romance2en'][0],model['romance2en'][1])
+    print("translate it-en: ",tmp)
     response.add(tmp)
 
-    tmp = translate(utterance,en_romance_model,en_romance_tok,trg="es")
-    print("trnaslate en-es: ",tmp)
-    tmp = translate(utterance,romance_en_model,romance_en_tok)
-    print("trnaslate es-en: ",tmp)
+    tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="es")
+    print("translate en-es: ",tmp)
+    tmp = translate(utterance,model['romance2en'][0],model['romance2en'][1])
+    print("translate es-en: ",tmp)
     response.add(tmp)
 
-    tmp = translate(utterance,en_romance_model,en_romance_tok,trg="fr")
-    print("trnaslate en-fr: ",tmp)
-    tmp = translate(utterance,romance_en_model,romance_en_tok)
-    print("trnaslate fr-en: ",tmp)
+    tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="fr")
+    print("translate en-fr: ",tmp)
+    tmp = translate(utterance,model['romance2en'][0],model['romance2en'][1])
+    print("translate fr-en: ",tmp)
     response.add(tmp)
 
-    src = 'en'  # source language
-    trg = 'ru'  # target language
-    #load english to russian model
-    mname = f'Helsinki-NLP/opus-mt-{src}-{trg}'
-    en_ru_model = MarianMTModel.from_pretrained(mname)
-    en_ru_tok = MarianTokenizer.from_pretrained(mname)
-    tmp = translate(utterance,en_ru_model,en_ru_tok)
-    print("trnaslate en-ru: ",tmp)
-    src = 'en'  # source language
-    trg = 'ru'  # target language
-    #load russian to english model
-    mname = f'Helsinki-NLP/opus-mt-{src}-{trg}'
-    en_ru_model = MarianMTModel.from_pretrained(mname)
-    en_ru_tok = MarianTokenizer.from_pretrained(mname)
-    tmp = translate(utterance,romance_en_model,romance_en_tok)
-    print("trnaslate es-en: ",tmp)
+    tmp = translate(utterance,model['en2ru'][0],model['en2ru'][1])
+    print("translate en-ru: ",tmp)
+    tmp = translate(utterance,model['ru2en'][0],model['ru2en'][1])
+    print("translate es-en: ",tmp)
     response.add(tmp)
     
   if pivot_level == 0 or pivot_level == 2:
-    print("NOTHING GULCH")
+    tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="es")
+    print("translate en-es: ",tmp)
+    tmp = translate(utterance,model['es2ru'][0],model['es2ru'][1])
+    print("translate es-en: ",tmp)
+    response.add(tmp)
+
+    tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="fr")
+    print("translate en-fr: ",tmp)
+    tmp = translate(utterance,model['romance2en'][0],model['romance2en'][1])
+    print("translate fr-en: ",tmp)
+    response.add(tmp)
+
+    tmp = translate(utterance,model['en2ru'][0],model['en2ru'][1])
+    print("translate en-ru: ",tmp)
+    tmp = translate(utterance,model['ru2en'][0],model['ru2en'][1])
+    print("translate ru-en: ",tmp)
+    response.add(tmp)
   return response
 
+def load_model():
+    """
+    Return a List of Huggingface Marian MT model
+    :return Python dictionary - key: model name - value: list containing respectively MarianModel and MarianTokenizer e.g. {'en2ru':[model,tokenizer]}
+    """
+    response = dict()
+    #load model to translate from en to ['French','Spanish','Italian','Portuguese']
+    print("load English to Romance model")
+    mname1 = 'Helsinki-NLP/opus-mt-en-ROMANCE'
+    en2romance_model = MarianMTModel.from_pretrained(mname1) #load model
+    en2romance_tok = MarianTokenizer.from_pretrained(mname1) #load tokenizer
+    response['en2romance']=[en2romance_model,en2romance_tok]
+
+    #load model to translate from ['French','Spanish','Italian','Portuguese'] to english
+    print("load Romance to English model")
+    mname2 = 'Helsinki-NLP/opus-mt-ROMANCE-en'
+    romance_en_model = MarianMTModel.from_pretrained(mname2) #load model
+    romance_en_tok = MarianTokenizer.from_pretrained(mname2) #load tokenizer
+    response['romance2en']=[romance_en_model,romance_en_tok]
+
+    #load english to russian model
+    mname = 'Helsinki-NLP/opus-mt-en-ru'
+    print("load English to Russian model")
+    en2ru_model = MarianMTModel.from_pretrained(mname)
+    en2ru_tok = MarianTokenizer.from_pretrained(mname)
+    response['en2ru']=[en2ru_model,en2ru_tok]
+
+    #load russian to english model
+    mname = 'Helsinki-NLP/opus-mt-ru-en'
+    print("load Russian to English model")
+    ru2en_model = MarianMTModel.from_pretrained(mname)
+    ru2en_tok = MarianTokenizer.from_pretrained(mname)
+    response['ru2en']=[ru2en_model,ru2en_tok]
+
+    #load Spanish to Russian model
+    mname = 'Helsinki-NLP/opus-mt-es-ru'
+    print("load Spanish to Russian model")
+    es2ru_model = MarianMTModel.from_pretrained(mname)
+    es2ru_tok = MarianTokenizer.from_pretrained(mname)
+    response['es2ru']=[es2ru_model,es2ru_tok]
+
+    return response
+
 if __name__ == "__main__":
-    # mname = f'Helsinki-NLP/opus-mt-fr-en'
-    # model = MarianMTModel.from_pretrained(mname)
-    # tok = MarianTokenizer.from_pretrained(mname)
+    #load all the model
+    print("load model")
+    model_list = load_model()
+
     text = "How does covid-19 spread?"
     # translate(text,'fr','en',model,tok)
-    paraphrases = multi_translate(text)
-    print(len(paraphrases))
-    print("\n\n================")
+    print("start translation")
+    paraphrases = multi_translate(text,model_list)
+    print("Result:")
     for i in paraphrases:
       print(i)
