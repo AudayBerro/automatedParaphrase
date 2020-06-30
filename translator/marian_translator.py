@@ -34,14 +34,9 @@ def translate(utterance,src,trg,model,tok):
     :param tok: transformers Marian Tokenizer module(MarianTokenizer)
     :return Translated utterance 
     """
-    # src = 'fr'  # source language
-    # trg = 'en'  # target language
-    # mname = f'Helsinki-NLP/opus-mt-{src}-{trg}'
-    # model = MarianMTModel.from_pretrained(mname)
-    # tok = MarianTokenizer.from_pretrained(mname)
-    batch = tok.prepare_translation_batch(src_texts=[utterance])  # don't need tgt_text for inference
-    gen = model.generate(**batch)  # for forward pass: model(**batch)
-    words = tok.batch_decode(gen, skip_special_tokens=True)  # returns "Where is the the bus stop ?"
+    batch = tok.prepare_translation_batch(src_texts=[utterance])
+    gen = model.generate(**batch)
+    words = tok.batch_decode(gen, skip_special_tokens=True)
 
     print(words)
 
