@@ -57,25 +57,25 @@ def multi_translate(utterance,model,pivot_level=1):
   if pivot_level == 0 or pivot_level == 1:  
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="it")
     print("translate en-it: ",tmp)
-    tmp = translate(utterance,model['romance2en'][0],model['romance2en'][1])
+    tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])
     print("translate it-en: ",tmp)
     response.add(tmp)
 
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="es")
     print("translate en-es: ",tmp)
-    tmp = translate(utterance,model['romance2en'][0],model['romance2en'][1])
+    tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])
     print("translate es-en: ",tmp)
     response.add(tmp)
 
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="fr")
     print("translate en-fr: ",tmp)
-    tmp = translate(utterance,model['romance2en'][0],model['romance2en'][1])
+    tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])
     print("translate fr-en: ",tmp)
     response.add(tmp)
 
     tmp = translate(utterance,model['en2ru'][0],model['en2ru'][1])
     print("translate en-ru: ",tmp)
-    tmp = translate(utterance,model['ru2en'][0],model['ru2en'][1])
+    tmp = translate(tmp,model['ru2en'][0],model['ru2en'][1])
     print("translate es-en: ",tmp)
     response.add(tmp)
     
@@ -83,7 +83,9 @@ def multi_translate(utterance,model,pivot_level=1):
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="es")
     print("translate en-es: ",tmp)
     tmp = translate(utterance,model['es2ru'][0],model['es2ru'][1])
-    print("translate es-en: ",tmp)
+    print("translate es-ru: ",tmp)
+    tmp = translate(utterance,model['ru2en'][0],model['ru2en'][1])
+    print("translate ru-en: ",tmp)
     response.add(tmp)
 
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="fr")
