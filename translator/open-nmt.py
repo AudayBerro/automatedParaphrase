@@ -1,0 +1,1 @@
+""" This code translate sentence using pretrained Open Neural Machine Translator Pretrained Model """
