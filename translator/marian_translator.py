@@ -1,4 +1,5 @@
 from transformers import MarianMTModel,MarianTokenizer
+import os
 
 """ This code translate sentence using Huggingface Marian Machine Translation Pretrained Model """
 
@@ -97,6 +98,29 @@ def multi_translate(utterance,model,pivot_level=1):
     response.add(tmp)
   return response
 
+def translate_file(file_path,model,pivot_level):
+  """
+  Translate a file
+  :param file_path: file path
+  :param model_list: dictionary containing marianMT model, key: model name - value: list containing respectively  Model and tokenizer.  e.g. {'en2ROMANCE':[model,tekenizer]}
+  :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
+  :return Python dictionary containing translsation, Key are initial sentence and vaule are a set of translations
+  """
+
+  paraphrases = dict()
+  #import data from file_path
+  f=open(file_path, "r")
+  while True: 
+      # Get next line from file 
+      line = f.readline()
+      if not line: 
+          break
+      line = normalize_text(line)
+      tmp = tmp = multi_translate(line,model_list,0)
+      paraphrases[line]=tmp
+
+  return paraphrases
+
 def load_model():
     """
     Return a List of Huggingface Marian MT model
@@ -151,11 +175,12 @@ if __name__ == "__main__":
     #load all the model
     print("load model")
     model_list = load_model()
-
-    text = "How does covid-19 spread?"
+    file_path = os.path.join(os.path.dirname(__file__), "..", "dataset/dataset.txt") # data to paraphrase
+    # text = "book a flight from lyon to sydney"
     # translate(text,'fr','en',model,tok)
     print("start translation")
-    paraphrases = multi_translate(text,model_list)
+    # paraphrases = multi_translate(text,model_list,0)
+    paraphrases = translate_file(file_path,model_list,1)
     print("Result:")
     for i in paraphrases:
       print(i)
