@@ -3,11 +3,11 @@
 
 # Automated Paraphrasing Tool
 
-We offer a tool to automatically generate paraphrases. The tool first generate paraphrases using different Translation API, remove semantically irrelevant and de-duplicate paraphrases by applying **cosine similarity** on **word embedding vector** of different embedding model as proposed by Parikh[[1]](#1).
+We offer a tool to automatically generate paraphrases. The tool first generate paraphrases, remove semantically irrelevant and de-duplicate paraphrases by applying **cosine similarity** on **word embedding vector** of different embedding model as proposed by Parikh[[1]](#1).
 
 ## Features
 
-- Automated translation using [Yandex Translate API](https://tech.yandex.com/translate/) and [MyMemory API](https://mymemory.translated.net/doc/)
+- Automated translation using Online Translator(e.g.[Yandex Translate API](https://tech.yandex.com/translate/) and [MyMemory API](https://mymemory.translated.net/doc/)) or Pretrained Neural Translation Model(e.g.[Huggingface MarianMT](https://huggingface.co/transformers/model_doc/marian.html) and [Open NMT](https://opennmt.net/Models-py/))
 - Apply **Weak Supervision Approach**[[2]](#2) to generate more data
 - Filter out bad paraphrases through [Hugging Face's transformers BERT model](https://huggingface.co/transformers/model_doc/bert.html#bertmodel) and [Universal Sentence Encoding](https://tfhub.dev/google/universal-sentence-encoder/4) semantic similarity
 - Remove deduplicate through [Hugging Face's transformers BERT model](https://huggingface.co/transformers/model_doc/bert.html#bertmodel)
