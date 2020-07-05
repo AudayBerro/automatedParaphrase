@@ -38,11 +38,6 @@ def translate(utterance,model,tok,trg="NONE"):
         utterance = '>>'+trg+'<<  '+utterance
     translated = model.generate(**tok.prepare_translation_batch([utterance]))
     result = [tok.decode(t, skip_special_tokens=True) for t in translated]
-
-    # print(result[0])
-    # print(type(result[0]))
-    # import sys
-    # sys.exit()
     return result[0]
 
 
@@ -176,10 +171,7 @@ if __name__ == "__main__":
     print("load model")
     model_list = load_model()
     file_path = os.path.join(os.path.dirname(__file__), "..", "dataset/dataset.txt") # data to paraphrase
-    # text = "book a flight from lyon to sydney"
-    # translate(text,'fr','en',model,tok)
     print("start translation")
-    # paraphrases = multi_translate(text,model_list,0)
     paraphrases = translate_file(file_path,model_list,1)
     print("Result:")
     for i in paraphrases:
