@@ -116,6 +116,21 @@ def translate_file(file_path,model,pivot_level):
 
   return paraphrases
 
+def translate_list(data,model,pivot_level):
+  """
+  Translate a List of sentences
+  :param data: data in python List, list of sentences
+  :param model_list: dictionary containing marianMT model, key: model name - value: list containing respectively  Model and tokenizer.  e.g. {'en2ROMANCE':[model,tekenizer]}
+  :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
+  :return Python dictionary containing translsation, Key are initial sentence and vaule are a set of translations
+  """
+  paraphrases = dict()
+ 
+  for sentence in data:
+    tmp = tmp = tmp = multi_translate(sentence,model,pivot_level)
+    paraphrases[sentence]=tmp
+  return paraphrases
+
 def load_model():
     """
     Return a List of Huggingface Marian MT model
@@ -166,6 +181,7 @@ def load_model():
 
     return response
 
+def main():
 if __name__ == "__main__":
     #load all the model
     print("load model")
