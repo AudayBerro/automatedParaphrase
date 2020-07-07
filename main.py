@@ -40,6 +40,7 @@ def main():
     parser.add_argument('-f', required=True) # -f data set file name argument
     parser.add_argument('-g') # if -g is defined use google_translator.translate method not translate_wrapper
     parser.add_argument('-l') # -l integer that indicate the pivot language level, single-pivot or multi-pivot range between 1 and 3
+    parser.add_argument('-p') # p==true mean use pretrained model(e.g. MarianMT) p==false use online translator engine(e.g Yandex,Google Translator)
     args = parser.parse_args()
     
     # load configs from config.ini file
@@ -58,7 +59,7 @@ def main():
             raise Exception("Yandex Translate API token is not defined in config.ini")
         else:
             yandex_api_key = yandex_config["api_key"]
-        if args.g:
+        if args.g:#flag g specify to use Official Google Traslator API not a wrapper
             if "api_key" not in google_config or google_config["api_key"] == "":
                 raise Exception("Google Translate API token is not defined in config.ini")
             else:
