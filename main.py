@@ -40,7 +40,7 @@ def main():
     parser.add_argument('-f', required=True) # -f data set file name argument
     parser.add_argument('-g') # if -g is defined use google_translator.translate method not translate_wrapper
     parser.add_argument('-l') # -l integer that indicate the pivot language level, single-pivot or multi-pivot range between 1 and 3
-    parser.add_argument('-p') # p==true mean use pretrained model(e.g. MarianMT) p==false use online translator engine(e.g Yandex,Google Translator)
+    parser.add_argument('-p') # use pretrained translator(p==true - MarianMT) or online translator engine(p==false - Yandex,Google Translator)
     args = parser.parse_args()
     
     # load configs from config.ini file
