@@ -52,44 +52,30 @@ def multi_translate(utterance,model,pivot_level=1):
   response = set()
   if pivot_level == 0 or pivot_level == 1:  
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="it")
-    print("translate en-it: ",tmp)
     tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])
-    print("translate it-en: ",tmp)
     response.add(tmp)
 
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="es")
-    print("translate en-es: ",tmp)
     tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])
-    print("translate es-en: ",tmp)
     response.add(tmp)
 
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="fr")
-    print("translate en-fr: ",tmp)
     tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])
-    print("translate fr-en: ",tmp)
     response.add(tmp)
 
     tmp = translate(utterance,model['en2ru'][0],model['en2ru'][1])
-    print("translate en-ru: ",tmp)
     tmp = translate(tmp,model['ru2en'][0],model['ru2en'][1])
-    print("translate es-en: ",tmp)
     response.add(tmp)
     
   if pivot_level == 0 or pivot_level == 2:
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="es")
-    print("translate en-es: ",tmp)
     tmp = translate(utterance,model['es2ru'][0],model['es2ru'][1])
-    print("translate es-ru: ",tmp)
     tmp = translate(utterance,model['ru2en'][0],model['ru2en'][1])
-    print("translate ru-en: ",tmp)
     response.add(tmp)
 
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="fr")
-    print("translate en-fr: ",tmp)
     tmp = translate(utterance,model['fr2ru'][0],model['fr2ru'][1])
-    print("translate fr-ru: ",tmp)
     tmp = translate(utterance,model['ru2en'][0],model['ru2en'][1])
-    print("translate ru-en: ",tmp)
     response.add(tmp)
   return response
 
@@ -111,8 +97,7 @@ def translate_file(file_path,model,pivot_level):
       if not line: 
           break
       line = normalize_text(line)
-      tmp = tmp = multi_translate(line,model_list,0)
-      paraphrases[line]=tmp
+      paraphrases[line]=multi_translate(line,model,0)
 
   return paraphrases
 
@@ -125,9 +110,8 @@ def translate_list(data,model,pivot_level):
   :return Python dictionary containing translsation, Key are initial sentence and vaule are a set of translations
   """
   paraphrases = dict()
- 
   for sentence in data:
-    tmp = tmp = tmp = multi_translate(sentence,model,pivot_level)
+    tmp = multi_translate(sentence,model,pivot_level)
     paraphrases[sentence]=tmp
   return paraphrases
 
@@ -181,14 +165,27 @@ def load_model():
 
     return response
 
-def main():
+def main(model_list):
+  #load all the model
+  print("load model")
+  file_path = os.path.join(os.path.dirname(__file__), "..", "dataset/dataset.txt") # data to paraphrase
+  print("start translation")
+  paraphrases = translate_file(file_path,model_list,1)
+  print("Result:")
+  for key,value in paraphrases.items():
+    print(key)
+    for i in value:
+      print("\t",i)
 if __name__ == "__main__":
-    #load all the model
-    print("load model")
-    model_list = load_model()
-    file_path = os.path.join(os.path.dirname(__file__), "..", "dataset/dataset.txt") # data to paraphrase
-    print("start translation")
-    paraphrases = translate_file(file_path,model_list,1)
-    print("Result:")
-    for i in paraphrases:
-      print(i)
+  #load all the model
+  print("load model")
+  model_list = load_model()
+  main(model_list)
+  dataset = ['How does COVID-19 spread?','Book a flight from lyon to sydney?','Reserve a Restaurant at Paris']
+  print("start translation")
+  paraphrases = translate_list(dataset,model_list,1)
+  print("Result:")
+  for key,value in paraphrases.items():
+    print(key)
+    for i in value:
+      print("\t",i)
