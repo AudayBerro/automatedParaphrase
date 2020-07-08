@@ -1,5 +1,6 @@
 from translator import my_memory_translator as memory
 from translator import yandex_translator as yandex
+from translator import marian_translator as marian
 from pos import pos_extraction as pos
 from filtering import bert_filter as bert
 from filtering import use_filter as use
@@ -108,6 +109,55 @@ def online_transaltion(file_path,yandex_api_key,valid_mail,pivot_level):
     bert_deduplicate_paraphrases = bert.bert_deduplication(bert_filtered_paraphrases)
     write_to_folder(bert_deduplicate_paraphrases,"BERT deduplication:","paraphrases.txt")
 
+def pretrained_transaltion(file_path,pivot_level):
+    """
+    Generate Paraphrases using Pretrained Translation Model e.g. Huggingface MarianMT
+    :param file_path: file path
+    :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
+    :return a Python dictionary, Key is the initial expression and value is a list of paraphrases
+    """
+    #load all the model
+    # print("load model")
+    model_list = marian.load_model()
+    #wordnet
+    print("Start weak supervision data generation")
+    # Generate data by Replacing only word with VERB pos-tags by synonym
+    spacy_tags = ['VERB'] #list of tag to extract from sentence using spacy
+    wm_tags = ['v'] #wordnet select only lemmas which pos-taggs is in wm_tags
+    data1 = nlt.main(file_path,spacy_tags,wm_tags)
+    # Generate data by Replacing only word with NOUN pos-tags by synonym 
+    spacy_tags = ['NOUN'] #list of tag to extract from sentence using spacy
+    wm_tags = ['n'] #wordnet select only lemmas which pos-taggs is in wm_tags
+    data2 = nlt.main(file_path,spacy_tags,wm_tags)
+    # Generate data by Replacing only word with NOUN and VERB pos-tags by synonym
+    spacy_tags = ['VERB','NOUN'] #list of tag to extract from sentence using spacy
+    wm_tags = ['v','n'] #wordnet select only lemmas which pos-taggs is in wm_tags
+    data3 = nlt.main(file_path,spacy_tags,wm_tags)
+
+    print("Start translation")
+    # generate paraphrases with MyMemory API
+    result1 = marian.translate_list(data1,model_list,pivot_level)
+    result2 = marian.translate_list(data2,model_list,pivot_level)
+    result3 = marian.translate_list(data3,model_list,pivot_level)
+    
+    result = marian.translate_file(file_path,model_list,pivot_level) #  (file_path,model_list,pivot_level)
+
+    # merge result1, result2, result3 with result
+    result= merge_data(result,result1)
+    result= merge_data(result,result2)
+    result= merge_data(result,result3)
+
+    write_to_folder(result,"Generated Paraphrases:","paraphrases.txt")
+    #universal sentence encoder filtering
+    print("Start Universal Sentence ENcoder filtering")
+    use_filtered_paraphrases = use.get_embedding(result)
+    write_to_folder(use_filtered_paraphrases,"Universal Sentence Encoder Filtering:","paraphrases.txt")
+    bert_filtered_paraphrases = bert.bert_filtering(use_filtered_paraphrases)
+    write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
+    print("Start BERT deduplication")
+    bert_deduplicate_paraphrases = bert.bert_deduplication(bert_filtered_paraphrases)
+    write_to_folder(bert_deduplicate_paraphrases,"BERT deduplication:","paraphrases.txt")
+
 def main():
     # required arg
     parser = argparse.ArgumentParser()
@@ -125,6 +175,8 @@ def main():
     google_config = config["GOOGLE"]
 
     try:
+        if str(args.p) == "None":#if -p not defined set default value to true
+            args.p="true"
         if args.p == "false":
             if "email" not in my_memory_config or my_memory_config["email"] == "":
                 raise Exception("Define a Valid email address for MyMemory API in config.ini")
@@ -149,7 +201,10 @@ def main():
         exit()
 
     file_path = os.path.join(os.path.dirname(__file__), ".", "dataset/"+args.f) # data to paraphrase
-    online_transaltion(file_path,yandex_api_key,valid_mail,pivot_level)
+    if args.p=="true":
+        pretrained_transaltion(file_path,pivot_level)
+    else:
+        online_transaltion(file_path,yandex_api_key,valid_mail,pivot_level)
 
 if __name__ == "__main__":
     main()
