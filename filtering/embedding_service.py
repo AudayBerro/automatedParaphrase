@@ -18,7 +18,7 @@ def get_similarity(vector1,vector2):
     print(cos_lib)
     return np.asscalar(cos_lib)#convert numpy array to float
 
-def filtering(pool,embedding='bert', model='bert_base_cased', max_seq_length=256,pooling='reduce_mean'):
+def filtering(pool,embedding='bert', model='bert_base_cased', max_seq_length=128,pooling='reduce_mean'):
     """
     Remove paraphrases that are not semantically equivalent to the initial expression 
     :param pool: a Python dictionary, Key: initial expression, value: set of paraphrases
@@ -33,7 +33,6 @@ def filtering(pool,embedding='bert', model='bert_base_cased', max_seq_length=256
     for key,value in pool.items():
         vector1 = en.encode([key], pooling)
         # a = vector1.reshape(1,-1)
-
         paraphrases = []
         for candidate in value:
             vector2 = en.encode([candidate], pooling)
@@ -43,19 +42,6 @@ def filtering(pool,embedding='bert', model='bert_base_cased', max_seq_length=256
                 paraphrases.append(candidate)
         result[key] = paraphrases
     return result
-
-
-def main():
-    en = Encoder(embedding='bert', model='bert_base_cased', max_seq_length=256)
-    vecs = en.encode(texts=['how does COVID-10 spread'], pooling='reduce_mean')
-    print(vecs)
-    print(vecs.shape)
-    import sys
-    sys.exit()
-    # a = vecs[0].reshape(1,-1)
-    # b = vecs[1].reshape(1,-1)
-    cos_lib = get_similarity(vecs[0],vecs[1])
-    print(cos_lib)
 
 if __name__ == "__main__":
     pool = {'book a flight from lyon to sydney? ': ['book a flight lyon', 'lyon book a flight to sydney?', 'to bible flights from lyon to sydney?']}
