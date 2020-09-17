@@ -176,6 +176,7 @@ def main(model_list):
     print(key)
     for i in value:
       print("\t",i)
+      
 if __name__ == "__main__":
   #load all the model
   print("load model")
