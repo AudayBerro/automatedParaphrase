@@ -27,10 +27,7 @@ def multi_translate(utterance,api_key,pivot_level):
   :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
   :return list of utterance translations
   """
-
-  tr = yandex_translate.Translater() # load yandex translator
-  tr.set_key(api_key) # set the api token
-
+  
   response = set()
   text = utterance
   if pivot_level == 0 or pivot_level == 1:
