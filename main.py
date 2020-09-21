@@ -1,5 +1,6 @@
 from translator import my_memory_translator as memory
-from translator import yandex_translator as yandex
+# from translator import yandex_translator as yandex
+from translator import deepl_translator as deepl
 from translator import marian_translator as marian
 from pos import pos_extraction as pos
 from filtering import bert_filter as bert
@@ -73,25 +74,32 @@ def online_transaltion(file_path,yandex_api_key,valid_mail,pivot_level):
     result= merge_data(result,memory_result3)
 
     # generate paraphrases with Yandex Translator API
-    yandex_result1 = yandex.translate_list(data1,yandex_api_key,pivot_level)
-    yandex_result2 = yandex.translate_list(data2,yandex_api_key,pivot_level)
-    yandex_result3 = yandex.translate_list(data3,yandex_api_key,pivot_level)
+    # yandex_result1 = yandex.translate_list(data1,yandex_api_key,pivot_level)
+    # yandex_result2 = yandex.translate_list(data2,yandex_api_key,pivot_level)
+    # yandex_result3 = yandex.translate_list(data3,yandex_api_key,pivot_level)
+
+    # generate paraphrases with DeepL API
+    deepl_result1 = deepl.translate_list(data1,yandex_api_key,pivot_level)
+    deepl_result2 = deepl.translate_list(data2,yandex_api_key,pivot_level)
+    deepl_result3 = deepl.translate_list(data3,yandex_api_key,pivot_level)
 
     # merge memory_result1, memory_result2, memory_result3 with result
-    result= merge_data(result,yandex_result1)
-    result= merge_data(result,yandex_result2)
-    result= merge_data(result,yandex_result3)
+    result= merge_data(result,deepl_result1)
+    result= merge_data(result,deepl_result2)
+    result= merge_data(result,deepl_result3)
 
-    yandex_result = yandex.translate_file(file_path,yandex_api_key,pivot_level)
+    # yandex_result = yandex.translate_file(file_path,yandex_api_key,pivot_level)
+    deepl_result = deepl.translate_file(file_path,yandex_api_key,pivot_level)
 
     extracted_pos = pos.pos_extraction(file_path)
-    yandex_paraphrases = yandex.translate_dict(extracted_pos,yandex_api_key,pivot_level)
+    # yandex_paraphrases = yandex.translate_dict(extracted_pos,yandex_api_key,pivot_level)
+    deepl_paraphrases =  deepl.translate_dict(extracted_pos,yandex_api_key,pivot_level)
     
     
     #create a function that take a list of dataset and merge them togheteherset
     for key,values in result.items():
-        values.update(yandex_result[key])
-        values.update(yandex_paraphrases[key])
+        values.update(deepl_result[key])
+        values.update(deepl_paraphrases[key])
         result[key] = values
 
 
@@ -173,6 +181,7 @@ def main():
     my_memory_config = config["MYMEMORY"]
     yandex_config = config["YANDEX"]
     google_config = config["GOOGLE"]
+    deepl_config = config['DEEPL']
 
     try:
         if str(args.p) == "None":#if -p not defined set default value to true
@@ -186,6 +195,10 @@ def main():
                 raise Exception("Yandex Translate API token is not defined in config.ini")
             else:
                 yandex_api_key = yandex_config["api_key"]
+            if "api_key" not in deepl_config or deepl_config["api_key"] == "":
+                raise Exception("DeepL API Authentication Key not defined in config.ini")
+            else:
+                deepl_api_key = deepl_config["api_key"]
             if args.g:#flag g specify to use Official Google Traslator API not a wrapper
                 if "api_key" not in google_config or google_config["api_key"] == "":
                     raise Exception("Google Translate API token is not defined in config.ini")
@@ -204,7 +217,7 @@ def main():
     if args.p=="true":
         pretrained_transaltion(file_path,pivot_level)
     else:
-        online_transaltion(file_path,yandex_api_key,valid_mail,pivot_level)
+        online_transaltion(file_path,deepl_api_key,valid_mail,pivot_level)
 
 if __name__ == "__main__":
     main()
