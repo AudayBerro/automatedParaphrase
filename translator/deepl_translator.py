@@ -139,6 +139,20 @@ def translate_file(file_path,api_key,pivot_level):
 
   return paraphrases
 
+def translate_dict(data,api_key,pivot_level):
+  """
+  Translate a dictionary
+  :param data: data in python dictionary, Key initial expression and value is a set of translations
+  :param api_key: Authentication Key for DeepL API https://www.deepl.com/pro-account.html
+  :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
+  :return Python dictionary containing translsation, Key are initial sentence and vaule are a set of translations
+  """
+  paraphrases = dict()
+ 
+  for key,value in data.items():
+    tmp = multi_translate(value,api_key,pivot_level)
+    paraphrases[key]=tmp
+  return paraphrases
 
 if __name__ == "__main__":
     print(multi_translate('How does COVID-19 spread?','f55c628f-a052-4431-90a7-86d0b8ca861b',1))
