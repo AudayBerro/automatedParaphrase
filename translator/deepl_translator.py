@@ -116,6 +116,30 @@ def multi_translate(utterance,api_key,pivot_level):
     response.add(translate(tmp,'EN',api_key))
   return response
 
+def translate_file(file_path,api_key,pivot_level):
+  """
+  Translate a file
+  :param file_path: file path
+  :param api_key: Authentication Key for DeepL API https://www.deepl.com/pro-account.html
+  :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
+  :return Python dictionary containing translsation, Key are initial sentence and vaule are a set of translations
+  """
+
+  paraphrases = dict()
+  #import data from file_path
+  f=open(file_path, "r")
+  while True: 
+      # Get next line from file 
+      line = f.readline()
+      if not line: 
+          break
+      line = normalize_text(line)
+      tmp = multi_translate(line,api_key,pivot_level)
+      paraphrases[line]=tmp
+
+  return paraphrases
+
+
 if __name__ == "__main__":
     print(multi_translate('How does COVID-19 spread?','f55c628f-a052-4431-90a7-86d0b8ca861b',1))
     
