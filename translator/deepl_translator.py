@@ -1,14 +1,14 @@
 import requests
 from googletrans import Translator
 
-# def normalize_text(text):
-#     """
-#     Remove line break and lowercase all words
-#     :param text: sentence to normalize
-#     :return return a sentence without line break and lowercased 
-#     """
-#     # mystring.replace('\n', ' ').replace('\r', '')
-#     return text.replace('\n', ' ').replace('\r', '').lower()
+def normalize_text(text):
+    """
+    Remove line break and lowercase all words
+    :param text: sentence to normalize
+    :return return a sentence without line break and lowercased 
+    """
+    # mystring.replace('\n', ' ').replace('\r', '')
+    return text.replace('\n', ' ').replace('\r', '').lower()
 
 def translate_wrapper(sentence,target):
     """
@@ -28,8 +28,8 @@ def translate_wrapper(sentence,target):
         response = "Probably Google has banned your client IP addres"+str(e)
         return response
     
-    # return normalize_text(response.text)
-    return response.text
+    return normalize_text(response.text)
+    # return response.text
 
 
 def translate(utterance,target,api_key):
@@ -49,7 +49,7 @@ def translate(utterance,target,api_key):
 
     response = requests.post('https://api.deepl.com/v2/translate', data=data)
     data = response.json()
-    return data['translations'][0]['text']
+    return normalize_text(data['translations'][0]['text'])
 
 def multi_translate(utterance,api_key,pivot_level):
   """
