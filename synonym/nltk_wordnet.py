@@ -15,7 +15,7 @@ def normalize_text(text):
 def get_best_synonym(word,sentence,synonyms,nlp):
     """
     Select appropriate synonym to word from synonyms list based on sentence (Select the best word synonym)
-    :param 
+    :param word: the word to be replaced by a synonym
     :param sentence: sentence 
     :param synonyms: list of synonym
     :param nlp: spacy model
