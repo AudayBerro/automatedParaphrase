@@ -120,7 +120,7 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level):
 def pretrained_transaltion(file_path,pivot_level):
     """
     Generate Paraphrases using Pretrained Translation Model e.g. Huggingface MarianMT
-    :param file_path: file path
+    :param file_path: file path to folder containing initial utterances
     :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
     :return a Python dictionary, Key is the initial expression and value is a list of paraphrases
     """
