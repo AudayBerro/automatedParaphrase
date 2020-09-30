@@ -112,3 +112,22 @@ def sentence_pos(sentence,tags):
       candidate.append(token.text)
   
   return candidate,tokenized_sentence
+
+
+def remove_stop_word(sentence):
+  """
+  Remove stop words from sentences
+  :param sentence: sentence to process
+  :return sentence without spacy_stop_words
+  """
+
+  nlp = spacy.load('en_core_web_lg') # en_core_web_sm
+  candidate = []
+  sentence = normalize_text(sentence)
+  sentences = nlp(sentence)
+  for token in sentences:
+    if token.text not in STOP_WORDS:
+      candidate.append(token.text)
+  
+  return ' '.join(candidate)
+  
