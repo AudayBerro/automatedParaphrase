@@ -39,7 +39,7 @@ def merge_data(dataset1,dataset2):
 def online_transaltion(file_path,api_key,valid_mail,pivot_level):
     """
     Generate Paraphrases Using online Translator Engine e.g. Google, Yandex
-    :param file_path: file path
+    :param file_path: file path to folder containing initial utterances
     :param api_key: Online Translator API key
     :param valid_mail: valid email address to reach a translation rate of 10000 words/day in MyMemory API.
     :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
