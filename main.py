@@ -110,7 +110,7 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level):
     deepl_paraphrases =  deepl.translate_dict(extracted_pos,api_key,pivot_level)
     
     
-    #create a function that take a list of dataset and merge them togheteherset
+    # merge all dictionary into one
     for key,values in result.items():
         values.update(deepl_result[key])
         values.update(deepl_paraphrases[key])
