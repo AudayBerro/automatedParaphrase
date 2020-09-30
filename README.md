@@ -45,17 +45,23 @@ In order to generate paraphrases, follow these steps:
    python -m spacy download en_core_web_lg
    ```
 
-4. Open **config.ini** configuration file and update the values.
+4. Make use of Google's Universal Sentence Encoder directly within SpaCy[Spacy - Universal Sentence Encoder](https://github.com/MartinoMensio/spacy-universal-sentence-encoder).
+
+   ```
+   pip install spacy-universal-sentence-encoder
+   ```
+
+5. Open **config.ini** configuration file and update the values.
 
    >  **Note**: Please make sure you fulfilled the required configs in **config.ini** file - especially YANDEX and MYMEMORY.
 
   
 
-5. Put the sentence you want to paraphrase in a file, sentences should be separated by a line break. Save the file in the **dataset** folder(we suggest to save the file with txt extension).
+6. Put the sentence you want to paraphrase in a file, sentences should be separated by a line break. Save the file in the **dataset** folder(we suggest to save the file with txt extension).
 
   
 
-6. Generate paraphrases by runing the following command:
+7. Generate paraphrases by runing the following command:
    ```
    $ python main.py -f file_name.txt
    ```
