@@ -15,7 +15,7 @@ def get_embedding(data):
     :return a python dictionary whre not equivalent paraphrase to initial sentence are removed
     """
     disable_eager_execution() # to avoid EagerTensor RuntimeError
-    embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+    embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder-large/5")
     response = dict()
     with tf.compat.v1.Session() as session:
         session.run([tf.compat.v1.global_variables_initializer(), tf.compat.v1.tables_initializer()])
