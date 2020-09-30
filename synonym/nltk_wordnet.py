@@ -71,6 +71,7 @@ def main(file_path,pos_tags,wordnet_tags):
     # import spacy
     # nlp = spacy.load('en_core_web_lg', create_pipeline=wmd.WMD.create_spacy_pipeline) # load spacy model, add Word Mover Distance pipeline
 
+    #Universal sentence embedding with spacy https://github.com/MartinoMensio/spacy-universal-sentence-encoder
     import spacy_universal_sentence_encoder
     nlp = spacy_universal_sentence_encoder.load_model('en_use_lg')
     
