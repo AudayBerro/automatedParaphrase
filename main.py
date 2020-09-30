@@ -141,20 +141,10 @@ def pretrained_transaltion(file_path,pivot_level):
     #load all the model
     # print("load model")
     model_list = marian.load_model()
+    
     #wordnet
     print("Start weak supervision data generation")
-    # Generate data by Replacing only word with VERB pos-tags by synonym
-    spacy_tags = ['VERB'] #list of tag to extract from sentence using spacy
-    wm_tags = ['v'] #wordnet select only lemmas which pos-taggs is in wm_tags
-    data1 = nlt.main(file_path,spacy_tags,wm_tags)
-    # Generate data by Replacing only word with NOUN pos-tags by synonym 
-    spacy_tags = ['NOUN'] #list of tag to extract from sentence using spacy
-    wm_tags = ['n'] #wordnet select only lemmas which pos-taggs is in wm_tags
-    data2 = nlt.main(file_path,spacy_tags,wm_tags)
-    # Generate data by Replacing only word with NOUN and VERB pos-tags by synonym
-    spacy_tags = ['VERB','NOUN'] #list of tag to extract from sentence using spacy
-    wm_tags = ['v','n'] #wordnet select only lemmas which pos-taggs is in wm_tags
-    data3 = nlt.main(file_path,spacy_tags,wm_tags)
+    data1,data2,data3 = weak_supervision_generation(file_path)
 
     print("Start translation")
     # generate paraphrases with MyMemory API
