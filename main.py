@@ -36,17 +36,12 @@ def merge_data(dataset1,dataset2):
         v.update(v2) # add dataset2 paraphrases list to dataset1 paraphrases list
     return dataset1
 
-def online_transaltion(file_path,api_key,valid_mail,pivot_level):
+def weak_supervision_generation(file_path):
     """
-    Generate Paraphrases Using online Translator Engine e.g. Google, Yandex
+    Apply Weak Supervision to generate data
     :param file_path: file path to folder containing initial utterances
-    :param api_key: Online Translator API key
-    :param valid_mail: valid email address to reach a translation rate of 10000 words/day in MyMemory API.
-    :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
-    :return a Python dictionary, Key is the initial expression and value is a list of paraphrases
+    :return generated data 
     """
-    #wordnet
-    print("Start weak supervision data generation")
     # Generate data by Replacing only word with VERB pos-tags by synonym
     spacy_tags = ['VERB'] #list of tag to extract from sentence using spacy
     wm_tags = ['v'] #wordnet select only lemmas which pos-taggs is in wm_tags
@@ -60,6 +55,22 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level):
     wm_tags = ['v','n'] #wordnet select only lemmas which pos-taggs is in wm_tags
     data3 = nlt.main(file_path,spacy_tags,wm_tags)
 
+    return data1,data2,data3
+
+
+def online_transaltion(file_path,api_key,valid_mail,pivot_level):
+    """
+    Generate Paraphrases Using online Translator Engine e.g. Google, Yandex
+    :param file_path: file path to folder containing initial utterances
+    :param api_key: Online Translator API key
+    :param valid_mail: valid email address to reach a translation rate of 10000 words/day in MyMemory API.
+    :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
+    :return a Python dictionary, Key is the initial expression and value is a list of paraphrases
+    """
+    #wordnet
+    print("Start weak supervision data generation")
+    data1,data2,data3 = weak_supervision_generation(file_path)
+    
     print("Start translation")
     # generate paraphrases with MyMemory API
     memory_result1 = memory.translate_list(data1,valid_mail)
@@ -67,6 +78,7 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level):
     memory_result3 = memory.translate_list(data3,valid_mail)
     
     result = memory.translate_file(file_path,valid_mail)
+    print()
 
     # merge memory_result1, memory_result2, memory_result3 with result
     result= merge_data(result,memory_result1)
