@@ -1,6 +1,5 @@
 from nltk.corpus import wordnet as wm
 from nltk.tokenize import word_tokenize
-import spacy
 import wmd
 
 """ Get token synonym using NLTK wordnet Corpus """
@@ -69,7 +68,11 @@ def main(file_path,pos_tags,wordnet_tags):
     sys.path.append("..")
     from pos import pos_extraction as ps
 
-    nlp = spacy.load('en_core_web_lg', create_pipeline=wmd.WMD.create_spacy_pipeline) # load spacy model, add Word Mover Distance pipeline
+    # import spacy
+    # nlp = spacy.load('en_core_web_lg', create_pipeline=wmd.WMD.create_spacy_pipeline) # load spacy model, add Word Mover Distance pipeline
+
+    import spacy_universal_sentence_encoder
+    nlp = spacy_universal_sentence_encoder.load_model('en_use_lg')
     
     f=open(file_path, "r")
     result = []
