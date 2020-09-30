@@ -76,7 +76,7 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level):
 
     print("Start translation")
     # generate paraphrases with MyMemory API
-    memory_result1 = memory.translate_list(data1,valid_mail)) #generate paraphrases through pivot-translation of data1
+    memory_result1 = memory.translate_list(data1,valid_mail) #generate paraphrases through pivot-translation of data1
     memory_result2 = memory.translate_list(data2,valid_mail) #generate paraphrases through pivot-translation of data2
     memory_result3 = memory.translate_list(data3,valid_mail) #generate paraphrases through pivot-translation of data3
     
