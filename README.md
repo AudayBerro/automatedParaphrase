@@ -54,7 +54,7 @@ In order to generate paraphrases, follow these steps:
 
 5. Open **config.ini** configuration file and update the values.
 
-   >  **Note**: Please make sure you fulfilled the required configs in **config.ini** file - especially YANDEX and MYMEMORY.
+   >  **Note**: Please make sure you fulfilled the required configs in **config.ini** file - especially DEEPL and MYMEMORY.
 
   
 
