@@ -42,14 +42,17 @@ def weak_supervision_generation(file_path):
     :param file_path: file path to folder containing initial utterances
     :return generated data 
     """
+
     # Generate data by Replacing only word with VERB pos-tags by synonym
     spacy_tags = ['VERB'] #list of tag to extract from sentence using spacy
     wm_tags = ['v'] #wordnet select only lemmas which pos-taggs is in wm_tags
     data1 = nlt.main(file_path,spacy_tags,wm_tags)
+
     # Generate data by Replacing only word with NOUN pos-tags by synonym 
     spacy_tags = ['NOUN'] #list of tag to extract from sentence using spacy
     wm_tags = ['n'] #wordnet select only lemmas which pos-taggs is in wm_tags
     data2 = nlt.main(file_path,spacy_tags,wm_tags)
+    
     # Generate data by Replacing only word with NOUN and VERB pos-tags by synonym
     spacy_tags = ['VERB','NOUN'] #list of tag to extract from sentence using spacy
     wm_tags = ['v','n'] #wordnet select only lemmas which pos-taggs is in wm_tags
@@ -70,7 +73,7 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level):
     #wordnet
     print("Start weak supervision data generation")
     data1,data2,data3 = weak_supervision_generation(file_path)
-    
+
     print("Start translation")
     # generate paraphrases with MyMemory API
     memory_result1 = memory.translate_list(data1,valid_mail)
