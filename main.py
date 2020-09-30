@@ -36,11 +36,11 @@ def merge_data(dataset1,dataset2):
         v.update(v2) # add dataset2 paraphrases list to dataset1 paraphrases list
     return dataset1
 
-def online_transaltion(file_path,yandex_api_key,valid_mail,pivot_level):
+def online_transaltion(file_path,api_key,valid_mail,pivot_level):
     """
     Generate Paraphrases Using online Translator Engine e.g. Google, Yandex
     :param file_path: file path
-    :param api_key: Yandex Translate API token https://translate.yandex.com/developers/keys
+    :param api_key: Online Translator API key
     :param valid_mail: valid email address to reach a translation rate of 10000 words/day in MyMemory API.
     :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
     :return a Python dictionary, Key is the initial expression and value is a list of paraphrases
@@ -74,14 +74,14 @@ def online_transaltion(file_path,yandex_api_key,valid_mail,pivot_level):
     result= merge_data(result,memory_result3)
 
     # generate paraphrases with Yandex Translator API
-    # yandex_result1 = yandex.translate_list(data1,yandex_api_key,pivot_level)
-    # yandex_result2 = yandex.translate_list(data2,yandex_api_key,pivot_level)
-    # yandex_result3 = yandex.translate_list(data3,yandex_api_key,pivot_level)
+    # yandex_result1 = yandex.translate_list(data1,api_key,pivot_level)
+    # yandex_result2 = yandex.translate_list(data2,api_key,pivot_level)
+    # yandex_result3 = yandex.translate_list(data3,api_key,pivot_level)
 
     # generate paraphrases with DeepL API
-    deepl_result1 = deepl.translate_list(data1,yandex_api_key,pivot_level)
-    deepl_result2 = deepl.translate_list(data2,yandex_api_key,pivot_level)
-    deepl_result3 = deepl.translate_list(data3,yandex_api_key,pivot_level)
+    deepl_result1 = deepl.translate_list(data1,api_key,pivot_level)
+    deepl_result2 = deepl.translate_list(data2,api_key,pivot_level)
+    deepl_result3 = deepl.translate_list(data3,api_key,pivot_level)
 
     # merge memory_result1, memory_result2, memory_result3 with result
     result= merge_data(result,deepl_result1)
@@ -89,11 +89,11 @@ def online_transaltion(file_path,yandex_api_key,valid_mail,pivot_level):
     result= merge_data(result,deepl_result3)
 
     # yandex_result = yandex.translate_file(file_path,yandex_api_key,pivot_level)
-    deepl_result = deepl.translate_file(file_path,yandex_api_key,pivot_level)
+    deepl_result = deepl.translate_file(file_path,api_key,pivot_level)
 
     extracted_pos = pos.pos_extraction(file_path)
     # yandex_paraphrases = yandex.translate_dict(extracted_pos,yandex_api_key,pivot_level)
-    deepl_paraphrases =  deepl.translate_dict(extracted_pos,yandex_api_key,pivot_level)
+    deepl_paraphrases =  deepl.translate_dict(extracted_pos,api_key,pivot_level)
     
     
     #create a function that take a list of dataset and merge them togheteherset
