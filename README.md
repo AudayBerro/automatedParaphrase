@@ -45,11 +45,12 @@ In order to generate paraphrases, follow these steps:
    python -m spacy download en_core_web_lg
    ```
 
-4. Make use of Google's Universal Sentence Encoder directly within SpaCy[Spacy - Universal Sentence Encoder](https://github.com/MartinoMensio/spacy-universal-sentence-encoder).
+4. Make use of Google's Universal Sentence Encoder directly within [Spacy - Universal Sentence Encoder](https://github.com/MartinoMensio/spacy-universal-sentence-encoder).
 
    ```
    pip install spacy-universal-sentence-encoder
    ```
+   > **Note**: By default we use en_use_lg model, if you want to use another model, modify **load_model** in ./synonym/nltk_wordnet.py line 76 
 
 5. Open **config.ini** configuration file and update the values.
 
