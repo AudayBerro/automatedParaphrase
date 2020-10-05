@@ -97,16 +97,16 @@ def bert_filtering(pool):#ebeddings using Huggingface trandformers library
         vector1 = concatenate_output(a)
 
         # token_embeddings = a[0][0]
-        vectora = token_vector_sum(a[0][0])
-        vectora2 = token_vector_mean(a[0][0])
+        # vectora = token_vector_sum(a[0][0])
+        # vectora2 = token_vector_mean(a[0][0])
         paraphrases = []
         for candidate in value:
             b = get_encoded_layers(candidate,model,tokenizer)
             vector2 = concatenate_output(b)
 
             # token_embeddings = b[0][0]
-            vectorb = token_vector_sum(b[0][0])
-            vectorb2 = token_vector_mean(b[0][0])
+            # vectorb = token_vector_sum(b[0][0])
+            # vectorb2 = token_vector_mean(b[0][0])
             cos_sim = get_similarity(vector1,vector2)
             # cos_sim2 = ukplab_similarity(vectora,vectorb)
             if cos_sim > 0.5:
@@ -130,16 +130,16 @@ def bert_deduplication(pool):#remove deduplicate paraphrases
         vector1 = concatenate_output(a)
 
         # token_embeddings = a[0][0]
-        vectora = token_vector_sum(a[0][0])
-        vectora2 = token_vector_mean(a[0][0])
+        # vectora = token_vector_sum(a[0][0])
+        # vectora2 = token_vector_mean(a[0][0])
         paraphrases = []
         for candidate in value:
             b = get_encoded_layers(candidate,model,tokenizer)
             vector2 = concatenate_output(b)
 
             # token_embeddings = b[0][0]
-            vectorb = token_vector_sum(b[0][0])
-            vectorb2 = token_vector_mean(b[0][0])
+            # vectorb = token_vector_sum(b[0][0])
+            # vectorb2 = token_vector_mean(b[0][0])
             cos_sim = get_similarity(vector1,vector2)
             if cos_sim <= 0.95:
                 paraphrases.append(candidate)
