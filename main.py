@@ -119,7 +119,7 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level):
 
     write_to_folder(result,"Generated Paraphrases:","paraphrases.txt")
     #universal sentence encoder filtering
-    print("Start Universal Sentence ENcoder filtering")
+    print("Start Universal Sentence Encoder filtering")
     use_filtered_paraphrases = use.get_embedding(result)
     write_to_folder(use_filtered_paraphrases,"Universal Sentence Encoder Filtering:","paraphrases.txt")
 
@@ -210,6 +210,8 @@ def main():
                     google_api_key = google_config['api_key']
         if args.l:
             pivot_level = int(args.l)
+            if pivot_level<0 or pivot_level>2:
+                raise Exception("Pivot-level value should be 0,1 or 2")
         else:
             pivot_level = 0
 
