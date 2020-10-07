@@ -1,7 +1,7 @@
 from nltk.corpus import wordnet as wm
 from nltk.tokenize import word_tokenize
 # import wmd
-import re
+import re,string
 
 """ Get token synonym using NLTK wordnet Corpus """
 
@@ -12,6 +12,10 @@ def normalize_text(text):
     :return return a sentence without line break and lowercased 
     """
     # return text.replace('\n', ' ').replace('\r', '').lower()
+    #remove punctuations
+    # text = re.sub('[%s]' % re.escape(string.punctuation), '', text)
+
+    #trim and lowercase
     return (re.sub(' +', ' ',(text.replace('\n',' ')))).strip().lower()
 
 def get_best_synonym(word,sentence,synonyms,nlp):
@@ -86,7 +90,7 @@ def main(file_path,pos_tags,wordnet_tags):
             break
 
         line = ps.expand_contractions(line)  #expand contraction e.g can't -> can not
-        line = normalize_text(line) #lowercase the sentence help to avoid wordnet word confusion. Wordnet consider Can as the beverage bottle and not the verb
+        # line = normalize_text(line) #lowercase the sentence help to avoid wordnet word confusion. Wordnet consider Can as the beverage bottle and not the verb
 
         candidate,tokenized_list = ps.sentence_pos(line,pos_tags)
         sentence = []
