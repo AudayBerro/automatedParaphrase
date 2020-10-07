@@ -1,5 +1,7 @@
 import requests
 from googletrans import Translator
+import re,string
+import contractions
 
 def normalize_text(text):
     """
@@ -7,8 +9,17 @@ def normalize_text(text):
     :param text: sentence to normalize
     :return return a sentence without line break and lowercased 
     """
-    # mystring.replace('\n', ' ').replace('\r', '')
-    return text.replace('\n', ' ').replace('\r', '').lower()
+    # return text.replace('\n', ' ').replace('\r', '').lower()
+    #remove punctuations
+    text = re.sub('[%s]' % re.escape(string.punctuation), '', text)
+
+    #trim and lowercase
+    return (re.sub(' +', ' ',(text.replace('\n',' ')))).strip().lower()
+
+def expand_contractions(text):
+    """ expand shortened words, e.g. don't to do not """
+
+    return contractions.fix(text)
 
 def translate_wrapper(sentence,target):
     """
@@ -27,8 +38,8 @@ def translate_wrapper(sentence,target):
     except Exception as e: # mean Google restrict IP address
         response = "Probably Google has banned your client IP addres"+str(e)
         return response
-    
-    return normalize_text(response.text)
+    tmp = expand_contractions(response.text)
+    return normalize_text(tmp)
     # return response.text
 
 
@@ -49,7 +60,7 @@ def translate(utterance,target,api_key):
 
     response = requests.post('https://api.deepl.com/v2/translate', data=data)
     data = response.json()
-    return normalize_text(data['translations'][0]['text'])
+    return data['translations'][0]['text']
 
 def multi_translate(utterance,api_key,pivot_level):
   """
@@ -66,54 +77,77 @@ def multi_translate(utterance,api_key,pivot_level):
     tmp = translate(text,'IT',api_key)
     response.add(translate_wrapper(tmp,'en')) # translate back to english with google translator wrapper
     # tmp = translate(tmp,'EN',api_key) # translate back to english with deepl
-    response.add(translate(tmp,'EN',api_key)) # translate back to english with deepl
+    tmp = translate(tmp,'EN',api_key)
+    tmp = expand_contractions(tmp)
+    response.add(normalize_text(tmp))
+    
 
     tmp = translate(text,'RU',api_key)
     response.add(translate_wrapper(tmp,'en'))
-    response.add(translate(tmp,'EN',api_key))
+    tmp = translate(tmp,'EN',api_key)
+    tmp = expand_contractions(tmp)
+    response.add(normalize_text(tmp))
 
     tmp = translate(text,'FR',api_key)
     response.add(translate_wrapper(tmp,'en'))
-    response.add(translate(tmp,'EN',api_key))
+    tmp = translate(tmp,'EN',api_key)
+    tmp = expand_contractions(tmp)
+    response.add(normalize_text(tmp))
 
     tmp = translate(text,'JA',api_key)
     response.add(translate_wrapper(tmp,'en'))
-    response.add(translate(tmp,'EN',api_key))
+    tmp = translate(tmp,'EN',api_key)
+    tmp = expand_contractions(tmp)
+    response.add(normalize_text(tmp))
 
     tmp = translate(text,'DE',api_key)
     response.add(translate_wrapper(tmp,'en'))
-    response.add(translate(tmp,'EN',api_key))
+    tmp = translate(tmp,'EN',api_key)
+    tmp = expand_contractions(tmp)
+    response.add(normalize_text(tmp))
     
   if pivot_level == 0 or pivot_level == 2:
     tmp = translate(text,'IT',api_key)
     tmp = translate(tmp,'RU',api_key)
     response.add(translate_wrapper(tmp,'en'))
-    response.add(translate(tmp,'EN',api_key))
+    tmp = translate(tmp,'EN',api_key)
+    tmp = expand_contractions(tmp)
+    response.add(normalize_text(tmp))
 
     tmp = translate(text,'IT',api_key)
     tmp = translate(tmp,'DE',api_key)
     response.add(translate_wrapper(tmp,'en'))
-    response.add(translate(tmp,'EN',api_key))
+    tmp = translate(tmp,'EN',api_key)
+    tmp = expand_contractions(tmp)
+    response.add(normalize_text(tmp))
 
     tmp = translate(text,'RU',api_key)
     tmp = translate(tmp,'FR',api_key)
     response.add(translate_wrapper(tmp,'en'))
-    response.add(translate(tmp,'EN',api_key))
+    tmp = translate(tmp,'EN',api_key)
+    tmp = expand_contractions(tmp)
+    response.add(normalize_text(tmp))
 
     tmp = translate(text,'RU',api_key)
     tmp = translate(tmp,'JA',api_key)
     response.add(translate_wrapper(tmp,'en'))
-    response.add(translate(tmp,'EN',api_key))
+    tmp = translate(tmp,'EN',api_key)
+    tmp = expand_contractions(tmp)
+    response.add(normalize_text(tmp))
 
     tmp = translate(text,'JA',api_key)
     tmp = translate(tmp,'FR',api_key)
     response.add(translate_wrapper(tmp,'en'))
-    response.add(translate(tmp,'EN',api_key))
+    tmp = translate(tmp,'EN',api_key)
+    tmp = expand_contractions(tmp)
+    response.add(normalize_text(tmp))
 
     tmp = translate(text,'JA',api_key)
     tmp = translate(tmp,'DE',api_key)
     response.add(translate_wrapper(tmp,'en'))
-    response.add(translate(tmp,'EN',api_key))
+    tmp = translate(tmp,'EN',api_key)
+    tmp = expand_contractions(tmp)
+    response.add(normalize_text(tmp))
   return response
 
 def translate_file(file_path,api_key,pivot_level):
@@ -133,7 +167,7 @@ def translate_file(file_path,api_key,pivot_level):
       line = f.readline()
       if not line: 
           break
-      line = normalize_text(line)
+      line = line.replace('\n', '').replace('\r', '') #remove linebreak
       tmp = multi_translate(line,api_key,pivot_level)
       paraphrases[line]=tmp
 
