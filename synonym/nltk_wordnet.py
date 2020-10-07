@@ -1,6 +1,7 @@
 from nltk.corpus import wordnet as wm
 from nltk.tokenize import word_tokenize
-import wmd
+# import wmd
+import re
 
 """ Get token synonym using NLTK wordnet Corpus """
 
@@ -10,7 +11,8 @@ def normalize_text(text):
     :param text: sentence to normalize
     :return return a sentence without line break and lowercased 
     """
-    return text.replace('\n', ' ').replace('\r', '').lower()
+    # return text.replace('\n', ' ').replace('\r', '').lower()
+    return (re.sub(' +', ' ',(text.replace('\n',' ')))).strip().lower()
 
 def get_best_synonym(word,sentence,synonyms,nlp):
     """
