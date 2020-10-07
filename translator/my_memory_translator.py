@@ -1,7 +1,8 @@
 import requests
 import os
 from yandex import Translater as yandex_trans
-import re
+import re,string
+import contractions
 
 """" Thi code translate sentence using Mymemory API and Yandex Translator API """
 
@@ -13,7 +14,16 @@ def normalize_text(text):
     :return return a sentence without line break and lowercased 
     """
     # return text.replace('\n', ' ').replace('\r', '').lower()
+    #remove punctuations
+    text = re.sub('[%s]' % re.escape(string.punctuation), '', text)
+
+    #trim and lowercase
     return (re.sub(' +', ' ',(text.replace('\n',' ')))).strip().lower()
+
+def expand_contractions(text):
+    """ expand shortened words, e.g. don't to do not """
+
+    return contractions.fix(text)
 
 def yandex_translate(utterance,source,target,api_key):
     """
@@ -44,6 +54,7 @@ def replace_quote(utterance):
     if "&#39;" in utterance:
       utterance = utterance.replace('&#39;','\'')
     
+    utterance = expand_contractions(utterance)
     return normalize_text(utterance)
 
 def check_match(utterance):
@@ -73,7 +84,10 @@ def translate_file(file_path,valid_mail):
         text = f.readline()
         if not text: 
             break
-        text = normalize_text(text)
+
+        sent = expand_contractions(text)
+        sent = normalize_text(sent)
+
         # api-endpoint
         URL = "https://api.mymemory.translated.net/get?de="+valid_mail+"&q="+text+"&langpair=en|fr"
 
@@ -105,6 +119,7 @@ def translate_file(file_path,valid_mail):
                 sentence = replace_quote(i['translation'])
                 if check_match(i):
                     final.add(sentence)
+        text = text.replace('\n', '').replace('\r', '') #remove linebreak
         response[text]=final
 
     return response
