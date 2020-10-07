@@ -161,7 +161,7 @@ def pretrained_transaltion(file_path,pivot_level):
 
     write_to_folder(result,"Generated Paraphrases:","paraphrases.txt")
     #universal sentence encoder filtering
-    print("Start Universal Sentence ENcoder filtering")
+    print("Start Universal Sentence Encoder filtering")
     use_filtered_paraphrases = use.get_embedding(result)
     write_to_folder(use_filtered_paraphrases,"Universal Sentence Encoder Filtering:","paraphrases.txt")
     bert_filtered_paraphrases = bert.bert_filtering(use_filtered_paraphrases)
