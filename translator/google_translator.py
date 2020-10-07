@@ -1,5 +1,6 @@
 import requests
 from googletrans import Translator
+import re,string
 
 def normalize_text(text):
     """
@@ -7,8 +8,12 @@ def normalize_text(text):
     :param text: sentence to normalize
     :return return a sentence without line break and lowercased 
     """
-    # mystring.replace('\n', ' ').replace('\r', '')
-    return text.replace('\n', ' ').replace('\r', '').lower()
+    # return text.replace('\n', ' ').replace('\r', '').lower()
+    #remove punctuations
+    text = re.sub('[%s]' % re.escape(string.punctuation), '', text)
+
+    #trim and lowercase
+    return (re.sub(' +', ' ',(text.replace('\n',' ')))).strip().lower()
 
 def translate_wrapper(sentence,target):
     """
