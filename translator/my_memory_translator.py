@@ -1,6 +1,7 @@
 import requests
 import os
 from yandex import Translater as yandex_trans
+import re
 
 """" Thi code translate sentence using Mymemory API and Yandex Translator API """
 
@@ -11,7 +12,8 @@ def normalize_text(text):
     :param text: sentence to normalize
     :return return a sentence without line break and lowercased 
     """
-    return text.replace('\n', ' ').replace('\r', '').lower()
+    # return text.replace('\n', ' ').replace('\r', '').lower()
+    return (re.sub(' +', ' ',(text.replace('\n',' ')))).strip().lower()
 
 def yandex_translate(utterance,source,target,api_key):
     """
