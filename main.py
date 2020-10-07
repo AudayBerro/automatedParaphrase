@@ -114,15 +114,12 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level):
     result= merge_data(result,deepl_result1)
     result= merge_data(result,deepl_result2)
     result= merge_data(result,deepl_result3)
-    print("result: ",result)
 
     # yandex_result = yandex.translate_file(file_path,yandex_api_key,pivot_level)
     deepl_result = deepl.translate_file(file_path,api_key,pivot_level)
-    print("deepl_translate_file: ",deepl_result)
     extracted_pos = pos.pos_extraction(file_path)
     # yandex_paraphrases = yandex.translate_dict(extracted_pos,yandex_api_key,pivot_level)
     deepl_paraphrases =  deepl.translate_dict(extracted_pos,api_key,pivot_level)
-    print("deepl_paraphrases: ",deepl_paraphrases)
     
     # merge all dictionary into one
     for key,values in result.items():
@@ -143,7 +140,7 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level):
     print("Start BERT deduplication")
     bert_deduplicate_paraphrases = bert.bert_deduplication(bert_filtered_paraphrases)
     write_to_folder(bert_deduplicate_paraphrases,"BERT deduplication:","paraphrases.txt")
-    print(result)
+    
 def pretrained_transaltion(file_path,pivot_level):
     """
     Generate Paraphrases using Pretrained Translation Model e.g. Huggingface MarianMT
