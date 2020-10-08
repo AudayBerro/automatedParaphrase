@@ -110,7 +110,7 @@ def bert_selection(pool):#ebeddings using Huggingface trandformers library
             cos_sim = get_similarity(vector1,vector2)
             # cos_sim2 = ukplab_similarity(vectora,vectorb)
             if cos_sim > 0.5 and cos_sim <= 0.95:
-                paraphrases.append(candidate)
+                paraphrases.append((candidate,cos_sim))
         result[key] = paraphrases
     return result
 
