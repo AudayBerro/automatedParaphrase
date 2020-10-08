@@ -230,7 +230,7 @@ def main():
     parser.add_argument('-g') # if -g is defined use google_translator.translate method not translate_wrapper
     parser.add_argument('-l') # -l integer that indicate the pivot language level, single-pivot or multi-pivot range between 0 and 2
     parser.add_argument('-p') # use pretrained translator(p==true - MarianMT) or online translator engine(p==false - Yandex,Google Translator)
-    parser.add_argument('-s') # cut-off criteria to stop paraphrasing, default s=5
+    parser.add_argument('-c') # cut-off criteria to stop paraphrasing, default c=5
     args = parser.parse_args()
     
     # load configs from config.ini file
@@ -269,7 +269,7 @@ def main():
         else:
             pivot_level = 0
         
-        if args.s:
+        if args.c:
             cut_off = int(args.s)
             if cut_off<=0:
                 raise Exception("Cut-off parameter value should be greater or equal to 1")
