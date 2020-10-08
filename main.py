@@ -172,6 +172,10 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level):
     bert_filtered_paraphrases = bert.bert_selection(use_filtered_paraphrases)
     write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
 
+    print("Start cut-off")
+    final_result = apply_cut_off(bert_filtered_paraphrases,cut_off)
+    write_to_folder(final_result,"Final Paraphrases List:","paraphrases.txt")
+
 def pretrained_transaltion(file_path,pivot_level,cut_off):
     """
     Generate Paraphrases using Pretrained Translation Model e.g. Huggingface MarianMT
