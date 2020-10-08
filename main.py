@@ -162,12 +162,15 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level):
     write_to_folder(use_filtered_paraphrases,"Universal Sentence Encoder Filtering:","paraphrases.txt")
 
     # apply BERT filtering after USE filtering
+    # print("Start BERT filtering")
+    # bert_filtered_paraphrases = bert.bert_filtering(use_filtered_paraphrases)
+    # write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
+    # print("Start BERT deduplication")
+    # bert_deduplicate_paraphrases = bert.bert_deduplication(bert_filtered_paraphrases)
+    # write_to_folder(bert_deduplicate_paraphrases,"BERT deduplication:","paraphrases.txt")
     print("Start BERT filtering")
-    bert_filtered_paraphrases = bert.bert_filtering(use_filtered_paraphrases)
+    bert_filtered_paraphrases = bert.bert_selection(use_filtered_paraphrases)
     write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
-    print("Start BERT deduplication")
-    bert_deduplicate_paraphrases = bert.bert_deduplication(bert_filtered_paraphrases)
-    write_to_folder(bert_deduplicate_paraphrases,"BERT deduplication:","paraphrases.txt")
 
 def pretrained_transaltion(file_path,pivot_level):
     """
