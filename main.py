@@ -60,6 +60,22 @@ def sort_collection(pool):
     
     return pool
 
+def apply_cut_off(pool,cut_off):
+    """
+    This function extract the [cut_off] top highest semantically related paraphrases
+    :param pool: python dictionary, key is the initial utterance and value is a list of tuples. Tuples(paraphrase, BERT embeddong cosine similarity score)
+    :param cut_off: integer that indicate how many parpahrases to select, e.g. cut_off = 3 will only select top highest 3 semantically related parpahrases and drop the rest
+    :return ordred Python dictionary
+    """
+    tmp = sort_collection(pool)
+    result = {}
+    for k,v in tmp.items():
+        if len(v) <= cut_off: # if list of paraphrases [v] contain less than [cut_off]-element, add all element
+            result[k]=v
+        else:
+            result[k]=v[:cut_off]
+    return result
+
 
 def weak_supervision_generation(file_path):
     """
