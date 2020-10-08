@@ -76,6 +76,44 @@ def get_similarity(vector1,vector2):
     return np.asscalar(cos_lib)#convert numpy array to float
 
 
+def bert_selection(pool):#ebeddings using Huggingface trandformers library
+    """
+    Remove paraphrases that are not semantically equivalent to the initial expression and duplicate(filtering+deduplication)
+    :param pool: a Python dictionary, Key is the initial expression, value is a set of paraphrases
+    :return a Python dictionary where not semantically equivalent paraphrases and duplicate are removed
+    """
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+
+    # to get hidden layer in the output uncomment the following above code line, see https://huggingface.co/transformers/model_doc/bert.html for details
+    # model = BertForPreTraining.from_pretrained('bert-base-uncased')
+    # config = BertConfig.from_pretrained("bert-base-uncased", output_hidden_states=True)
+    # model = BertModel.from_pretrained("bert-base-uncased", config=config) #return hidden state in the output
+    model = BertModel.from_pretrained("bert-base-uncased")
+    model.eval()
+    # input_ids = torch.tensor(tokenizer.encode("After stealing money from the bank vault, the bank robber was seen", add_special_tokens=True)).unsqueeze(0)
+    result = dict()
+    for key,value in pool.items():
+        a = get_encoded_layers(key,model,tokenizer)
+        vector1 = concatenate_output(a)
+
+        # token_embeddings = a[0][0]
+        # vectora = token_vector_sum(a[0][0])
+        # vectora2 = token_vector_mean(a[0][0])
+        paraphrases = []
+        for candidate in value:
+            b = get_encoded_layers(candidate,model,tokenizer)
+            vector2 = concatenate_output(b)
+
+            # token_embeddings = b[0][0]
+            # vectorb = token_vector_sum(b[0][0])
+            # vectorb2 = token_vector_mean(b[0][0])
+            cos_sim = get_similarity(vector1,vector2)
+            # cos_sim2 = ukplab_similarity(vectora,vectorb)
+            if cos_sim > 0.5 and cos_sim <= 0.95:
+                paraphrases.append(candidate)
+        result[key] = paraphrases
+    return result
+
 def bert_filtering(pool):#ebeddings using Huggingface trandformers library
     """
     Remove paraphrases that are not semantically equivalent to the initial expression 
