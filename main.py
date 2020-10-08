@@ -172,11 +172,12 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level):
     bert_filtered_paraphrases = bert.bert_selection(use_filtered_paraphrases)
     write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
 
-def pretrained_transaltion(file_path,pivot_level):
+def pretrained_transaltion(file_path,pivot_level,cut_off):
     """
     Generate Paraphrases using Pretrained Translation Model e.g. Huggingface MarianMT
     :param file_path: file path to folder containing initial utterances
     :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
+    :param cut_off: integer that indicate how many parpahrases to select, e.g. cut_off = 3 will only select top highest 3 semantically related parpahrases and drop the rest
     :return a Python dictionary, Key is the initial expression and value is a list of paraphrases
     """
     #load all the model
@@ -213,6 +214,9 @@ def pretrained_transaltion(file_path,pivot_level):
     print("Start BERT filtering")
     bert_filtered_paraphrases = bert.bert_selection(use_filtered_paraphrases)
     write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
+
+    final_result = apply_cut_off(bert_filtered_paraphrases)
+    write_to_folder(final_result,"Final Paraphrases List:","paraphrases.txt")
 
 def main():
     # required arg
@@ -265,7 +269,7 @@ def main():
             if cut_off<=0:
                 raise Exception("Cut-off parameter value should be greater or equal to 1")
         else:
-            cutt_off = 5 # default value
+            cut_off = 5 # default value
 
     except Exception as e:
         print(str(e))
@@ -273,7 +277,7 @@ def main():
 
     file_path = os.path.join(os.path.dirname(__file__), ".", "dataset/"+args.f) # data to paraphrase
     if args.p=="true":
-        pretrained_transaltion(file_path,pivot_level)
+        pretrained_transaltion(file_path,pivot_level,cut_off)
     else:
         online_transaltion(file_path,deepl_api_key,valid_mail,pivot_level)
 
