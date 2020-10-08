@@ -140,7 +140,7 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level):
     print("Start BERT deduplication")
     bert_deduplicate_paraphrases = bert.bert_deduplication(bert_filtered_paraphrases)
     write_to_folder(bert_deduplicate_paraphrases,"BERT deduplication:","paraphrases.txt")
-    
+
 def pretrained_transaltion(file_path,pivot_level):
     """
     Generate Paraphrases using Pretrained Translation Model e.g. Huggingface MarianMT
@@ -187,6 +187,7 @@ def main():
     parser.add_argument('-g') # if -g is defined use google_translator.translate method not translate_wrapper
     parser.add_argument('-l') # -l integer that indicate the pivot language level, single-pivot or multi-pivot range between 0 and 2
     parser.add_argument('-p') # use pretrained translator(p==true - MarianMT) or online translator engine(p==false - Yandex,Google Translator)
+    parser.add_argument('-s') # cut-off criteria to stop paraphrasing, default s=5
     args = parser.parse_args()
     
     # load configs from config.ini file
@@ -224,6 +225,13 @@ def main():
                 raise Exception("Pivot-level value should be 0,1 or 2")
         else:
             pivot_level = 0
+        
+        if args.s:
+            cut_off = int(args.s)
+            if cut_off<=0:
+                raise Exception("Cut-off parameter value should be greater or equal to 1")
+        else:
+            cutt_off = 5 # default value
 
     except Exception as e:
         print(str(e))
