@@ -24,6 +24,7 @@ for t in data[1:]:
         qid = t['graph_query']['nodes'][0]['friendly_name']
         result[key] = []
 
+# save result in csv file
 f = open("./web_Question_crawled_dataset.csv","a")
 
 f.write("question\tnumber of paraphrases\tparaphrases\n")
