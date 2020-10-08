@@ -49,6 +49,18 @@ def merge_data(dataset1,dataset2):
         v.update(v2) # add dataset2 paraphrases list to dataset1 paraphrases list
     return dataset1
 
+def sort_collection(pool):
+    """
+    This function sort the filtred BERT dictionary in descending order according to the second element of the value tuple wich is the BERT embeddong cosine similarity score
+    :param pool: python dictionary, key is the initial utterance and value is a list of tuples. Tuples(paraphrase, BERT embeddong cosine similarity score)
+    :return ordred Python dictionary
+    """
+    for key in pool:
+        pool[key].sort(key = lambda x: x[1],reverse = True)
+    
+    return pool
+
+
 def weak_supervision_generation(file_path):
     """
     Apply Weak Supervision to generate data
@@ -174,11 +186,14 @@ def pretrained_transaltion(file_path,pivot_level):
     print("Start Universal Sentence Encoder filtering")
     use_filtered_paraphrases = use.get_embedding(result)
     write_to_folder(use_filtered_paraphrases,"Universal Sentence Encoder Filtering:","paraphrases.txt")
-    bert_filtered_paraphrases = bert.bert_filtering(use_filtered_paraphrases)
+    # bert_filtered_paraphrases = bert.bert_filtering(use_filtered_paraphrases)
+    # write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
+    # print("Start BERT deduplication")
+    # bert_deduplicate_paraphrases = bert.bert_deduplication(bert_filtered_paraphrases)
+    # write_to_folder(bert_deduplicate_paraphrases,"BERT deduplication:","paraphrases.txt")
+    print("Start BERT filtering")
+    bert_filtered_paraphrases = bert.bert_selection(use_filtered_paraphrases)
     write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
-    print("Start BERT deduplication")
-    bert_deduplicate_paraphrases = bert.bert_deduplication(bert_filtered_paraphrases)
-    write_to_folder(bert_deduplicate_paraphrases,"BERT deduplication:","paraphrases.txt")
 
 def main():
     # required arg
