@@ -270,7 +270,7 @@ def main():
             pivot_level = 0
         
         if args.c:
-            cut_off = int(args.s)
+            cut_off = int(args.c)
             if cut_off<=0:
                 raise Exception("Cut-off parameter value should be greater or equal to 1")
         else:
