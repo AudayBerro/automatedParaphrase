@@ -15,16 +15,19 @@ import re,string
 
 def normalize_text(text):
     """
-    Remove line break and lowercase all words
+    Remove punctuation except in real value or date(e.g. 2.5, 25/10/2015),line break and lowercase all words
     :param text: sentence to normalize
-    :return return a sentence without line break and lowercased 
+    :return return a preprocessed sentence e.g. "This is a ? 12\3  ?? 5.5 covid-19 ! ! *  & $ % ^" => "this is a 12\3 5.5 covid-19"
     """
-    # return text.replace('\n', ' ').replace('\r', '').lower()
-    #remove punctuations
-    text = re.sub('[%s]' % re.escape(string.punctuation), '', text)
+    regex = "(?<!\w)[!\"#$%&'()*-+/:;<=>?@[\]^_`{|}~](?!\w)"
 
-    #trim and lowercase
-    return (re.sub(' +', ' ',(text.replace('\n','')))).strip().lower()
+    #remove punctuation
+    result = re.sub(regex, "", text, 0)
+
+    #trim to remove excessive whitespace
+    result = re.sub(' +', ' ',(result.replace('\n',' '))).strip().lower()
+
+    return result
 
 def write_to_folder(data,message,file_name):
     """
@@ -285,7 +288,7 @@ def main():
     if args.p=="true":
         pretrained_transaltion(file_path,pivot_level,cut_off)
     else:
-        online_transaltion(file_path,deepl_api_key,valid_mail,pivot_level)
+        online_transaltion(file_path,deepl_api_key,valid_mail,pivot_level,cut_off)
 
 if __name__ == "__main__":
     main()
