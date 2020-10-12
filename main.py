@@ -166,27 +166,21 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level,cut_off):
     #universal sentence encoder filtering
     print("Start Universal Sentence Encoder filtering")
     use_filtered_paraphrases = use.get_embedding(result)
-    write_to_folder(use_filtered_paraphrases,"Universal Sentence Encoder Filtering:","paraphrases.txt")
+    # write_to_folder(use_filtered_paraphrases,"Universal Sentence Encoder Filtering:","paraphrases.txt")
 
-    # apply BERT filtering after USE filtering
-    # print("Start BERT filtering")
-    # bert_filtered_paraphrases = bert.bert_filtering(use_filtered_paraphrases)
-    # write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
-    # print("Start BERT deduplication")
-    # bert_deduplicate_paraphrases = bert.bert_deduplication(bert_filtered_paraphrases)
-    # write_to_folder(bert_deduplicate_paraphrases,"BERT deduplication:","paraphrases.txt")
     print("Start BERT filtering")
     bert_filtered_paraphrases = bert.bert_selection(use_filtered_paraphrases)
-    
+    # write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
+
     # sort the dictionary
     bert_filtered_paraphrases = sort_collection(bert_filtered_paraphrases)
     
     if cut_off > 0:
-        write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
         print("Start cut-off")
         final_result = apply_cut_off(bert_filtered_paraphrases,cut_off)
         write_to_folder(final_result,"Final Paraphrases List:","paraphrases.txt")
     else:
+        write_to_folder(final_bert_filtered_paraphrasesresult,"Final Paraphrases List:","paraphrases.txt")
         
 
 def pretrained_transaltion(file_path,pivot_level,cut_off):
@@ -222,19 +216,21 @@ def pretrained_transaltion(file_path,pivot_level,cut_off):
     #universal sentence encoder filtering
     print("Start Universal Sentence Encoder filtering")
     use_filtered_paraphrases = use.get_embedding(result)
-    write_to_folder(use_filtered_paraphrases,"Universal Sentence Encoder Filtering:","paraphrases.txt")
-    # bert_filtered_paraphrases = bert.bert_filtering(use_filtered_paraphrases)
-    # write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
-    # print("Start BERT deduplication")
-    # bert_deduplicate_paraphrases = bert.bert_deduplication(bert_filtered_paraphrases)
-    # write_to_folder(bert_deduplicate_paraphrases,"BERT deduplication:","paraphrases.txt")
+    # write_to_folder(use_filtered_paraphrases,"Universal Sentence Encoder Filtering:","paraphrases.txt")
+    
     print("Start BERT filtering")
     bert_filtered_paraphrases = bert.bert_selection(use_filtered_paraphrases)
-    write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
+    # write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
 
-    print("Start cut-off")
-    final_result = apply_cut_off(bert_filtered_paraphrases,cut_off)
-    write_to_folder(final_result,"Final Paraphrases List:","paraphrases.txt")
+    # sort the dictionary
+    bert_filtered_paraphrases = sort_collection(bert_filtered_paraphrases)
+    
+    if cut_off > 0:
+        print("Start cut-off")
+        final_result = apply_cut_off(bert_filtered_paraphrases,cut_off)
+        write_to_folder(final_result,"Final Paraphrases List:","paraphrases.txt")
+    else:
+        write_to_folder(final_bert_filtered_paraphrasesresult,"Final Paraphrases List:","paraphrases.txt")
 
 def main():
     # required arg
