@@ -70,14 +70,18 @@ def apply_cut_off(pool,cut_off):
     :param cut_off: integer that indicate how many parpahrases to select, e.g. cut_off = 3 will only select top highest 3 semantically related parpahrases and drop the rest
     :return ordred Python dictionary
     """
-    tmp = sort_collection(pool)
-    result = {}
-    for k,v in tmp.items():
-        if len(v) <= cut_off: # if list of paraphrases [v] contain less than [cut_off]-element, add all element
-            result[k]=v
-        else:
-            result[k]=v[:cut_off]
-    return result
+
+    if cut_off == 0:
+        return pool
+    else:
+        tmp = sort_collection(pool)
+        result = {}
+        for k,v in tmp.items():
+            if len(v) <= cut_off: # if list of paraphrases [v] contain less than [cut_off]-element, add all element
+                result[k]=v
+            else:
+                result[k]=v[:cut_off]
+        return result
 
 
 def weak_supervision_generation(file_path):
