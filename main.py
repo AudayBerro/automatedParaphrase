@@ -74,9 +74,8 @@ def apply_cut_off(pool,cut_off):
     if cut_off == 0:
         return pool
     else:
-        tmp = sort_collection(pool)
         result = {}
-        for k,v in tmp.items():
+        for k,v in pool.items():
             if len(v) <= cut_off: # if list of paraphrases [v] contain less than [cut_off]-element, add all element
                 result[k]=v
             else:
@@ -178,11 +177,17 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level,cut_off):
     # write_to_folder(bert_deduplicate_paraphrases,"BERT deduplication:","paraphrases.txt")
     print("Start BERT filtering")
     bert_filtered_paraphrases = bert.bert_selection(use_filtered_paraphrases)
-    write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
-
-    print("Start cut-off")
-    final_result = apply_cut_off(bert_filtered_paraphrases,cut_off)
-    write_to_folder(final_result,"Final Paraphrases List:","paraphrases.txt")
+    
+    # sort the dictionary
+    bert_filtered_paraphrases = sort_collection(bert_filtered_paraphrases)
+    
+    if cut_off > 0:
+        write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
+        print("Start cut-off")
+        final_result = apply_cut_off(bert_filtered_paraphrases,cut_off)
+        write_to_folder(final_result,"Final Paraphrases List:","paraphrases.txt")
+    else:
+        
 
 def pretrained_transaltion(file_path,pivot_level,cut_off):
     """
@@ -280,7 +285,7 @@ def main():
         if args.c:
             cut_off = int(args.c)
             if cut_off<0:
-                raise Exception("Cut-off parameter value should be greater or equal to 1")
+                raise Exception("Cut-off parameter value should be greater or equal to 0")
         else:
             cut_off = 0 # default value
 
