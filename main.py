@@ -86,7 +86,7 @@ def apply_cut_off(pool,cut_off):
 
 def weak_supervision_generation(file_path):
     """
-    Apply Weak Supervision to generate data
+    Apply Weak Supervision to generate data using nltk_wordnet.py module
     :param file_path: file path to folder containing initial utterances
     :return generated data 
     """
