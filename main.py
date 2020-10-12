@@ -9,7 +9,8 @@ from synonym import nltk_wordnet as nlt
 import os
 import configparser
 #import spacy
-
+import time
+import datetime
 import argparse
 import re,string
 
@@ -119,10 +120,13 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level,cut_off):
     :return a Python dictionary, Key is the initial expression and value is a list of paraphrases
     """
     #wordnet
-    print("Start weak supervision data generation")
+    print("Start weak supervision data generation ",end="")
+    t = time.time()
     data1,data2,data3 = weak_supervision_generation(file_path)
+    print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
 
-    print("Start translation")
+    print("Start translation ",end="")
+    t = time.time()
     # generate paraphrases with MyMemory API
     memory_result1 = memory.translate_list(data1,valid_mail) #generate paraphrases through pivot-translation of data1
     memory_result2 = memory.translate_list(data2,valid_mail) #generate paraphrases through pivot-translation of data2
@@ -155,29 +159,36 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level,cut_off):
     extracted_pos = pos.pos_extraction(file_path)
     # yandex_paraphrases = yandex.translate_dict(extracted_pos,yandex_api_key,pivot_level)
     deepl_paraphrases =  deepl.translate_dict(extracted_pos,api_key,pivot_level)
-    
+
     # merge all dictionary into one
     for key,values in result.items():
         values.update(deepl_result[key])
         values.update(deepl_paraphrases[key])
         result[key] = values
+    
+    print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
 
     write_to_folder(result,"Generated Paraphrases:","paraphrases.txt")
     #universal sentence encoder filtering
-    print("Start Universal Sentence Encoder filtering")
+    print("Start Universal Sentence Encoder filtering ",end="")
+    t = time.time()
     use_filtered_paraphrases = use.get_embedding(result)
+    print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
     # write_to_folder(use_filtered_paraphrases,"Universal Sentence Encoder Filtering:","paraphrases.txt")
 
-    print("Start BERT filtering")
+    print("Start BERT filtering ",end="")
+    t = time.time()
     bert_filtered_paraphrases = bert.bert_selection(use_filtered_paraphrases)
+    print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
     # write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
 
     # sort the dictionary
     bert_filtered_paraphrases = sort_collection(bert_filtered_paraphrases)
     
     if cut_off > 0:
-        print("Start cut-off")
+        print("Start cut-off ",end="")
         final_result = apply_cut_off(bert_filtered_paraphrases,cut_off)
+        print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
         write_to_folder(final_result,"Final Paraphrases List:","paraphrases.txt")
     else:
         write_to_folder(bert_filtered_paraphrases,"Final Paraphrases List:","paraphrases.txt")
@@ -196,10 +207,13 @@ def pretrained_transaltion(file_path,pivot_level,cut_off):
     model_list = marian.load_model()
     
     #wordnet
-    print("Start weak supervision data generation")
+    print("Start weak supervision data generation ",end="")
+    t = time.time()
     data1,data2,data3 = weak_supervision_generation(file_path)
+    print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
 
-    print("Start translation")
+    print("Start translation ", end="")
+    t = time.time()
     # generate paraphrases with MyMemory API
     result1 = marian.translate_list(data1,model_list,pivot_level)
     result2 = marian.translate_list(data2,model_list,pivot_level)
@@ -211,23 +225,29 @@ def pretrained_transaltion(file_path,pivot_level,cut_off):
     result= merge_data(result,result1)
     result= merge_data(result,result2)
     result= merge_data(result,result3)
+    print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
 
     write_to_folder(result,"Generated Paraphrases:","paraphrases.txt")
     #universal sentence encoder filtering
-    print("Start Universal Sentence Encoder filtering")
+    print("Start Universal Sentence Encoder filtering ", end="")
+    t = time.time()
     use_filtered_paraphrases = use.get_embedding(result)
+    print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
     # write_to_folder(use_filtered_paraphrases,"Universal Sentence Encoder Filtering:","paraphrases.txt")
     
-    print("Start BERT filtering")
+    print("Start BERT filtering ", end="")
     bert_filtered_paraphrases = bert.bert_selection(use_filtered_paraphrases)
+    print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
     # write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
 
     # sort the dictionary
     bert_filtered_paraphrases = sort_collection(bert_filtered_paraphrases)
     
     if cut_off > 0:
-        print("Start cut-off")
+        print("Start cut-off ", end="")
+        t = time.time()
         final_result = apply_cut_off(bert_filtered_paraphrases,cut_off)
+        print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
         write_to_folder(final_result,"Final Paraphrases List:","paraphrases.txt")
     else:
         write_to_folder(bert_filtered_paraphrases,"Final Paraphrases List:","paraphrases.txt")
@@ -290,10 +310,15 @@ def main():
         exit()
 
     file_path = os.path.join(os.path.dirname(__file__), ".", "dataset/"+args.f) # data to paraphrase
+
+    t1 = time.time() # to compute overall time execution
+
     if args.p=="true":
         pretrained_transaltion(file_path,pivot_level,cut_off)
     else:
         online_transaltion(file_path,deepl_api_key,valid_mail,pivot_level,cut_off)
+    
+    print("Overall elapsed time: ",str(datetime.timedelta(0,time.time()-t1)))
 
 if __name__ == "__main__":
     main()
