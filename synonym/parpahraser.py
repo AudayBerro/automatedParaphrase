@@ -10,9 +10,8 @@ nlp = spacy.load('en')
 
 def generate_sentence(original_doc, new_tokens):
     new_sentence = ' '.join(new_tokens).replace('_', ' ')
-    new_doc = nlp(new_sentence)
-    similarity_score = original_doc.similarity(new_doc)
-    return (new_sentence, similarity_score)
+    new_sentence = normalize_text(new_sentence)
+    return new_sentence
 
 def join_set(data1,data2):
     """
