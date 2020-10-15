@@ -14,6 +14,15 @@ def generate_sentence(original_doc, new_tokens):
     similarity_score = original_doc.similarity(new_doc)
     return (new_sentence, similarity_score)
 
+def join_set(data1,data2):
+    """
+    This function join two Sets
+    :param :data1 first set
+    :param :data2 second set
+    :return the union of the two sets
+    """
+    return set(data1).union(set(data2))
+
 def synonym_model(s,tags):
     generated_sentences = set([])
 
@@ -66,7 +75,7 @@ def synonym_model(s,tags):
             new_tokens.append(str(token))
         sentence_and_score = generate_sentence(doc, new_tokens)
         generated_sentences.add(sentence_and_score)
-        
+
     return generated_sentences
 
 def synonym_paraphrase(s):
