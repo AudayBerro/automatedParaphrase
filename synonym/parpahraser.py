@@ -103,6 +103,36 @@ def synonym_model(s,tags):
 
     return generated_sentences
 
+def get_paraphrases_list(sentence):
+    """
+    This functionon generate a list of sentence's parpahrases by replacing token with synomnym
+    :parma sentence: sentence to generate parpahrases for
+    :return Python set of sentence's paraphrases
+    """
+    # generate parpahrases by replacing NOUN with synonym
+    tags = ['NOUN'] # if token.pos in tags replace get synonym
+    data1 = synonym_model(sentence,tags)
+    data1 = sorted(data1, key = lambda x: x[1], reverse = True)
+
+    # generate parpahrases by replacing VERB with synonym
+    tags = ['VERB']
+    data2 = synonym_model(sentence,tags)
+    data2 = sorted(data2, key = lambda x: x[1], reverse = True)
+
+    # generate parpahrases by replacing NOUN and VERB with synonym
+    tags = ['NOUN','VERB']
+    data3 = synonym_model(sentence,tags)
+    data3 = sorted(data3, key = lambda x: x[1], reverse = True)
+
+    # generate parpahrases by replacing NOUN, VERB, ADVERBE and ADJECTIVE with synonym
+    # tags = ['NOUN','VERB','ADV','ADJ']
+    # data4 = synonym_model(sentence,tags)
+    # data4 = sorted(data4, key = lambda x: x[1], reverse = True)
+
+    result = join_set(data1,data2)
+    result = join_set(result,data3)
+    return result
+
 if __name__ == '__main__':
     #x = synonym_model('I am discussing my homework with the teacher.')
     #x = synonym_model('the rabbit quickly ran down the hole')
