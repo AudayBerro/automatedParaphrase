@@ -5,8 +5,25 @@ from spacy.tokens.token import Token
 from nltk.corpus import wordnet as wn
 from six.moves import xrange
 import random
+import re
 
 nlp = spacy.load('en')
+
+def normalize_text(text):
+    """
+    Remove punctuation except in real value or date(e.g. 2.5, 25/10/2015),line break and lowercase all words
+    :param text: sentence to normalize
+    :return return a preprocessed sentence e.g. "This is a ? 12\3  ?? 5.5 covid-19 ! ! *  & $ % ^" => "this is a 12\3 5.5 covid-19"
+    """
+    regex = "(?<!\w)[!\"#$%&'()*-+/:;<=>?@[\]^_`{|}~](?!\w)"
+
+    #remove punctuation
+    result = re.sub(regex, "", text, 0)
+
+    #trim to remove excessive whitespace
+    result = re.sub(' +', ' ',(result.replace('\n',' '))).strip().lower()
+
+    return result
 
 def generate_sentence(original_doc, new_tokens):
     new_sentence = ' '.join(new_tokens).replace('_', ' ')
