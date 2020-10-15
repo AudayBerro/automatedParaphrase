@@ -9,6 +9,7 @@ import re
 sim_model = spacy_universal_sentence_encoder.load_model('en_use_lg')
 nlp = spacy.load('en')
 
+
 def get_similarity(token,synonym):
     a = sim_model(token)
     b = sim_model(synonym)
@@ -101,6 +102,7 @@ def synonym_model(s,tags):
         sentence_and_score = generate_sentence(doc, new_tokens)
         generated_sentences.add(sentence_and_score)
 
+    #print(generated_sentences)
     return generated_sentences
 
 def get_paraphrases_list(sentence):
@@ -133,9 +135,28 @@ def get_paraphrases_list(sentence):
     result = join_set(result,data3)
     return result
 
+def main(file_path):
+    f=open(file_path, "r")
+    result = dict()
+    while True: 
+        # Get next line from file 
+        line = f.readline()
+        if not line: 
+            break
+
+        sent = expand_contractions(line)  #expand contraction e.g can't -> can not
+        sent = normalize_text(sent)
+        paraphrases = get_paraphrases_list(sent)
+        line = line.replace('\n', '').replace('\r', '')
+        result[line] = paraphrases
+    
+    return result
+
+
 if __name__ == '__main__':
-    #x = synonym_model('I am discussing my homework with the teacher.')
-    #x = synonym_model('the rabbit quickly ran down the hole')
-    #x = synonym_model('John tried to fix his computer by hacking away at it.')
-    x = synonym_model('team based multiplayer online first person shooter video game')
-    print(x)
+    import sys
+    import os
+    file_path = os.path.join(os.path.dirname(__file__), "..", "dataset/"+sys.argv[1])
+    pool = main(file_path)
+    print(pool)
+
