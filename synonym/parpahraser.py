@@ -8,6 +8,11 @@ import re
 sim_model = spacy_universal_sentence_encoder.load_model('en_use_lg')
 nlp = spacy.load('en')
 
+def get_similarity(token,synonym):
+    a = sim_model(token)
+    b = sim_model(synonym)
+    return a.similarity(b)
+
 def normalize_text(text):
     """
     Remove punctuation except in real value or date(e.g. 2.5, 25/10/2015),line break and lowercase all words
