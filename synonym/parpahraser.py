@@ -1,12 +1,11 @@
-import sys
 import spacy
-from pprint import pprint
-from spacy.tokens.token import Token
 from nltk.corpus import wordnet as wn
 from six.moves import xrange
 import random
+import spacy_universal_sentence_encoder
 import re
 
+sim_model = spacy_universal_sentence_encoder.load_model('en_use_lg')
 nlp = spacy.load('en')
 
 def normalize_text(text):
