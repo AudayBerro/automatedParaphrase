@@ -3,6 +3,7 @@ from nltk.corpus import wordnet as wn
 from six.moves import xrange
 import random
 import spacy_universal_sentence_encoder
+import contractions
 import re
 
 sim_model = spacy_universal_sentence_encoder.load_model('en_use_lg')
@@ -12,6 +13,10 @@ def get_similarity(token,synonym):
     a = sim_model(token)
     b = sim_model(synonym)
     return a.similarity(b)
+
+def expand_contractions(text):
+    """ expand shortened words, e.g. don't to do not """
+    return contractions.fix(text)
 
 def normalize_text(text):
     """
