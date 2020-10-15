@@ -14,7 +14,7 @@ def generate_sentence(original_doc, new_tokens):
     similarity_score = original_doc.similarity(new_doc)
     return (new_sentence, similarity_score)
 
-def synonym_model(s):
+def synonym_model(s,tags):
     generated_sentences = set([])
 
     doc = nlp(s)
@@ -26,25 +26,36 @@ def synonym_model(s):
         index_to_lemmas[index] = set([])
         index_to_lemmas[index].add(token)
 
-        if token.pos_ == 'NOUN' and len(token.text) >= 3:
-            pos = wn.NOUN
-        elif token.pos_ == 'VERB' and len(token.text) >= 3:
-            pos = wn.VERB
-        elif token.pos_ == 'ADV' and len(token.text) >= 3:
-            pos = wn.ADV
-        elif token.pos_ == 'ADJ' and len(token.text) >= 3:
-            pos = wn.ADJ
+        if token.pos_ in tags and len(token.text) >= 3:
+            if token.pos_ == 'NOUN':
+                pos = wn.NOUN
+            elif token.pos_ == 'VERB':
+                pos = wn.VERB
+            #uncomment the following condition to add adjectif and adverb
+            # elif token.pos_ == 'ADV' and len(token.text) >= 3:
+            #     pos = wn.ADV
+            # elif token.pos_ == 'ADJ' and len(token.text) >= 3:
+            #     pos = wn.ADJ
+            else:
+                continue
         else:
             continue
 
         # Synsets
         for synset in wn.synsets(token.text, pos):
             for lemma in synset.lemmas():
-                new_tokens = original_tokens.copy()
-                new_tokens[index] = lemma.name()
-                sentence_and_score = generate_sentence(doc, new_tokens)
-                generated_sentences.add(sentence_and_score)
-                index_to_lemmas[index].add(lemma.name())
+                lemma_token_similarity = get_similarity(lemma.name(),token.text)
+                if lemma_token_similarity > 0.5: # if the candidate synonym and token are related e.g. for the sentence "How COVID spread", spread and coif are not related
+                    new_tokens = original_tokens.copy()
+                    new_tokens[index] = lemma.name().lower()
+
+                    # sentence_and_score = generate_sentence(doc, new_tokens)
+                    # generated_sentences.add(sentence_and_score)
+                    
+                    new_sentence = generate_sentence(doc, new_tokens)
+                    generated_sentences.add(new_sentence)
+
+                    index_to_lemmas[index].add(lemma.name())
 
     count = sum([ len(words) for words in index_to_lemmas.values() ])
 
@@ -55,8 +66,7 @@ def synonym_model(s):
             new_tokens.append(str(token))
         sentence_and_score = generate_sentence(doc, new_tokens)
         generated_sentences.add(sentence_and_score)
-
-    #print(generated_sentences)
+        
     return generated_sentences
 
 def synonym_paraphrase(s):
