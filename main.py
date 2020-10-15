@@ -6,6 +6,7 @@ from pos import pos_extraction as pos
 from filtering import bert_filter as bert
 from filtering import use_filter as use
 from synonym import nltk_wordnet as nlt
+from synonym import parpahraser as para
 import os
 import configparser
 #import spacy
@@ -84,11 +85,19 @@ def apply_cut_off(pool,cut_off):
         return result
 
 
+def weak_supervision_generation2(file_path):
+    """
+    Apply Weak Supervision to generate data using paraphraser.py module
+    :param file_path: file path to folder containing initial utterances
+    :return a dictionary, key initial utterance, value set of parpahrases generated using the parpahraser.py module
+    """
+    return para.main(file_path)
+
 def weak_supervision_generation(file_path):
     """
     Apply Weak Supervision to generate data using nltk_wordnet.py module
     :param file_path: file path to folder containing initial utterances
-    :return generated data 
+    :return list of parpahrases, for each sentence it return 3 paraphrases one paraphrase in each dataset(data1 replace NOUN, data2 replace VERB, data3 replace NOUN and VERB)
     """
 
     # Generate data by Replacing only word with VERB pos-tags by synonym
@@ -122,7 +131,10 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level,cut_off):
     #wordnet
     print("Start weak supervision data generation ",end="")
     t = time.time()
+
     data1,data2,data3 = weak_supervision_generation(file_path)
+    data4 = weak_supervision_generation2(file_path) #pool = nlsp.main(file_path)
+
     print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
 
     print("Start translation ",end="")
@@ -166,6 +178,7 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level,cut_off):
         values.update(deepl_paraphrases[key])
         result[key] = values
     
+    result = merge_data(result,data4)
     print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
 
     write_to_folder(result,"Generated Paraphrases:","paraphrases.txt")
@@ -209,7 +222,10 @@ def pretrained_transaltion(file_path,pivot_level,cut_off):
     #wordnet
     print("Start weak supervision data generation ",end="")
     t = time.time()
+
     data1,data2,data3 = weak_supervision_generation(file_path)
+    data4 = weak_supervision_generation2(file_path) #pool = nlsp.main(file_path)
+
     print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
 
     print("Start translation ", end="")
@@ -225,6 +241,8 @@ def pretrained_transaltion(file_path,pivot_level,cut_off):
     result= merge_data(result,result1)
     result= merge_data(result,result2)
     result= merge_data(result,result3)
+
+    result = merge_data(result,data4)
     print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
 
     write_to_folder(result,"Generated Paraphrases:","paraphrases.txt")
