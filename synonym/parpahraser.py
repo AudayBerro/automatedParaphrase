@@ -103,9 +103,6 @@ def synonym_model(s,tags):
 
     return generated_sentences
 
-def synonym_paraphrase(s):
-    return synonym_model(s)
-
 if __name__ == '__main__':
     #x = synonym_model('I am discussing my homework with the teacher.')
     #x = synonym_model('the rabbit quickly ran down the hole')
