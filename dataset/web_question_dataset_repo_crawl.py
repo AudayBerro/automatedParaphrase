@@ -33,25 +33,25 @@ def get_bleu_score(dataset):
     
     counter = 0
     data_set_bleu_score = 0 #bleu score of all dataset
-    for k,v in data.items():
-    counter +=1
-    reference = [k.lower().split(" ")]
-    utterance_bleu_score = 0 # current utterance bleu_Score = average_paraphrase_bleu_score
-    print(k)
-    for cand in v:
-        candidate = cand[0].lower().split(" ")
-        #get_smooth(candidate,reference)
-        #parpahrase_bleu_Score = sentence_bleu(reference,candidate,weights=(1,0,0,0))
-        parpahrase_bleu_Score = get_smooth(candidate,reference)
-        print("\tcandidate bleu score: "+cand[0]+"= "+str(parpahrase_bleu_Score),sep="")
-        utterance_bleu_score += parpahrase_bleu_Score
-        print("\t - average= "+str(utterance_bleu_score))
-    
-    if utterance_bleu_score > 0:
-        utterance_bleu_score = utterance_bleu_score / len(v)
-        print("\t\tBLEU("+k+")= "+str(utterance_bleu_score))
-    data_set_bleu_score += utterance_bleu_score
-    bleu = data_set_bleu_score / len(data)
+    for k,v in dataset.items():
+        counter +=1
+        reference = [k.lower().split(" ")]
+        utterance_bleu_score = 0 # current utterance bleu_Score = average_paraphrase_bleu_score
+        print(k)
+        for cand in v:
+            candidate = cand[0].lower().split(" ")
+            #get_smooth(candidate,reference)
+            #parpahrase_bleu_Score = sentence_bleu(reference,candidate,weights=(1,0,0,0))
+            parpahrase_bleu_Score = get_smooth(candidate,reference)
+            print("\tcandidate bleu score: "+cand[0]+"= "+str(parpahrase_bleu_Score),sep="")
+            utterance_bleu_score += parpahrase_bleu_Score
+            print("\t - average= "+str(utterance_bleu_score))
+        
+        if utterance_bleu_score > 0:
+            utterance_bleu_score = utterance_bleu_score / len(v)
+            print("\t\tBLEU("+k+")= "+str(utterance_bleu_score))
+        data_set_bleu_score += utterance_bleu_score
+    bleu = data_set_bleu_score / len(dataset)
     print("================================================\n\tBLEU = "+str(bleu)+"\n\tUtterance number: "+str(counter)+"\n================================================")
     return bleu,counter
 
