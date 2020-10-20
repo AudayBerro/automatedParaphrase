@@ -242,7 +242,7 @@ def main():
     timestr = time.strftime("%Y%m%d-%H%M%S")
     file_name = "result-"+timestr+".csv"
     print("Save data in \""+file_name+"\"")
-    # write_result(result,file_name)
+    write_result(result,file_name)
 
 if __name__ == "__main__":
     main()
