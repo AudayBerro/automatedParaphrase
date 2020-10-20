@@ -187,9 +187,11 @@ def write_result(data,name):
 
     f.close()
 
-def main():
-    """ Crawl GraphQuestions repo and compute Individual and Cumulative BLEU-Score """
-
+def crawl_data():
+    """
+    Crawl GraphQuestions repository
+    :return crawled data in a form of Python dictionary where Key is the utterance and value is a list of paraphrases
+    """
     url = "https://raw.githubusercontent.com/ysu1989/GraphQuestions/master/freebase13/graphquestions.testing.json"
     req = requests.get(url)
     data = json.loads(req.content)
@@ -209,6 +211,13 @@ def main():
             qid = t['graph_query']['nodes'][0]['friendly_name']
             result[key] = []
     
+    return result
+
+def main():
+    """ Crawl GraphQuestions repo and compute Individual and Cumulative BLEU-Score """
+    
+    result = crawl_data()
+
     bleu = sentence_bleu
     print("============================================================")
     print("  Compute Individual N-gram BLEU-Score using mean: ")
