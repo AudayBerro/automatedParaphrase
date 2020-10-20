@@ -5,7 +5,7 @@ import urllib
 import unidecode # convert unicode string to ascii string
 from nltk.translate.bleu_score import SmoothingFunction, sentence_bleu
 import statistics
-
+import time
 
 
 def get_smooth(sentence_bleu,hyp,ref,weights, smoothing_function):
@@ -171,6 +171,22 @@ def get_cumulative_bleu_score(dataset,sentence_bleu,flag):
     
     return bleu2,bleu3,bleu4
 
+def write_result(data,name):
+    """ 
+    Write output in folder
+    :param data: data to preserve in folder
+    """
+    f = open("./dataset/"+name,"a")
+
+    f.write("question\tnumber of paraphrases\tparaphrases\n")
+    for k,v in data.items():
+        f.write(k+"\t"+str(len(v)))
+        for e in v:
+            f.write("\t"+e)
+        f.write("\n")
+
+    f.close()
+
 def main():
     """ Crawl GraphQuestions repo and compute Individual and Cumulative BLEU-Score """
 
@@ -223,19 +239,10 @@ def main():
     print("\tIndividual 4-gram: ",b4)
     print("============================================================")
 
-    import sys
-    sys.exit()
-    # save result in csv file
-    f = open("./dataset/web_Question_crawled_dataset.csv","a")
-
-    f.write("question\tnumber of paraphrases\tparaphrases\n")
-    for k,v in result.items():
-        f.write(k+"\t"+str(len(v)))
-        for e in v:
-            f.write("\t"+e)
-        f.write("\n")
-
-    f.close()
+    timestr = time.strftime("%Y%m%d-%H%M%S")
+    file_name = "result-"+timestr+".csv"
+    print("Save data in \""+file_name+"\"")
+    # write_result(result,file_name)
 
 if __name__ == "__main__":
     main()
