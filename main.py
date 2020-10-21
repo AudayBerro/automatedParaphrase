@@ -341,6 +341,7 @@ def main():
         paraphrases = online_transaltion(file_path,deepl_api_key,valid_mail,pivot_level,cut_off)
     
     # compute BLEU-Score of generated paraphrases
+    print("Compute BLEU-Score")
     bleu_score.main(paraphrases)
     print("Overall elapsed time: ",str(datetime.timedelta(0,time.time()-t1)))
 
