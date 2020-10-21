@@ -14,6 +14,7 @@ import time
 import datetime
 import argparse
 import re,string
+from evaluation import bleu_score
 
 def normalize_text(text):
     """
@@ -337,9 +338,10 @@ def main():
     if args.p=="true":
         paraphrases = pretrained_transaltion(file_path,pivot_level,cut_off)
     else:
-        online_transaltion(file_path,deepl_api_key,valid_mail,pivot_level,cut_off)
+        paraphrases = online_transaltion(file_path,deepl_api_key,valid_mail,pivot_level,cut_off)
     
-
+    # compute BLEU-Score of generated paraphrases
+    bleu_score.main(paraphrases)
     print("Overall elapsed time: ",str(datetime.timedelta(0,time.time()-t1)))
 
 if __name__ == "__main__":
