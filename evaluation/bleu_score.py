@@ -185,10 +185,14 @@ def read_data(file_name):
   
   return d
 
-def main():
+def main(data):
+    """
+    Compute BLEU-Score for data
+    :param data: python dictionary key initial utterance, value list of parpahrases
+    """
 
     bleu = sentence_bleu
-    data = read_data("output.csv")
+    # data = read_data("output.csv")
     print("============================================================")
     print("  Compute Individual N-gram BLEU-Score using mean: ")
     b1,b2,b3,b4 = get_individual_bleu_score(data,bleu,0)
