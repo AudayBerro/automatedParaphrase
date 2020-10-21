@@ -269,6 +269,8 @@ def pretrained_transaltion(file_path,pivot_level,cut_off):
         write_to_folder(final_result,"Final Paraphrases List:","paraphrases.txt")
     else:
         write_to_folder(bert_filtered_paraphrases,"Final Paraphrases List:","paraphrases.txt")
+    
+    return bert_filtered_paraphrases
 
 def main():
     # required arg
@@ -332,10 +334,11 @@ def main():
     t1 = time.time() # to compute overall time execution
 
     if args.p=="true":
-        pretrained_transaltion(file_path,pivot_level,cut_off)
+        paraphrases = pretrained_transaltion(file_path,pivot_level,cut_off)
     else:
         online_transaltion(file_path,deepl_api_key,valid_mail,pivot_level,cut_off)
     
+
     print("Overall elapsed time: ",str(datetime.timedelta(0,time.time()-t1)))
 
 if __name__ == "__main__":
