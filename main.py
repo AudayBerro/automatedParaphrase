@@ -205,7 +205,8 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level,cut_off):
         write_to_folder(final_result,"Final Paraphrases List:","paraphrases.txt")
     else:
         write_to_folder(bert_filtered_paraphrases,"Final Paraphrases List:","paraphrases.txt")
-        
+    
+    return bert_filtered_paraphrases
 
 def pretrained_transaltion(file_path,pivot_level,cut_off):
     """
