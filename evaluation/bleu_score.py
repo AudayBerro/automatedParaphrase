@@ -1,6 +1,5 @@
 #this code compute the bleu score of candidate paraphrases
 
-from nltk.translate.bleu_score import sentence_bleu
 import statistics
 from nltk.translate.bleu_score import SmoothingFunction, sentence_bleu
 import csv
