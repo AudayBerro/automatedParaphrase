@@ -3,8 +3,31 @@ import os
 from yandex import Translater as yandex_trans
 import re,string
 import contractions
+import random
+import string
 
 """" Thi code translate sentence using Mymemory API and Yandex Translator API """
+
+def get_random_string(length):
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(length))
+    return result_str
+
+
+def make_email():
+        extensions = ['com'] # ['com','fr','...']
+        domains = ['gmail'] # ['gmail','hotmail','yahoo','...']
+
+        ext = extensions[random.randint(0,len(extensions)-1)]
+        dom = domains[random.randint(0,len(domains)-1)]
+
+        digit_len = random.randint(1,12)
+        digit = ''.join(random.choice(string.digits) for _ in range(digit_len))
+
+        pseudo = ''.join(get_random_string(random.randint(3,8)) + digit + get_random_string(random.randint(1,4)))
+
+        mail = pseudo + "@" + dom + "." + ext
+        return mail
 
 
 def normalize_text(text):
