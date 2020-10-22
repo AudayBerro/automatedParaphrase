@@ -4,6 +4,26 @@ import statistics
 from nltk.translate.bleu_score import SmoothingFunction, sentence_bleu
 import csv
 
+
+def apply_cut_off(pool,cut_off):
+    """
+    This function extract the [cut_off] top highest semantically related paraphrases
+    :param pool: python dictionary, key is the initial utterance and value is a list of tuples. Tuples(paraphrase, BERT embeddong cosine similarity score)
+    :param cut_off: integer that indicate how many parpahrases to select, e.g. cut_off = 3 will only select top highest 3 semantically related parpahrases and drop the rest
+    :return ordred Python dictionary
+    """
+
+    if cut_off == 0:
+        return pool
+    else:
+        result = {}
+        for k,v in pool.items():
+            if len(v) <= cut_off: # if list of paraphrases [v] contain less than [cut_off]-element, add all element
+                result[k]=v
+            else:
+                result[k]=v[:cut_off]
+        return result
+
 def get_smooth(sentence_bleu,hyp,ref,weights, smoothing_function):
     """
     This function return the BLEU-Score
@@ -185,15 +205,13 @@ def read_data(file_name):
   
   return d
 
-def main(data):
-    """
-    Compute BLEU-Score for data
-    :param data: python dictionary key initial utterance, value list of parpahrases
-    """
-
+def get_bleu_score(data,cut_off):
     bleu = sentence_bleu
     # data = read_data("output.csv")
+    print("\n============================================================")
+    print("                  Cut_off parpameter = ",cut_off,"            ")
     print("============================================================")
+    data = apply_cut_off(data,cut_off)
     print("  Compute Individual N-gram BLEU-Score using mean: ")
     b1,b2,b3,b4 = get_individual_bleu_score(data,bleu,0)
     print("\tIndividual 1-gram: ",b1)
@@ -221,6 +239,22 @@ def main(data):
     print("\tIndividual 3-gram: ",b3)
     print("\tIndividual 4-gram: ",b4)
     print("============================================================")
+
+def main(data):
+    """
+    Compute BLEU-Score for data
+    :param data: python dictionary key initial utterance, value list of parpahrases
+    :param cut_off: cut off parmeter
+    """
+
+    get_bleu_score(data,3)
+    get_bleu_score(data,5)
+    get_bleu_score(data,10)
+    get_bleu_score(data,20)
+    get_bleu_score(data,50)
+    get_bleu_score(data,100)
+    # data = read_data("output.csv")
+
 
 if __name__ == "__main__":
     main()
