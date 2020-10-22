@@ -240,21 +240,22 @@ def get_bleu_score(data,cut_off):
     print("\tIndividual 4-gram: ",b4)
     print("============================================================")
 
-def main(data):
+def main(data,cut_off):
     """
     Compute BLEU-Score for data
     :param data: python dictionary key initial utterance, value list of parpahrases
-    :param cut_off: cut off parmeter
+    :param cut_off: integer that indicate how many parpahrases to select, e.g. cut_off = 3 will only select top highest 3 semantically related parpahrases and drop the rest
     """
 
-    get_bleu_score(data,3)
-    get_bleu_score(data,5)
-    get_bleu_score(data,10)
-    get_bleu_score(data,20)
-    get_bleu_score(data,50)
-    get_bleu_score(data,100)
-    # data = read_data("output.csv")
-
+    if cut_off == 0:
+        get_bleu_score(data,cut_off)
+    else:
+        get_bleu_score(data,3)
+        get_bleu_score(data,5)
+        get_bleu_score(data,10)
+        get_bleu_score(data,20)
+        get_bleu_score(data,50)
+        get_bleu_score(data,100)
 
 if __name__ == "__main__":
     main()
