@@ -145,7 +145,6 @@ def translate_file(file_path,valid_mail,word_counter):
             
 
             word_counter += len(data['responseData']['translatedText'])
-            print("$$  counter: ",word_counter)
             if word_counter > 9800 :
                 word_counter = 0 # reset counter to 0
                 valid_mail = make_email() # generate new mail
@@ -204,7 +203,6 @@ def translate_list(data_set,valid_mail,word_counter):
             tmp = data['matches']
 
             word_counter += len(data['responseData']['translatedText'])
-            print("$$list  counter: ",word_counter)
             if word_counter > 9800 :
                 word_counter = 0 # reset counter to 0
                 valid_mail = make_email() # generate new mail
