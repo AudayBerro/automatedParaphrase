@@ -32,7 +32,7 @@ def get_bleu_score_median(dataset,sentence_bleu,weights,smoothing_function):
         utterance_bleu_score = [] # current utterance bleu_Score = average_paraphrase_bleu_score
         if len(v) > 0 :
           for cand in v:
-              candidate = cand.lower().split(" ")
+              candidate = cand[0].lower().split(" ")
 
               parpahrase_bleu_Score = get_smooth(sentence_bleu,candidate,reference,weights,smoothing_function)
 
@@ -59,7 +59,7 @@ def get_bleu_score_mean(dataset,sentence_bleu,weights,smoothing_function):
         reference = [k.lower().split(" ")]
         utterance_bleu_score = 0 # current utterance bleu_Score = average_paraphrase_bleu_score
         for cand in v:
-            candidate = cand.lower().split(" ")
+            candidate = cand[0].lower().split(" ")
             
             paraphrase_bleu_score = get_smooth(sentence_bleu,candidate,reference,weights,smoothing_function)
             
