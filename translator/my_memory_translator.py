@@ -159,7 +159,7 @@ def translate_file(file_path,valid_mail,word_counter):
         text = text.replace('\n', '').replace('\r', '') #remove linebreak
         response[text]=final
 
-    return response
+    return response,word_counter
 
 def translate_list(data_set,valid_mail,word_counter):
     """
@@ -215,4 +215,4 @@ def translate_list(data_set,valid_mail,word_counter):
                     final.add(normalize_text(sentence))
         response[utterance] = final
 
-    return response
+    return response, word_counter
