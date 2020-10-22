@@ -95,16 +95,18 @@ def check_match(utterance):
         return False
     return True
 
-def translate_file(file_path,valid_mail):
+def translate_file(file_path,valid_mail,word_counter):
     """
     Translate a file
     :param file_path: file path
     :param valid_mail: valid email address to reach a translation rate of 10000 words/day in MyMemory API. https://mymemory.translated.net/doc/usagelimits.php
-    :return Python dictionary containing translsation, Key are initial sentence and vaule are a set of translations
+    :param word_counter: variable to count how many word Mymemory has translated to avoid API usage limit (limit is 10000 words/day per mail)
+    :return Python dictionary containing translsation, Key are initial sentence and vaule are a set of translations and word_counter
     """
 
     response = dict()
     f=open(file_path, "r")
+
     while True: 
         # Get next line from file 
         text = f.readline()
@@ -125,6 +127,8 @@ def translate_file(file_path,valid_mail):
 
         tmp = data['matches']
 
+        word_counter += len(data['responseData']['translatedText']) # count word of the translated sentence
+
         rep = set()#will contain all french translation
         rep.add(replace_quote(data['responseData']['translatedText']))
         for i in tmp:
@@ -139,6 +143,13 @@ def translate_file(file_path,valid_mail):
             r = requests.get(url = URL)
             data = r.json()
             
+
+            word_counter += len(data['responseData']['translatedText'])
+            print("$$  counter: ",word_counter)
+            if word_counter > 9800 :
+                word_counter = 0 # reset counter to 0
+                valid_mail = make_email() # generate new mail
+
             tmp = data['matches']
 
             for i in tmp:
@@ -150,15 +161,17 @@ def translate_file(file_path,valid_mail):
 
     return response
 
-def translate_list(data_set,valid_mail):
+def translate_list(data_set,valid_mail,word_counter):
     """
     Translate a a list of sentences
     :param data_set: snetences to transalte in a form of python list
     :param valid_mail: valid email address to reach a translation rate of 10000 words/day in MyMemory API. https://mymemory.translated.net/doc/usagelimits.php
-    :return Python dictionary containing translsation, Key are initial sentence and vaule are a set of translations
+    :param counter: variable to count how many word Mymemory has translated to avoid API usage limit (limit is 10000 words/day per mail)
+    :return Python dictionary containing translsation, Key are initial sentence and vaule are a set of translations and word_counter
     """
 
     response = dict()
+
     for utterance in data_set:
         # api-endpoint
         URL = "https://api.mymemory.translated.net/get?de="+valid_mail+"&q="+utterance+"&langpair=en|fr"
@@ -173,6 +186,9 @@ def translate_list(data_set,valid_mail):
 
         rep = set()#will contain all french translation
         rep.add(replace_quote(data['responseData']['translatedText']))
+
+        word_counter += len(data['responseData']['translatedText']) # count word of the translated sentence
+
         for i in tmp:
             if check_match(i):
                 sentence=replace_quote(i['translation'])
@@ -186,6 +202,12 @@ def translate_list(data_set,valid_mail):
             data = r.json()
             
             tmp = data['matches']
+
+            word_counter += len(data['responseData']['translatedText'])
+            print("$$list  counter: ",word_counter)
+            if word_counter > 9800 :
+                word_counter = 0 # reset counter to 0
+                valid_mail = make_email() # generate new mail
 
             for i in tmp:
                 sentence = replace_quote(i['translation'])
