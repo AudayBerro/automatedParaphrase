@@ -343,7 +343,7 @@ def main():
     
     # compute BLEU-Score of generated paraphrases
     print("Compute BLEU-Score")
-    bleu_score.main(paraphrases)
+    bleu_score.main(paraphrases,cut_off)
     print("Overall elapsed time: ",str(datetime.timedelta(0,time.time()-t1)))
 
 if __name__ == "__main__":
