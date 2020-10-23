@@ -248,14 +248,12 @@ def main(data,cut_off):
     """
 
     if cut_off == 0:
-        get_bleu_score(data,cut_off)
+        cut_off = [0,3,5,10,20,50,100]
+        
+        for cut in cut_off:
+            get_bleu_score(data,cut)
     else:
-        get_bleu_score(data,3)
-        get_bleu_score(data,5)
-        get_bleu_score(data,10)
-        get_bleu_score(data,20)
-        get_bleu_score(data,50)
-        get_bleu_score(data,100)
+        get_bleu_score(data,cut_off)
 
 if __name__ == "__main__":
     main()
