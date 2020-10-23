@@ -14,7 +14,7 @@ import time
 import datetime
 import argparse
 import re,string
-from evaluation import bleu_score,gleu_score
+from evaluation import bleu_score,gleu_score,chrf_score
 
 def normalize_text(text):
     """
@@ -342,9 +342,10 @@ def main():
         paraphrases = online_transaltion(file_path,deepl_api_key,valid_mail,pivot_level,cut_off)
     
     # compute BLEU-Score of generated paraphrases
-    print("Compute BLEU-Score")
+    print("Compute BLEU, GLEU and CHRF scores: ")
     bleu_score.main(paraphrases,cut_off)
     gleu_score.main(paraphrases,cut_off)
+    chrf_score.main(paraphrases,cut_off)
     print("Overall elapsed time: ",str(datetime.timedelta(0,time.time()-t1)))
 
 if __name__ == "__main__":
