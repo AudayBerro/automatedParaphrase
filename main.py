@@ -14,7 +14,7 @@ import time
 import datetime
 import argparse
 import re,string
-from evaluation import bleu_score
+from evaluation import bleu_score,gleu_score
 
 def normalize_text(text):
     """
@@ -344,6 +344,7 @@ def main():
     # compute BLEU-Score of generated paraphrases
     print("Compute BLEU-Score")
     bleu_score.main(paraphrases,cut_off)
+    gleu_score.main(paraphrases,cut_off)
     print("Overall elapsed time: ",str(datetime.timedelta(0,time.time()-t1)))
 
 if __name__ == "__main__":
