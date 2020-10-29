@@ -1,7 +1,6 @@
 #ignore pucahe file
 __pycache__
 *.pyc
-config.ini
 dataset/dataset.txt
 web_Question_crawled_dataset.csv
 gold_dataset.txt
