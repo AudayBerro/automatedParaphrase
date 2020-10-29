@@ -197,20 +197,24 @@ def crawl_data():
     data = json.loads(req.content)
 
 
-    result = {}
+    tmp = {}
     key = str(data[0]['question'])
     qid = data[0]['graph_query']['nodes'][0]['friendly_name']
 
-    result[key] = []
+    tmp[key] = []
 
     for t in data[1:]:
         if t['graph_query']['nodes'][0]['friendly_name'] == qid:
-            result[key].append(unidecode.unidecode(t['question']))
+            tmp[key].append(unidecode.unidecode(t['question']))
         else:
             key = unidecode.unidecode(t['question'])
             qid = t['graph_query']['nodes'][0]['friendly_name']
-            result[key] = []
+            tmp[key] = []
     
+    result = {}
+    for k,v in tmp.items():#remove sentences that have less than 3 parpahrases
+        if len(v)>2:
+            result[k] = v
     return result
 
 def main():
