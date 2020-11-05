@@ -91,11 +91,12 @@ def read_data(file_name):
   """
  
   import csv
-  reader = csv.reader(open(file_name, 'r'))
+  tsv_file = open(file_name)
+  reader = csv.reader(tsv_file,delimiter="\t")
   d = {}
   for row in reader:
-    tmp = row[0].split("\t")
-    d[tmp[0]]= tmp[2:]
+     if int(row[1]) > 2:
+        d[row[0]]= row[2:]
   
   return d
 
