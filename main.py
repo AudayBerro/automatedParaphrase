@@ -14,7 +14,7 @@ import time
 import datetime
 import argparse
 import re,string
-from evaluation import bleu_score,gleu_score,chrf_score
+from evaluation import bleu_score,gleu_score,chrf_score,diversity_metrics
 
 def normalize_text(text):
     """
@@ -340,6 +340,19 @@ def main():
         paraphrases = pretrained_transaltion(file_path,pivot_level,cut_off)
     else:
         paraphrases = online_transaltion(file_path,deepl_api_key,valid_mail,pivot_level,cut_off)
+    
+
+    # compute diversity metrics
+    print("\nCompute Mean-TTR, Mean-PINC and DIV scores: ")
+    diversity_score = diversity_metrics.main(paraphrases,cut_off)
+
+    for k,v in diversity_score.items():
+        print("\t============================================================")
+        print("\t                  Cut_off parpameter = ",k,"            ")
+        print("\t============================================================")
+        print("\t\tMean TTR: ", v[0]["Mean TTR"])
+        print("\t\tMean PINC: ", v[1]["Mean PINC"])
+        print("\t\tDiversity: ", v[2]['Diversity'])
     
     # compute BLEU-Score of generated paraphrases
     print("Compute BLEU, GLEU and CHRF scores: ")
