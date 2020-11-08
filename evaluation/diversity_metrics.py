@@ -132,12 +132,12 @@ def get_pinc_score(data):
             "Expr by Pinc": expr_by_pinc}
 
 
-def jaccard_index(source, paraphrase, n=4):
+def jaccard_index(source, paraphrase, n=3):
     """ 
     Calculate the reverse of the mean Jaccard Index between the sentences’ n-grams sets to represent the semantic distances between the two sentences
     :param source: sentence a
     :param paraphrase: sentence b
-    :param n: n-grams, default n=4 e.g a=[1,2,3] b=[2,3,4] => 2-grams of a: {(1,2),(2,3)}
+    :param n: n-grams, default n=3 as set by author papers in their experiments e.g a=[1,2,3] b=[2,3,4] => 2-grams of a: {(1,2),(2,3)}
     :return reverse of the mean Jaccard Index between sentence a and sentence b
     """
     sum = 0
@@ -173,7 +173,7 @@ def get_div_score(data):
                 if j != i:
                     tokens_2 = pre_process(p).split(" ")
                     tokens_2 = list(filter(None,tokens_2))
-                    local_d += jaccard_index(tokens_1, tokens_2)
+                    local_d += jaccard_index(tokens_1, tokens_2) # jaccard_index(tokens_1, tokens_2,4) # to compute 4-gram DIV
                     index += 1
 
         if index != 0:
