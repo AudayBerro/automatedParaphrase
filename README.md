@@ -66,14 +66,14 @@ In order to generate paraphrases, follow these steps:
    ```
    $ python main.py -f dataset.txt -l 1 -p false
    ```
-**-f** initial data file path, utterances should be separated by a breakline and file extension **.txt**
-**-p** generate paraphrases using Online Translator Model(Google,DeepL,Yandex) or pretrained Neural Machine Translator(MariamMT,OpenNMT).
-    Asign true To generate with pretrained Neural Machine Translator asign. -p true
-    Asign false To generate with Online Neural Translator  Model. -p false
-**-l** indicate sequential pivot language translation level.
-    To have 1-pivot language -l 1. e.g. English-Russian-English, English-Italian-Emglish.
-    To have 2-pivot language -l 2. e.g. English-Russian-French-English, English-Japanese-Spanish-Emglish.
-    By default `-l 0` apply both 1-pivot and 2-pivot language translation.
+
+## Model Parameter
+| Parameter | Description |
+| ------ | ------ |
+| **-f** | initial data file path, utterances should be separated by a breakline and file extension **.txt** |
+| **-p** | generate paraphrases using Online Translator Model(Google,DeepL,Yandex) or pretrained Neural Machine Translator(MariamMT,OpenNMT).<ul><li>**-p true** translate with pretrained Neural Machine Translator asign.</li><li>**-p false** translate with Online Neural Translator  Model.</li></ul>|
+| **-l** | indicate sequential pivot language translation level.<ul><li>To have **1-pivot** language `-l 1`. e.g. English-Russian-English, English-Italian-Emglish.</li><li>To have **2-pivot** language `-l 2`. e.g. English-Russian-French-English, English-Japanese-Spanish-Emglish.</li><li> By default `-l 0` apply both 1-pivot and 2-pivot language translation.</li></ul>|
+| **-c** | cut-off integer that indicate how many parpahrases to select, e.g. `-c 3` will only select top highest 3 semantically related parpahrases and drop the rest.|
 
 
 This will save the generated paraphrases in the **result** folder. The **result** file display the paraphrases in Python dictionary(**Key** -- initial sentences and **Value** -- list of paraphrases) following the given order:
@@ -81,6 +81,8 @@ This will save the generated paraphrases in the **result** folder. The **result*
 >- Paraphrases after filtration with [Universal Sentence Encoding](https://tfhub.dev/google/universal-sentence-encoder/4)
 >- Paraphrases after filtration with [BERT](https://huggingface.co/transformers/model_doc/bert.html#bertmodel)
 >- Paraphrases after duplication with [BERT](https://huggingface.co/transformers/model_doc/bert.html#bertmodel)
+
+
 
 
 ## References
