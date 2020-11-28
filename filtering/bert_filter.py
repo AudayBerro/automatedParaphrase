@@ -24,6 +24,56 @@ def concatenate_output(outputs):
 
     return token_vecs_cat
 
+
+###########################################################################################################################
+## Pooling STrategy function from Chris McCkormick page: https://mccormickml.com/2019/05/14/BERT-word-embeddings-tutorial/
+###########################################################################################################################
+
+def summing_layer(outputs):
+    """
+    Sum the vectors from the last four layers.
+    :param outputs: BERT model output, 
+    :return a vector formed by the summation of the last four hidden layer of the hidden_states
+    """
+    # Here output is Float.Tensor: outputs[0]= last_hidden_state; outputs[1]= pooler_output; outputs[2]= hidden_states;
+    # More details: https://huggingface.co/transformers/model_doc/bert.html#bertmodel  and https://colab.research.google.com/drive/1yFphU6PW9Uo6lmDly_ud9a6c4RCYlwdX#scrollTo=HKTlTS_sfuAe
+
+    # in order to get sentence embeddings I have to adopt a pooling strategy. The idea is to combine hidden_states vector, hidden states has four dimensions, in the following order:
+    #    1. The layer number (13 layers) - layers dimension
+    #    2. The batch number (1 sentence)
+    #    3. The word / token number (22 tokens in our sentence) -tokens dimension 
+    #    4. The hidden unit / feature number (768 features)
+    
+    # Here the adopted strategy is to concatenate the last four layer for each token. Concatenate the last four layers, giving us a single word vector per token
+    hidden_states = outputs[2]
+
+    token_embeddings = torch.stack(hidden_states, dim=0) # Combine the layers to make this one whole big tensor
+    token_embeddings = torch.squeeze(token_embeddings, dim=1) # remove "batches" dimension since we don't need it
+    token_embeddings = token_embeddings.permute(1,0,2) # swap/switching "layers" and "tokens" dimensions
+
+    token_vecs_sum = []
+
+    # `token_embeddings` is a [words x 12 x 768] tensor.
+
+    # For each token in the sentence...
+    for token in token_embeddings:
+
+        # `token` is a [12 x 768] tensor
+
+        # Sum the vectors from the last four layers. sum_vec = torch.sum(token[-4:], dim=0)
+        sum_vec = torch.sum(token[:], dim=0)
+        
+        # Use `sum_vec` to represent `token`.
+        token_vecs_sum.append(sum_vec)
+    print(str(len(token_vecs_sum)))
+    return token_vecs_sum
+
+
+
+
+###########################################################################################################################
+
+
 def token_vector_sum(token_embeddings): 
     """
     Summing togheter all token embedding
