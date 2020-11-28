@@ -31,9 +31,9 @@ def concatenate_output(outputs):
 
 def layer_concatenation(outputs):
     """
-    Concatenate the last four hidden layer output
+    Concatenate the last four hidden layer for each token into one vecotr output
     :param outputs: BERT model output, 
-    :return a vector formed by the concatenation of the output of the last four hidden layer
+    :return a vector formed by the concatenation of the output of the last four hidden layer for each token
     """
     # Here output is Float.Tensor: outputs[0]= last_hidden_state; outputs[1]= pooler_output; outputs[2]= hidden_states;
     # More details: https://huggingface.co/transformers/model_doc/bert.html#bertmodel  and https://colab.research.google.com/drive/1yFphU6PW9Uo6lmDly_ud9a6c4RCYlwdX#scrollTo=HKTlTS_sfuAe
@@ -55,16 +55,14 @@ def layer_concatenation(outputs):
     
     #token_embeddings = token_embeddings[1:] # remove [CLS] token embedding vector
     #token_embeddings = token_embeddings[:-1] # remove [SEP]  token embedding vectorand 
-
-    token_embeddings = token_embeddings[1:-1] # remove [CLS] and [SEP] token embedding vector
-    
+    #token_embeddings = token_embeddings[1:-1] # remove [CLS] and [SEP] token embedding vector
     
     # For each token in the sentence...
     for token in token_embeddings:
-        # Concatenate the vectors from the last four layers
+        # Concatenate the the last four layers of the current token
         cat_vec = torch.cat((token[-1], token[-2], token[-3], token[-4]), dim=0)
         
-        # Use `cat_vec` to represent `token`.
+        # append current vector
         token_vecs_cat.append(cat_vec)
     
     return token_vecs_cat
