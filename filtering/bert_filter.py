@@ -52,8 +52,11 @@ def layer_concatenation(outputs):
     token_embeddings = token_embeddings.permute(1,0,2) # swap/switching "layers" and "tokens" dimensions
 
     token_vecs_cat = []
+    
+    #token_embeddings = token_embeddings[1:] # remove [CLS] token embedding vector
+    #token_embeddings = token_embeddings[:-1] # remove [SEP]  token embedding vectorand 
 
-    token_embeddings = token_embeddings[1:] # remove [CLS] and [SEP] token embedding vector
+    token_embeddings = token_embeddings[1:-1] # remove [CLS] and [SEP] token embedding vector
     
     
     # For each token in the sentence...
@@ -91,6 +94,7 @@ def summing_layer(outputs):
     token_vecs_sum = []
 
     # `token_embeddings` is a [words x 12 x 768] tensor.
+    token_embeddings = token_embeddings[1:-1] # remove [CLS] and [SEP] token embedding vector
 
     # For each token in the sentence...
     for token in token_embeddings:
@@ -102,7 +106,7 @@ def summing_layer(outputs):
         
         # Use `sum_vec` to represent `token`.
         token_vecs_sum.append(sum_vec)
-    print(str(len(token_vecs_sum)))
+        
     return token_vecs_sum
 
 def second_to_last_layer_average(outputs):
@@ -121,16 +125,51 @@ def second_to_last_layer_average(outputs):
     #    4. The hidden unit / feature number (768 features)
     
     # Here the adopted strategy is to concatenate the last four layer for each token. Concatenate the last four layers, giving us a single word vector per token
-    hidden_states = outputs[2]
-    # `hidden_states` has shape [13 x 1 x 22 x 768]
-
+    hidden_states = outputs[2] # `hidden_states` has shape [13 x 1 x 22 x 768]
     # `token_vecs` is a tensor with shape [22 x 768]
-    token_vecs = hidden_states[-2][0]
-
+    token_vecs = hidden_states[-2][0] # get
     # Calculate the average of all 22 token vectors.
     sentence_embedding = torch.mean(token_vecs, dim=0)
-    return sentence_embedding
 
+    # torch.mean() example:
+    #  
+    # a = tensor([[-0.3841,  0.6320,  0.4254, -0.7384],
+    #             [-0.9644,  1.0131, -0.6549, -1.4279],
+    #             [-0.2951, -1.3350, -0.7694,  0.5600],
+    #             [ 1.0842, -0.9580,  0.3623,  0.2343]])
+    #
+    # >>> torch.mean(a, dim = 0)
+    # >>> tensor([-0.0163, -0.5085, -0.4599,  0.1807])
+    # In our function sentence_embedding will be a tensor of sitorch.Size() = 768
+    return sentence_embedding #the worst pooling strategy for semantic similarity
+
+
+def average_of_layer_average(outputs):
+    """
+    Averaging the average of each layer tokens.
+    :param outputs: BERT model output, 
+    :return a 768 length vector formed by averaging the average embedding of each layer tokens 
+    """
+    # Here the adopted strategy is to concatenate the last four layer for each token. Concatenate the last four layers, giving us a single word vector per token
+    hidden_states = outputs[2] # `hidden_states` has shape [13 x 1 x 22 x 768]
+    
+    # # `token_vecs` is a tensor with shape [22 x 768]
+    # token_vecs = hidden_states[-1][0] # get
+    # # Calculate the average of all 22 token vectors.
+    # sentence_embedding = torch.mean(token_vecs, dim=0)
+    sentence_embedding = []
+    
+    for layers in hidden_states: # to get the first 4 layers => hidden_states[0:4]
+        # layer is of size torch.Size([1,X,768]), where X is the number of tokens in the sentences
+        token_layer = layers[0] # get current layer tokens embeddings => get X embeddings
+        for token_embedding in token_layer: # get token embedding except [CLS] and [SEP] tokens => token_layer[1:-1]
+            layer_average = torch.mean(token_embedding, dim=0) # average current layer, e.g. if [3x768] => [768] vector by averaging the 3 row togheter
+        sentence_embedding.append(layer_average)
+
+    sentence_embedding = torch.stack(sentence_embedding)
+    sentence_embedding = torch.mean(sentence_embedding, dim=0)
+
+    return sentence_embedding
 
 ###########################################################################################################################
 
@@ -358,14 +397,14 @@ if __name__ == "__main__":
     u1 = "how"
     u2 = "how did covid-19 spread"
     a = get_encoded_layers(u1,model,tokenizer)
-    vector1 = summing_layer(a)
+    vector1 = second_to_last_layer_average(a)
 
     # token_embeddings = a[0][0]
     # vectora = token_vector_sum(a[0][0])
     # vectora2 = token_vector_mean(a[0][0])
     
     b = get_encoded_layers(u2,model,tokenizer)
-    vector2 = summing_layer(b)
+    vector2 = second_to_last_layer_average(b)
 
     # token_embeddings = b[0][0]
     # vectorb = token_vector_sum(b[0][0])
