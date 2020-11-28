@@ -68,7 +68,31 @@ def summing_layer(outputs):
     print(str(len(token_vecs_sum)))
     return token_vecs_sum
 
+def second_to_last_layer_average(outputs):
+    """
+    Average the second to last hiden layer of each token
+    :param outputs: BERT model output, 
+    :return a 768 length vector formed by averaging the second to last layer of the hidden_states 
+    """
+    # Here output is Float.Tensor: outputs[0]= last_hidden_state; outputs[1]= pooler_output; outputs[2]= hidden_states;
+    # More details: https://huggingface.co/transformers/model_doc/bert.html#bertmodel  and https://colab.research.google.com/drive/1yFphU6PW9Uo6lmDly_ud9a6c4RCYlwdX#scrollTo=HKTlTS_sfuAe
 
+    # in order to get sentence embeddings I have to adopt a pooling strategy. The idea is to combine hidden_states vector, hidden states has four dimensions, in the following order:
+    #    1. The layer number (13 layers) - layers dimension
+    #    2. The batch number (1 sentence)
+    #    3. The word / token number (22 tokens in our sentence) -tokens dimension 
+    #    4. The hidden unit / feature number (768 features)
+    
+    # Here the adopted strategy is to concatenate the last four layer for each token. Concatenate the last four layers, giving us a single word vector per token
+    hidden_states = outputs[2]
+    # `hidden_states` has shape [13 x 1 x 22 x 768]
+
+    # `token_vecs` is a tensor with shape [22 x 768]
+    token_vecs = hidden_states[-2][0]
+
+    # Calculate the average of all 22 token vectors.
+    sentence_embedding = torch.mean(token_vecs, dim=0)
+    return sentence_embedding
 
 
 ###########################################################################################################################
