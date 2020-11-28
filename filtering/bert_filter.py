@@ -242,7 +242,7 @@ def bert_selection(pool):#ebeddings using Huggingface trandformers library
     result = dict()
     for key,value in pool.items():
         a = get_encoded_layers(key,model,tokenizer)
-        vector1 = chris(a)
+        vector1 = layer_concatenation(a)
 
         # token_embeddings = a[0][0]
         # vectora = token_vector_sum(a[0][0])
@@ -250,7 +250,7 @@ def bert_selection(pool):#ebeddings using Huggingface trandformers library
         paraphrases = []
         for candidate in value:
             b = get_encoded_layers(candidate,model,tokenizer)
-            vector2 = chris(b)
+            vector2 = layer_concatenation(b)
 
             # token_embeddings = b[0][0]
             # vectorb = token_vector_sum(b[0][0])
