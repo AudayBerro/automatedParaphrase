@@ -88,13 +88,13 @@ def bert_selection(pool):#ebeddings using Huggingface trandformers library
     # model = BertForPreTraining.from_pretrained('bert-base-uncased')
     # config = BertConfig.from_pretrained("bert-base-uncased", output_hidden_states=True)
     # model = BertModel.from_pretrained("bert-base-uncased", config=config) #return hidden state in the output
-    model = BertModel.from_pretrained("bert-base-uncased")
+    model = BertModel.from_pretrained("bert-base-uncased",output_hidden_states = True)
     model.eval()
-    # input_ids = torch.tensor(tokenizer.encode("After stealing money from the bank vault, the bank robber was seen", add_special_tokens=True)).unsqueeze(0)
+    
     result = dict()
     for key,value in pool.items():
         a = get_encoded_layers(key,model,tokenizer)
-        vector1 = concatenate_output(a)
+        vector1 = chris(a)
 
         # token_embeddings = a[0][0]
         # vectora = token_vector_sum(a[0][0])
@@ -102,7 +102,7 @@ def bert_selection(pool):#ebeddings using Huggingface trandformers library
         paraphrases = []
         for candidate in value:
             b = get_encoded_layers(candidate,model,tokenizer)
-            vector2 = concatenate_output(b)
+            vector2 = chris(b)
 
             # token_embeddings = b[0][0]
             # vectorb = token_vector_sum(b[0][0])
@@ -128,7 +128,7 @@ def bert_filtering(pool):#ebeddings using Huggingface trandformers library
     # model = BertModel.from_pretrained("bert-base-uncased", config=config) #return hidden state in the output
     model = BertModel.from_pretrained("bert-base-uncased")
     model.eval()
-    # input_ids = torch.tensor(tokenizer.encode("After stealing money from the bank vault, the bank robber was seen", add_special_tokens=True)).unsqueeze(0)
+    
     result = dict()
     for key,value in pool.items():
         a = get_encoded_layers(key,model,tokenizer)
@@ -232,3 +232,32 @@ def ukplab_filtering(pool):#embeddings using UKPLab sentence_transformers librar
                 print(key,",",candidate,"= ",cos_sim)
         result[key] = paraphrases
     return result
+
+
+if __name__ == "__main__":
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+
+    # to get hidden layer in the output uncomment the following above code line, see https://huggingface.co/transformers/model_doc/bert.html for details
+    # model = BertForPreTraining.from_pretrained('bert-base-uncased')
+    # config = BertConfig.from_pretrained("bert-base-uncased", output_hidden_states=True)
+    # model = BertModel.from_pretrained("bert-base-uncased", config=config) #return hidden state in the output
+    model = BertModel.from_pretrained("bert-base-uncased",output_hidden_states = True) # model = BertModel.from_pretrained("bert-base-uncased",output_hidden_states = True
+    model.eval()
+    
+    u1 = "how"
+    u2 = "how did covid-19 spread"
+    a = get_encoded_layers(u1,model,tokenizer)
+    vector1 = summing_layer(a)
+
+    # token_embeddings = a[0][0]
+    # vectora = token_vector_sum(a[0][0])
+    # vectora2 = token_vector_mean(a[0][0])
+    
+    b = get_encoded_layers(u2,model,tokenizer)
+    vector2 = summing_layer(b)
+
+    # token_embeddings = b[0][0]
+    # vectorb = token_vector_sum(b[0][0])
+    # vectorb2 = token_vector_mean(b[0][0])
+    cos_sim = get_similarity(vector1,vector2)
+    print(cos_sim)
