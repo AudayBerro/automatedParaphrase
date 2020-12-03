@@ -151,10 +151,11 @@ def jaccard_index(source, paraphrase, n=3):
             sum += jaccard_index
     
     #return reverse of the mean of Jaccard index
-    return 1 - sum
+    return 1 - sum/n
 
 def get_div_score(data):
     """
+    Papers: "Data Collection for a Production Dialogue System: A Clinc Perspective" and "Outlier Detection for Improved Data Quality and Diversity in Dialog Systems"
     Compute diversity as the average jaccard_index distance between all sentence pairs. Paper: Data Collection for Dialogue System: A Startup Perspective
     :param data: Dataset to be measured in terms of diversity. Python dictionary, key: initial utterance - value: list of paraphrases
     :return Diversity score of a dictionary of paraphrases
