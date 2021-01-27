@@ -45,7 +45,7 @@ def get_gleu_score_median(dataset,sentence_gleu):
         utterance_gleu_score = [] # current utterance gleu_Score = average_paraphrase_gleu_score
         if len(v) > 0 :
           for cand in v:
-              candidate = cand[0].lower().split(" ")
+              candidate = cand.lower().split(" ")
 
               parpahrase_gleu_Score = get_gleu_score(sentence_gleu,candidate,reference)
 
@@ -70,7 +70,7 @@ def get_gleu_score_mean(dataset,sentence_gleu):
         reference = [k.lower().split(" ")]
         utterance_gleu_score = 0 # current utterance gleu_Score = average_paraphrase_gleu_score
         for cand in v:
-            candidate = cand[0].lower().split(" ")
+            candidate = cand.lower().split(" ")
             
             paraphrase_gleu_score = get_gleu_score(sentence_gleu,candidate,reference)
             
