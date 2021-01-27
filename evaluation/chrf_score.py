@@ -45,7 +45,7 @@ def get_chrf_score_median(dataset,sentence_chrf):
         utterance_chrf_score = [] # current utterance chrf_Score = average_paraphrase_chrf_score
         if len(v) > 0 :
           for cand in v:
-              candidate = cand[0].lower().split(" ")
+              candidate = cand.lower().split(" ")
 
               parpahrase_chrf_Score = get_chrf_score(sentence_chrf,candidate,reference)
 
@@ -70,7 +70,7 @@ def get_chrf_score_mean(dataset,sentence_chrf):
         reference = k.lower().split(" ")
         utterance_chrf_score = 0 # current utterance chrf_Score = average_paraphrase_chrf_score
         for cand in v:
-            candidate = cand[0].lower().split(" ")
+            candidate = cand.lower().split(" ")
             
             paraphrase_chrf_score = get_chrf_score(sentence_chrf,candidate,reference)
             
