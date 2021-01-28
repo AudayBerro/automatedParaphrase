@@ -10,8 +10,7 @@ from synonym import parpahraser as para
 import os
 import configparser
 #import spacy
-import time
-import datetime
+from datetime import datetime as dt
 import argparse
 import re,string
 from evaluation import bleu_score,gleu_score,chrf_score,diversity_metrics
@@ -20,6 +19,18 @@ from evaluation import bleu_score,gleu_score,chrf_score,diversity_metrics
 from nltk.translate.bleu_score import SmoothingFunction,sentence_bleu
 from nltk.translate.gleu_score import sentence_gleu
 from nltk.translate.chrf_score import sentence_chrf
+
+#time and color in console
+import time
+import datetime
+
+def pr_green(msg):
+    """ Pring msg in green color font"""
+    print("\033[92m{}\033[00m" .format(msg))
+
+def pr_red(msg): 
+    """ Pring msg in Red color font"""
+    print("\033[91m {}\033[00m" .format(msg)) 
 
 def normalize_text(text):
     """
@@ -356,6 +367,9 @@ def main():
     file_path = os.path.join(os.path.dirname(__file__), ".", "dataset/"+args.f) # data to paraphrase
 
     t1 = time.time() # to compute overall time execution
+    now = dt.now()
+    start_time = now.strftime("%H:%M:%S")
+    pr_green("Starting time: "+start_time)
 
     if args.p=="true":
         paraphrases = pretrained_transaltion(file_path,pivot_level,cut_off)
@@ -382,7 +396,9 @@ def main():
     bleu_score.main(paraphrases,cut_off)
     gleu_score.main(paraphrases,cut_off)
     chrf_score.main(paraphrases,cut_off)
-    print("Overall elapsed time: ",str(datetime.timedelta(0,time.time()-t1)))
+    
+    t2 = "Overall elapsed time: "+str(datetime.timedelta(0,time.time()-t1))
+    pr_green(t2)
 
 if __name__ == "__main__":
     main()
