@@ -181,9 +181,14 @@ def translate_list(data_set,valid_mail,word_counter):
         # extracting data in json format 
         data = r.json()
 
-        tmp = data['matches']
-
         rep = set()#will contain all french translation
+        while type(data['responseData']['translatedText']) == "NoneType":
+           r = requests.get(url = URL) 
+           # extracting data in json format 
+           data = r.json()
+        
+        tmp = data['matches']
+        
         rep.add(replace_quote(data['responseData']['translatedText']))
 
         word_counter += len(data['responseData']['translatedText']) # count word of the translated sentence
@@ -199,6 +204,11 @@ def translate_list(data_set,valid_mail,word_counter):
             # sending get request and saving the response as response object 
             r = requests.get(url = URL)
             data = r.json()
+
+            while type(data['responseData']['translatedText']) == "NoneType":
+                r = requests.get(url = URL) 
+                # extracting data in json format 
+                data = r.json()
             
             tmp = data['matches']
 
