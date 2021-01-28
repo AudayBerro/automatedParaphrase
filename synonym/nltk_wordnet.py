@@ -36,7 +36,7 @@ def get_best_synonym(word,sentence,synonyms,nlp):
         sent2 = sentence.replace(word,candidate) #replace word by candidate synonym
         sent2 = nlp(sent2)
         score = sent1.similarity(sent2) #compute word mover distance to select the best synonym, we can also use cosine similarity on BERT embedding
-        if score > max_score:
+        if score > max_score and score<0.97:
             result = candidate
             max_score = score
     
