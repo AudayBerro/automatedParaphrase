@@ -23,9 +23,10 @@ def remove_cosine_score(data):
 
     response = {}
     for k,v in data.items():
-        response[k] = []
-        for t in v:
-            response[k].append(t[0])
+        if data[k]:
+            response[k] = []
+            for t in v:
+                response[k].append(t[0])
     
     return response
 
