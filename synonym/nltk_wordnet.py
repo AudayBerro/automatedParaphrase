@@ -32,6 +32,7 @@ def get_best_synonym(word,sentence,synonyms,nlp):
     """
     sent1 = nlp(sentence)
     max_score = 0
+    result = word
     for candidate in synonyms:
         sent2 = sentence.replace(word,candidate) #replace word by candidate synonym
         sent2 = nlp(sent2)
