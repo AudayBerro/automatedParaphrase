@@ -1,7 +1,4 @@
 import torch
-import os
-import contractions
-import re,string
 
 """ This code translate sentence using pretrained Open Neural Machine Translator Pretrained Model """
 
