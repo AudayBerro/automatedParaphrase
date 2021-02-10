@@ -1,4 +1,5 @@
 from transformers import MarianMTModel,MarianTokenizer
+from translator import open_nmt
 import os
 import contractions
 import re,string
@@ -201,8 +202,17 @@ def load_model():
     fr2ru_model = MarianMTModel.from_pretrained(mname)
     fr2ru_tok = MarianTokenizer.from_pretrained(mname)
     response['fr2ru']=[fr2ru_model,fr2ru_tok]
-    import sys
-    sys.exit()
+
+    open_nmt
+    #Load Open-NMT translation model
+    pr_green("\nLoad Open-NMT translation model:")
+    pr_gray("\tload English to German model")
+    en2de = open_nmt.load_model("en-de")
+    response['open-en2de']=[en2de]
+
+    pr_gray("\tload German to English model")
+    de2en = open_nmt.load_model("de-en")
+    response['open-de2en']=[de2en]
 
     return response
 
