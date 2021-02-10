@@ -103,15 +103,15 @@ def read_data(file_name):
 def get_score(data,cut_off):
     chrf = sentence_chrf
     # data = read_data("output.csv")
-    print("\n============================================================")
-    print("                  Cut_off parpameter = ",cut_off,"            ")
-    print("============================================================")
+    print("\n\t============================================================")
+    print("\t                  Cut_off parpameter = ",cut_off,"            ")
+    print("\t============================================================")
     data = apply_cut_off(data,cut_off)
-    print("  Compute chrf-Score using mean: ", end="")
+    print("\t  Compute chrf-Score using mean: ", end="")
     chrf_score = get_chrf_score_mean(data,chrf)
     print(" ",chrf_score)
 
-    print("  Compute chrf-Score using median: ", end="")
+    print("\t  Compute chrf-Score using median: ", end="")
     chrf_score = get_chrf_score_median(data,chrf)
     print(" ",chrf_score)
 
