@@ -103,15 +103,15 @@ def read_data(file_name):
 def get_score(data,cut_off):
     gleu = sentence_gleu
     # data = read_data("output.csv")
-    print("\n============================================================")
-    print("                  Cut_off parpameter = ",cut_off,"            ")
-    print("============================================================")
+    print("\n\t============================================================")
+    print("\t                  Cut_off parpameter = ",cut_off,"            ")
+    print("\t============================================================")
     data = apply_cut_off(data,cut_off)
-    print("  Compute GLEU-Score using mean: ", end="")
+    print("\t  Compute GLEU-Score using mean: ", end="")
     gleu_score = get_gleu_score_mean(data,gleu)
     print(" ",gleu_score)
 
-    print("  Compute GLEU-Score using median: ", end="")
+    print("\t  Compute GLEU-Score using median: ", end="")
     gleu_score = get_gleu_score_median(data,gleu)
     print(" ",gleu_score)
 
