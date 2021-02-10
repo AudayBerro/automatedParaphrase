@@ -77,42 +77,85 @@ def multi_translate(utterance,model,pivot_level=1):
   if pivot_level == 0 or pivot_level == 1:  
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="it")
     tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])
+    #translate with Open-NMT
+    tmp2 = open_nmt.translate(tmp,model['open-en2de'])
+    tmp2 = open_nmt.translate(tmp2,model['open-de2en'])
+    tmp2 = expand_contractions(tmp2)
+    tmp2 = normalize_text(tmp2)
     tmp = expand_contractions(tmp)
     tmp = normalize_text(tmp)
     response.add(tmp)
+    response.add(tmp2)
 
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="es")
     tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])
+    #translate with Open-NMT
+    tmp2 = open_nmt.translate(tmp,model['open-en2de'])
+    tmp2 = open_nmt.translate(tmp2,model['open-de2en'])
+    tmp2 = expand_contractions(tmp2)
+    tmp2 = normalize_text(tmp2)
     tmp = expand_contractions(tmp)
     tmp = normalize_text(tmp)
     response.add(tmp)
+    response.add(tmp2)
 
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="fr")
     tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])
+    #translate with Open-NMT
+    tmp2 = open_nmt.translate(tmp,model['open-en2de'])
+    tmp2 = open_nmt.translate(tmp2,model['open-de2en'])
+    tmp2 = expand_contractions(tmp2)
+    tmp2 = normalize_text(tmp2)
     tmp = expand_contractions(tmp)
     tmp = normalize_text(tmp)
     response.add(tmp)
+    response.add(tmp2)
 
     tmp = translate(utterance,model['en2ru'][0],model['en2ru'][1])
     tmp = translate(tmp,model['ru2en'][0],model['ru2en'][1])
+    #translate with Open-NMT
+    tmp2 = open_nmt.translate(tmp,model['open-en2de'])
+    tmp2 = open_nmt.translate(tmp2,model['open-de2en'])
+    tmp2 = expand_contractions(tmp2)
+    tmp2 = normalize_text(tmp2)
     tmp = expand_contractions(tmp)
     tmp = normalize_text(tmp)
+    response.add(tmp)
+    response.add(tmp2)
+
+    #translate using Open-NMT
+    tmp2 = open_nmt.translate(tmp,model['open-en2de'])
+    tmp2 = open_nmt.translate(tmp2,model['open-de2en'])
+    tmp2 = expand_contractions(tmp)
+    tmp2 = normalize_text(tmp)
     response.add(tmp)
     
   if pivot_level == 0 or pivot_level == 2:
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="es")
     tmp = translate(utterance,model['es2ru'][0],model['es2ru'][1])
     tmp = translate(utterance,model['ru2en'][0],model['ru2en'][1])
+    #translate with Open-NMT
+    tmp2 = open_nmt.translate(tmp,model['open-en2de'])
+    tmp2 = open_nmt.translate(tmp2,model['open-de2en'])
+    tmp2 = expand_contractions(tmp2)
+    tmp2 = normalize_text(tmp2)
     tmp = expand_contractions(tmp)
     tmp = normalize_text(tmp)
     response.add(tmp)
+    response.add(tmp2)
 
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="fr")
     tmp = translate(utterance,model['fr2ru'][0],model['fr2ru'][1])
     tmp = translate(utterance,model['ru2en'][0],model['ru2en'][1])
+    #translate with Open-NMT
+    tmp2 = open_nmt.translate(tmp,model['open-en2de'])
+    tmp2 = open_nmt.translate(tmp2,model['open-de2en'])
+    tmp2 = expand_contractions(tmp2)
+    tmp2 = normalize_text(tmp2)
     tmp = expand_contractions(tmp)
     tmp = normalize_text(tmp)
     response.add(tmp)
+    response.add(tmp2)
   return response
 
 def translate_file(file_path,model,pivot_level):
@@ -208,11 +251,11 @@ def load_model():
     pr_green("\nLoad Open-NMT translation model:")
     pr_gray("\tload English to German model")
     en2de = open_nmt.load_model("en-de")
-    response['open-en2de']=[en2de]
+    response['open-en2de']=en2de
 
     pr_gray("\tload German to English model")
     de2en = open_nmt.load_model("de-en")
-    response['open-de2en']=[de2en]
+    response['open-de2en']=de2en
 
     return response
 
