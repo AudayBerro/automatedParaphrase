@@ -152,14 +152,15 @@ def load_model():
     """
     response = dict()
     #load model to translate from en to ['French','Spanish','Italian','Portuguese']
-    print("load English to Romance model")
+    print("load Huggingface Marian MT model:")
+    print("---    load English to Romance model")
     mname1 = 'Helsinki-NLP/opus-mt-en-ROMANCE'
     en2romance_model = MarianMTModel.from_pretrained(mname1) #load model
     en2romance_tok = MarianTokenizer.from_pretrained(mname1) #load tokenizer
     response['en2romance']=[en2romance_model,en2romance_tok]
 
     #load model to translate from ['French','Spanish','Italian','Portuguese'] to english
-    print("load Romance to English model")
+    print("---    load Romance to English model")
     mname2 = 'Helsinki-NLP/opus-mt-ROMANCE-en'
     romance_en_model = MarianMTModel.from_pretrained(mname2) #load model
     romance_en_tok = MarianTokenizer.from_pretrained(mname2) #load tokenizer
@@ -167,28 +168,28 @@ def load_model():
 
     #load english to russian model
     mname = 'Helsinki-NLP/opus-mt-en-ru'
-    print("load English to Russian model")
+    print("---    load English to Russian model")
     en2ru_model = MarianMTModel.from_pretrained(mname)
     en2ru_tok = MarianTokenizer.from_pretrained(mname)
     response['en2ru']=[en2ru_model,en2ru_tok]
 
     #load russian to english model
     mname = 'Helsinki-NLP/opus-mt-ru-en'
-    print("load Russian to English model")
+    print("---    load Russian to English model")
     ru2en_model = MarianMTModel.from_pretrained(mname)
     ru2en_tok = MarianTokenizer.from_pretrained(mname)
     response['ru2en']=[ru2en_model,ru2en_tok]
 
     #load Spanish to Russian model
     mname = 'Helsinki-NLP/opus-mt-es-ru'
-    print("load Spanish to Russian model")
+    print("---    load Spanish to Russian model")
     es2ru_model = MarianMTModel.from_pretrained(mname)
     es2ru_tok = MarianTokenizer.from_pretrained(mname)
     response['es2ru']=[es2ru_model,es2ru_tok]
 
     #load French to Russian model
     mname = 'Helsinki-NLP/opus-mt-fr-ru'
-    print("load French to Russian model")
+    print("---    load French to Russian model")
     fr2ru_model = MarianMTModel.from_pretrained(mname)
     fr2ru_tok = MarianTokenizer.from_pretrained(mname)
     response['fr2ru']=[fr2ru_model,fr2ru_tok]
