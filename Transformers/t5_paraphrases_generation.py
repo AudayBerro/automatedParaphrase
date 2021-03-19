@@ -19,7 +19,7 @@ def test():
     print ("device ",device)
     model = model.to(device)
 
-    sentence = "any pizza restaurant near villeurbanne"
+    sentence = "how does covid-19 spread"
 
 
     text =  "paraphrase: " + sentence + " </s>"
