@@ -39,16 +39,17 @@ def convert_to_t5_format(sentence):
     """
     Convert sentence to T5 Input format: "paraphrase:"+sentence+"</s>"
     :param sentence: sentence to convert to T5 format
-    return a T5 compatible sentence: "paraphrase:"+sentence+"</s>" 
+    :return a T5 compatible sentence: "paraphrase:"+sentence+"</s>" 
     """
     sentence =  "paraphrase: " + sentence + " </s>"
     return sentence
 
 def encode_input(tokenizer,text):
     """
-    Encode text using T5 Tokenizer
+    Encode text using T5 Tokenizer by adding special tokens using the tokenizer
     :param tokenizer: T5 Tokenizer
     :param text: sentence to encode
+    :return the encoded sentence
     """
     encoding = tokenizer.encode_plus(text,pad_to_max_length=True, return_tensors="pt")
     return encoding
@@ -73,6 +74,20 @@ def generate_paraphrase(input_ids,attention_masks,max_len=256):
     )
     return beam_outputs
 
+def extract_paraphrases(beam_outputs,tokenizer,utterance):
+    """
+    This funciton extract paraphrases from beam_outputs
+    :param beam_outputs: T5 generated Paraphrases in a form of torch.FloatTensor
+    :param tokenizer: T5 Tokenizer
+    :param utterance: initial expression to paraphrase
+    :return a Python list containing the generated paraphrases 
+    """
+    final_outputs =[]
+    for beam_output in beam_outputs:
+        sent = tokenizer.decode(beam_output, skip_special_tokens=True,clean_up_tokenization_spaces=True)
+        if sent.lower() != utterance.lower() and sent not in final_outputs:
+            final_outputs.append(sent)
+    return final_outputs
 
 def test():
     set_seed(42)
