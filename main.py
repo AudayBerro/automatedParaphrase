@@ -392,7 +392,7 @@ def main():
     paraphrases = remove_cosine_score(paraphrases)
 
     # compute BLEU-Score of generated paraphrases
-    print("Compute BLEU, GLEU and CHRF scores: ")
+    print("\nCompute BLEU, GLEU and CHRF scores: ")
     bleu_score.main(paraphrases,cut_off)
     gleu_score.main(paraphrases,cut_off)
     chrf_score.main(paraphrases,cut_off)
@@ -402,4 +402,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
