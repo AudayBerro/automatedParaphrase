@@ -8,6 +8,15 @@ def set_seed(seed):
   if torch.cuda.is_available():
     torch.cuda.manual_seed_all(seed)
 
+def load_model(model_name):
+    """
+    Load Fine-Tuned HuggingFace T5 model
+    :param model_name: HuggingFace T5 model 
+    :return HuggingFace T5 model
+    """
+    model = T5ForConditionalGeneration.from_pretrained(model_name) #auday/t5_paraphraser/model1   auday/t5_paraphraser/model2
+    return model
+
 
 def test():
     set_seed(42)
