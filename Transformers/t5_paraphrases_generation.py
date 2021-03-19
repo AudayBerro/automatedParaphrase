@@ -44,6 +44,14 @@ def convert_to_t5_format(sentence):
     sentence =  "paraphrase: " + sentence + " </s>"
     return sentence
 
+def encode_input(tokenizer,text):
+    """
+    Encode text using T5 Tokenizer
+    :param tokenizer: T5 Tokenizer
+    :param text: sentence to encode
+    """
+    encoding = tokenizer.encode_plus(text,pad_to_max_length=True, return_tensors="pt")
+    return encoding
 
 def test():
     set_seed(42)
