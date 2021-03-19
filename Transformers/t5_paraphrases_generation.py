@@ -11,12 +11,20 @@ def set_seed(seed):
 def load_model(model_name):
     """
     Load Fine-Tuned HuggingFace T5 model
-    :param model_name: HuggingFace T5 model 
+    :param model_name: name of the HuggingFace T5 model to load
     :return HuggingFace T5 model
     """
     model = T5ForConditionalGeneration.from_pretrained(model_name) #auday/t5_paraphraser/model1   auday/t5_paraphraser/model2
     return model
 
+def load_tokenizer(model_name='t5-base'):
+    """
+    Load HuggingFace T5 Tokenizer
+    :param model_name: name of the HuggingFace T5 tokenizer to load
+    :return HuggingFace T5 Tokenier
+    """
+    tokenizer = T5Tokenizer.from_pretrained(model_name)#default 't5-base'
+    return tokenizer
 
 def test():
     set_seed(42)
