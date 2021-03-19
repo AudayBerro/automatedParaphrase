@@ -34,6 +34,15 @@ def check_device():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     return device
 
+def convert_to_t5_format(sentence):
+    """
+    Convert sentence to T5 Input format: "paraphrase:"+sentence+"</s>"
+    :param sentence: sentence to convert to T5 format
+    return a T5 compatible sentence: "paraphrase:"+sentence+"</s>" 
+    """
+    sentence =  "paraphrase: " + sentence + " </s>"
+    return sentence
+
 def test():
     set_seed(42)
 
