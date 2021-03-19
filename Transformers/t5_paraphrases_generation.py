@@ -4,9 +4,10 @@ from transformers import T5ForConditionalGeneration,T5Tokenizer
 """" This code generate paraphrases using Huggingface T5 model's """
 
 def set_seed(seed):
-  torch.manual_seed(seed)
-  if torch.cuda.is_available():
-    torch.cuda.manual_seed_all(seed)
+    """ Set the seed for generating random numbers for REPRODUCIBILITY """
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
 
 def load_model(model_name):
     """
@@ -42,6 +43,7 @@ def convert_to_t5_format(sentence):
     """
     sentence =  "paraphrase: " + sentence + " </s>"
     return sentence
+
 
 def test():
     set_seed(42)
