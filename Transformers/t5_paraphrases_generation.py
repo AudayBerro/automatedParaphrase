@@ -26,6 +26,14 @@ def load_tokenizer(model_name='t5-base'):
     tokenizer = T5Tokenizer.from_pretrained(model_name)#default 't5-base'
     return tokenizer
 
+def check_device():
+    """
+    Check the availability of NVIDIA GPU, to run the code on GPU instead of CPU
+    :return cuda if a NVIDIA GPU is installed on the system, otherwise cpu
+    """
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    return device
+
 def test():
     set_seed(42)
 
