@@ -118,6 +118,30 @@ def apply_cut_off(pool,cut_off):
         return result
 
 
+def gui_weak_supervision_generation(sentence):
+    """
+    Apply Weak Supervision to generate data using nltk_wordnet.py module, use this function for GUI
+    :param sentence: sentence to generate parpahrases for
+    :return list of parpahrases, for each sentence it return 3 paraphrases one paraphrase in each dataset(data1 replace NOUN, data2 replace VERB, data3 replace NOUN and VERB)
+    """
+
+    # Generate data by Replacing only word with VERB pos-tags by synonym
+    spacy_tags = ['VERB'] #list of tag to extract from sentence using spacy
+    wm_tags = ['v'] #wordnet select only lemmas which pos-taggs is in wm_tags
+    data1 = nlt.main(sentence,spacy_tags,wm_tags)
+
+    # Generate data by Replacing only word with NOUN pos-tags by synonym 
+    spacy_tags = ['NOUN'] #list of tag to extract from sentence using spacy
+    wm_tags = ['n'] #wordnet select only lemmas which pos-taggs is in wm_tags
+    data2 = nlt.main(sentence,spacy_tags,wm_tags)
+    
+    # Generate data by Replacing only word with NOUN and VERB pos-tags by synonym
+    spacy_tags = ['VERB','NOUN'] #list of tag to extract from sentence using spacy
+    wm_tags = ['v','n'] #wordnet select only lemmas which pos-taggs is in wm_tags
+    data3 = nlt.main(sentence,spacy_tags,wm_tags)
+
+    return data1,data2,data3
+
 def weak_supervision_generation2(file_path):
     """
     Apply Weak Supervision to generate data using paraphraser.py module
