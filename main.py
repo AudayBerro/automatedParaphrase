@@ -118,29 +118,35 @@ def apply_cut_off(pool,cut_off):
         return result
 
 
-def gui_weak_supervision_generation(sentence):
+def gui_sbss_weak_supervision_generation(sentence):
     """
-    Apply Weak Supervision to generate data using nltk_wordnet.py module, use this function for GUI
+    Apply Weak Supervision using the SBSS component to generate data using nltk_wordnet.py module, use this function for GUI
     :param sentence: sentence to generate parpahrases for
-    :return list of parpahrases, for each sentence it return 3 paraphrases one paraphrase in each dataset(data1 replace NOUN, data2 replace VERB, data3 replace NOUN and VERB)
+    :return a list of 3 paraphrases generated using the SBSS part of the weak-supervision component of the pipeline
     """
+    result = []
+    #load spaCy USE embedding model
+    spacy_nlp = nlt.load_spacy_nlp('en_use_lg')
 
     # Generate data by Replacing only word with VERB pos-tags by synonym
     spacy_tags = ['VERB'] #list of tag to extract from sentence using spacy
     wm_tags = ['v'] #wordnet select only lemmas which pos-taggs is in wm_tags
-    data1 = nlt.main(sentence,spacy_tags,wm_tags)
+    data1 = nlt.gui_main(sentence,spacy_tags,wm_tags,spacy_nlp)
+    result.append(data1)
 
     # Generate data by Replacing only word with NOUN pos-tags by synonym 
     spacy_tags = ['NOUN'] #list of tag to extract from sentence using spacy
     wm_tags = ['n'] #wordnet select only lemmas which pos-taggs is in wm_tags
-    data2 = nlt.main(sentence,spacy_tags,wm_tags)
+    data2 = nlt.gui_main(sentence,spacy_tags,wm_tags,spacy_nlp)
+    result.append(data2)
     
     # Generate data by Replacing only word with NOUN and VERB pos-tags by synonym
     spacy_tags = ['VERB','NOUN'] #list of tag to extract from sentence using spacy
     wm_tags = ['v','n'] #wordnet select only lemmas which pos-taggs is in wm_tags
-    data3 = nlt.main(sentence,spacy_tags,wm_tags)
+    data3 = nlt.gui_main(sentence,spacy_tags,wm_tags,spacy_nlp)
+    result.append(data3)
 
-    return data1,data2,data3
+    return result
 
 def weak_supervision_generation2(file_path):
     """
