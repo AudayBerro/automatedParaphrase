@@ -148,9 +148,17 @@ def gui_sbss_weak_supervision_generation(sentence):
 
     return result
 
+def gui_srss_weak_supervision_generation(sentence):
+    """
+    Apply Weak Supervision to generate data using paraphraser.py module (SRSS component)
+    :param sentence: sentence to generate parpahrases for
+    :return a list of generated paraphrases using the SRSS part of the Weak-supervision component of the pipeline
+    """
+    return para.gui_main(sentence)
+
 def weak_supervision_generation2(file_path):
     """
-    Apply Weak Supervision to generate data using paraphraser.py module
+    Apply Weak Supervision to generate data using paraphraser.py module (SRSS component)
     :param file_path: file path to folder containing initial utterances
     :return a dictionary, key initial utterance, value set of parpahrases generated using the parpahraser.py module
     """
@@ -158,7 +166,7 @@ def weak_supervision_generation2(file_path):
 
 def weak_supervision_generation(file_path):
     """
-    Apply Weak Supervision to generate data using nltk_wordnet.py module
+    Apply Weak Supervision to generate data using nltk_wordnet.py module (SBSS component)
     :param file_path: file path to folder containing initial utterances
     :return list of parpahrases, for each sentence it return 3 paraphrases one paraphrase in each dataset(data1 replace NOUN, data2 replace VERB, data3 replace NOUN and VERB)
     """
