@@ -265,7 +265,7 @@ def pretrained_transaltion(file_path,pivot_level,cut_off):
 
     print("Start translation ", end="")
     t = time.time()
-    # generate paraphrases with MyMemory API
+    # generate paraphrases with Marian MT
     result1 = marian.translate_list(data1,model_list,pivot_level)
     result2 = marian.translate_list(data2,model_list,pivot_level)
     result3 = marian.translate_list(data3,model_list,pivot_level)
