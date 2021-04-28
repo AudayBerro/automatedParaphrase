@@ -400,5 +400,13 @@ def main():
     t2 = "Overall elapsed time: "+str(datetime.timedelta(0,time.time()-t1))
     pr_green(t2)
 
+def generate_from_gui(sentence,pipeline_config):
+    """
+    Generate parpahrases using Graphical User Interface(GUI) of the pipeline implemented in index.html 
+    :param sentence: user sentence to parpahrase obtained from the GUI
+    :param pipeline_config: user configuration of the pipline from the GUI
+    :return a list of paraphrases
+    """
+
 if __name__ == "__main__":
     main()
