@@ -245,8 +245,7 @@ def load_model():
     fr2ru_model = MarianMTModel.from_pretrained(mname)
     fr2ru_tok = MarianTokenizer.from_pretrained(mname)
     response['fr2ru']=[fr2ru_model,fr2ru_tok]
-
-    open_nmt
+    
     #Load Open-NMT translation model
     pr_green("\nLoad Open-NMT translation model:")
     pr_gray("\tload English to German model")
