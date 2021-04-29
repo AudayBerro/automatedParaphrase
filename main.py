@@ -156,26 +156,12 @@ def gui_sbss(sent,spacy_nlp,flag):
 
     if flag == 0:#the pipeline start with the weak supervision SBSS component
         for k,v in sent.items():
-            result = []
-            # Generate data by Replacing only word with VERB pos-tags by synonym
-            spacy_tags = ['VERB'] #list of tag to extract from sentence using spacy
-            wm_tags = ['v'] #wordnet select only lemmas which pos-taggs is in wm_tags
-            data1 = nlt.gui_main(k,spacy_tags,wm_tags,spacy_nlp,pos)
-            sent[k].append(data1)
+            paraphrases = sbss_weak_supervision_generation(k,spacy_nlp)
+            sent[k] = paraphrases
 
-            # Generate data by Replacing only word with NOUN pos-tags by synonym 
-            spacy_tags = ['NOUN'] #list of tag to extract from sentence using spacy
-            wm_tags = ['n'] #wordnet select only lemmas which pos-taggs is in wm_tags
-            data2 = nlt.gui_main(k,spacy_tags,wm_tags,spacy_nlp,pos)
-            sent[k].append(data2)
-            
-            # Generate data by Replacing only word with NOUN and VERB pos-tags by synonym
-            spacy_tags = ['VERB','NOUN'] #list of tag to extract from sentence using spacy
-            wm_tags = ['v','n'] #wordnet select only lemmas which pos-taggs is in wm_tags
-            data3 = nlt.gui_main(k,spacy_tags,wm_tags,spacy_nlp,pos)
-            sent[k].append(data3)
     else:#the pipeline have started with another component(e.g. Pivot-translation, T5, etc)
         for k,v in sent.items():
+            print("d")
 
     return sent
 
