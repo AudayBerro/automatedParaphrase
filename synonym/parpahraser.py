@@ -153,13 +153,13 @@ def main(file_path):
     return result
 
 
-def gui_main(senetence):
+def gui_main(sentence):
     """
     Apply Weak Supervision to generate paraphrases candidate using (pipeline SRSS component)
     :param sentence: sentence to generate parpahrases for
     :return a list of generated paraphrases using the SRSS part of the Weak-supervision component of the pipeline
     """
-    sent = expand_contractions(senetence)  #expand contraction e.g can't -> can not
+    sent = expand_contractions(sentence)  #expand contraction e.g can't -> can not
     sent = normalize_text(sent)
     paraphrases = get_paraphrases_list(sent)
 
