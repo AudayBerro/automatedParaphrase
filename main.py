@@ -121,11 +121,12 @@ def apply_cut_off(pool,cut_off):
 def gui_sbss_weak_supervision_generation(sentence):
     """
     Apply Weak Supervision using the SBSS component to generate data using nltk_wordnet.py module, use this function for GUI
-    :param sentence: sentence to generate parpahrases for
+    :param sentence: list of sentences to generate parpahrases for
     :return a list of 3 paraphrases generated using the SBSS part of the weak-supervision component of the pipeline
     """
     result = []
     #load spaCy USE embedding model
+    
     spacy_nlp = nlt.load_spacy_nlp('en_use_lg')
 
     # Generate data by Replacing only word with VERB pos-tags by synonym
@@ -151,7 +152,7 @@ def gui_sbss_weak_supervision_generation(sentence):
 def gui_srss_weak_supervision_generation(sentence):
     """
     Apply Weak Supervision to generate data using paraphraser.py module (SRSS component)
-    :param sentence: sentence to generate parpahrases for
+    :param sentence: list of sentences to generate parpahrases for
     :return a list of generated paraphrases using the SRSS part of the Weak-supervision component of the pipeline
     """
     return para.gui_main(sentence)
