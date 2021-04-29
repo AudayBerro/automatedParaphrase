@@ -177,6 +177,30 @@ def gui_sbss(sent,spacy_nlp,flag):
 
     return sent
 
+def gui_srss_weak_supervision_generation(sent):
+    """
+    Apply Weak Supervision to generate data using paraphraser.py module (SRSS component)
+    :param sent: python dictionary, key:initial sentence, value list of paraphrases candidates
+    :return a python dictionary containing a list generated paraphrases
+    """
+    for k,v in sent.items():
+        result = set()
+
+        #generate parpahrases for the initial expression k
+        paraphrases = para.gui_main(k)
+        result.update(paraphrases)
+
+        #generate paraphrases for each element in the values list
+        if v:#check if v not empty
+            for element in v:
+                paraphrases = para.gui_main(element)
+                result.update(paraphrases)
+            
+            result.update(v)
+        sent[k] = result
+
+    return sent
+
 def weak_supervision_generation2(file_path):
     """
     Apply Weak Supervision to generate data using paraphraser.py module (SRSS component)
