@@ -117,7 +117,7 @@ def apply_cut_off(pool,cut_off):
                 result[k]=v[:cut_off]
         return result
 
-def gui_sbss_weak_supervision_generation(sent,spacy_nlp,flag):
+def gui_sbss(sent,spacy_nlp,flag):
     """
     Apply Weak Supervision using the SBSS component to generate data using nltk_wordnet.py module, use this function for GUI
     :param sent: :param data: Python dictionary, key:initial utterance, value: list of paraphrases
