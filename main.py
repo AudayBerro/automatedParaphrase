@@ -168,11 +168,12 @@ def gui_sbss(sent,spacy_nlp,flag):
             result.update(paraphrases)
 
             #generate paraphrases for each element in the values list
-            for element in v:
-                paraphrases = sbss_weak_supervision_generation(element,spacy_nlp)
-                result.update(paraphrases)
-            
-            result.update(sent[k])#add K list of parpahrases to result to avoid loosing previous parpahrases 
+            if v:#check if v not empty
+                for element in v:
+                    paraphrases = sbss_weak_supervision_generation(element,spacy_nlp)
+                    result.update(paraphrases)
+                
+                result.update(v)#add K list of parpahrases to result to avoid loosing previous parpahrases 
             sent[k] = result
 
     return sent
