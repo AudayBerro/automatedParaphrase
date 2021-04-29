@@ -50,6 +50,12 @@ def join_set(data1,data2):
     return set(data1).union(set(data2))
 
 def synonym_model(s,tags):
+    """
+    This algorithm is based on synonym_model.py module form  Tili-dev/paraphraser  github project: https://github.com/Tili-dev/paraphraser/blob/master/paraphraser/synonym_model.py
+    :param s: sentence to generate paraphrases for
+    :param tags: par-of-speech tag to focus on during generation
+    :return a set of generated parphrases
+    """
     generated_sentences = set([])
 
     doc = nlp(s)
