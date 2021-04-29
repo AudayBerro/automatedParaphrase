@@ -5,6 +5,18 @@ import re,string
 
 """ Get token synonym using NLTK wordnet Corpus """
 
+def pr_green(msg):
+    """ Pring msg in green color font"""
+    print("\033[92m{}\033[00m" .format(msg))
+
+def pr_gray(msg):
+    """ Pring msg in gray color font"""
+    print("\033[7m{}\033[00m" .format(msg))
+
+def pr_red(msg): 
+    """ Pring msg in Red color font"""
+    print("\033[91m {}\033[00m" .format(msg)) 
+
 def normalize_text(text):
     """
     Remove punctuation except in real value or date(e.g. 2.5, 25/10/2015),line break and lowercase all words
@@ -70,7 +82,7 @@ def main(file_path,pos_tags,wordnet_tags):
     Apply part-of-speech taging, replace detected token defined in tags by appropriate wordnet synonym
     :param file_path: file path
     :param pos_tags: select only token which pos-tags is in pos_tags as candidate token to replace with wordnet synonym
-    :param pos_tags: select wordnet synset lemmas which pos-tags is in wordnet_tags
+    :param wordnet_tags: select wordnet synset lemmas which pos-tags is in wordnet_tags
     :return a new dataset where words selected from a list of tags are replaced by a synonymous word.
     """
 
@@ -113,5 +125,59 @@ def main(file_path,pos_tags,wordnet_tags):
         
         sentence = " ".join(sentence)
         result.append(sentence)
+    
+    return result
+
+def load_spacy_nlp(model_name='en_use_lg'):
+    """
+    Load spaCy Universal Sentence encoder model
+    :param model_name: spaCy USE model name to load
+    :return Universal Sentence Encoder embeddings model
+    """
+    #Universal sentence embedding with spacy https://github.com/MartinoMensio/spacy-universal-sentence-encoder
+    import spacy_universal_sentence_encoder
+
+    pr_gray("\nLoad spaCy Universal Sentence Encoder embedding model")
+    nlp = spacy_universal_sentence_encoder.load_model(model_name)
+
+    pr_green("... done")
+    return nlp
+
+def gui_main(sentence,pos_tags,wordnet_tags,spacy_nlp):
+    """
+    Apply part-of-speech taging, replace detected token defined in tags by appropriate wordnet synonym
+    :param sentence: sentence to generate parpahrases for
+    :param pos_tags: select only token which pos-tags is in pos_tags as candidate token to replace with wordnet synonym
+    :param wordnet_tags: select wordnet synset lemmas which pos-tags is in wordnet_tags
+    :param spacy_nlp: spacy Universal sentence embedding model
+    :return a new dataset where words selected from a list of tags are replaced by a synonymous word.
+    """
+
+    import sys
+    sys.path.append("..")
+    from pos import pos_extraction as ps
+
+    # import spacy
+    # nlp = spacy.load('en_core_web_lg', create_pipeline=wmd.WMD.create_spacy_pipeline) # load spacy model, add Word Mover Distance pipeline
+    
+    line = ps.expand_contractions(sentence)  #expand contraction e.g can't -> can not
+    # line = normalize_text(line) #lowercase the sentence help to avoid wordnet word confusion. Wordnet consider Can as the beverage bottle and not the verb
+
+    candidate,tokenized_list = ps.sentence_pos(line,pos_tags)
+    result = []
+
+    for token in tokenized_list:
+        if token in candidate:
+            wordnet_synonym = get_synonym(token,wordnet_tags)
+
+            if wordnet_synonym:
+                best_synonym = get_best_synonym(token,line,wordnet_synonym,spacy_nlp) #get best synonym
+                result.append(best_synonym)
+            else:
+                result.append(token)
+        else:
+            result.append(token)
+    
+    result = " ".join(result)
     
     return result
