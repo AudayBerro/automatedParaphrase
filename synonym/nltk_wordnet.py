@@ -150,34 +150,36 @@ def gui_main(sentence,pos_tags,wordnet_tags,spacy_nlp):
     :param pos_tags: select only token which pos-tags is in pos_tags as candidate token to replace with wordnet synonym
     :param wordnet_tags: select wordnet synset lemmas which pos-tags is in wordnet_tags
     :param spacy_nlp: spacy Universal sentence embedding model
-    :return a new dataset where words selected from a list of tags are replaced by a synonymous word.
+    :return a python dictionary containing 3 generated paraphrases for each sentence
     """
 
     import sys
     sys.path.append("..")
     from pos import pos_extraction as ps
-
+    
+    response = dict()
     # import spacy
     # nlp = spacy.load('en_core_web_lg', create_pipeline=wmd.WMD.create_spacy_pipeline) # load spacy model, add Word Mover Distance pipeline
-    
-    line = ps.expand_contractions(sentence)  #expand contraction e.g can't -> can not
-    # line = normalize_text(line) #lowercase the sentence help to avoid wordnet word confusion. Wordnet consider Can as the beverage bottle and not the verb
+    for sent in sentence:
+        line = ps.expand_contractions(sent)  #expand contraction e.g can't -> can not
+        # line = normalize_text(line) #lowercase the sentence help to avoid wordnet word confusion. Wordnet consider Can as the beverage bottle and not the verb
 
-    candidate,tokenized_list = ps.sentence_pos(line,pos_tags)
-    result = []
+        candidate,tokenized_list = ps.sentence_pos(line,pos_tags)
+        result = []
 
-    for token in tokenized_list:
-        if token in candidate:
-            wordnet_synonym = get_synonym(token,wordnet_tags)
+        for token in tokenized_list:
+            if token in candidate:
+                wordnet_synonym = get_synonym(token,wordnet_tags)
 
-            if wordnet_synonym:
-                best_synonym = get_best_synonym(token,line,wordnet_synonym,spacy_nlp) #get best synonym
-                result.append(best_synonym)
+                if wordnet_synonym:
+                    best_synonym = get_best_synonym(token,line,wordnet_synonym,spacy_nlp) #get best synonym
+                    result.append(best_synonym)
+                else:
+                    result.append(token)
             else:
                 result.append(token)
-        else:
-            result.append(token)
+        
+        result = " ".join(result)
+        response[sentence] = result
     
-    result = " ".join(result)
-    
-    return result
+    return response
