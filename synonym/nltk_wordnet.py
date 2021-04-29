@@ -146,7 +146,7 @@ def load_spacy_nlp(model_name='en_use_lg'):
 def gui_main(sentence,pos_tags,wordnet_tags,spacy_nlp):
     """
     Apply part-of-speech taging, replace detected token defined in tags by appropriate wordnet synonym
-    :param sentence: sentence to generate parpahrases for
+    :param sentence: list of sentences to generate parpahrases for
     :param pos_tags: select only token which pos-tags is in pos_tags as candidate token to replace with wordnet synonym
     :param wordnet_tags: select wordnet synset lemmas which pos-tags is in wordnet_tags
     :param spacy_nlp: spacy Universal sentence embedding model
