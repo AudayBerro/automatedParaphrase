@@ -159,7 +159,7 @@ def gui_sbss(sent,spacy_nlp,flag):
             paraphrases = sbss_weak_supervision_generation(k,spacy_nlp)
             sent[k] = paraphrases
 
-    elif flag == 2:#the pipeline have started with another component(e.g. Pivot-translation, T5, etc)
+    elif flag == 1:#the pipeline have started with another component(e.g. Pivot-translation, T5, etc)
         for k,v in sent.items():
             result = set()#will contain the generated paraphrases
 
@@ -176,14 +176,6 @@ def gui_sbss(sent,spacy_nlp,flag):
             sent[k] = result
 
     return sent
-
-def gui_srss_weak_supervision_generation(sentence):
-    """
-    Apply Weak Supervision to generate data using paraphraser.py module (SRSS component)
-    :param sent: python dictionary, key:initial sentence, value list of paraphrases candidates
-    :return a python dictionary containing a list generated paraphrases
-    """
-    return para.gui_main(sentence)
 
 def weak_supervision_generation2(file_path):
     """
@@ -485,6 +477,9 @@ if __name__ == "__main__":
 
     #flag 0 mean start with weak supervision, 1 mean start with another component(e.g. pivot-translation or trnasformer)
     flag = 1
-    d = {'book a flight from lyon to sydney':['book a flight from lyon to sydney', 'record a trajectory from lyon to sydney', 'reserve a trajectory from lyon to sydney'],'meat shop near me':['meat shop near me', 'kernel workshop near me', 'kernel workshop near me']}
-    a = gui_sbss(d,spacy_nlp,flag)
+    d = {'book a flight from lyon to sydney':[],'meat shop near me':[]}
+    #a = gui_sbss(d,spacy_nlp,flag)
+    a = gui_srss_weak_supervision_generation(d)
+    print(a)
+    a = gui_sbss(a,spacy_nlp,flag)
     print(a)
