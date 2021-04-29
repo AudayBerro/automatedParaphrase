@@ -153,10 +153,25 @@ def main(file_path):
     return result
 
 
+def gui_main(senetence):
+    """
+    Apply Weak Supervision to generate paraphrases candidate using (pipeline SRSS component)
+    :param sentence: sentence to generate parpahrases for
+    :return a list of generated paraphrases using the SRSS part of the Weak-supervision component of the pipeline
+    """
+    sent = expand_contractions(senetence)  #expand contraction e.g can't -> can not
+    sent = normalize_text(sent)
+    paraphrases = get_paraphrases_list(sent)
+
+    #convert paraphrases to python list (paraphrases is a python set)
+    return list(paraphrases) 
+
 if __name__ == '__main__':
-    import sys
-    import os
-    file_path = os.path.join(os.path.dirname(__file__), "..", "dataset/"+sys.argv[1])
-    pool = main(file_path)
+    #import sys
+    #import os
+    #file_path = os.path.join(os.path.dirname(__file__), "..", "dataset/"+sys.argv[1])
+    # pool = main(file_path)
+    # print(pool)
+    pool = gui_main('book a flight from lyon to sydney')
     print(pool)
 
