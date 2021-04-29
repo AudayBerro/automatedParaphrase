@@ -117,13 +117,41 @@ def apply_cut_off(pool,cut_off):
                 result[k]=v[:cut_off]
         return result
 
+def sbss_weak_supervision_generation(sentence,spacy_nlp):
+    """
+    Generate parpahrases using nltk_wordnet.py module
+    :param sentence: string to generate parpahrases for
+    :param spacy_nlp: spacy Universal sentence embedding model
+    :return a list of 3 paraphrases generated using the SBSS part of the weak-supervision component of the pipeline
+    """
+    result = []
+    # Generate data by Replacing only word with VERB pos-tags by synonym
+    spacy_tags = ['VERB'] #list of tag to extract from sentence using spacy
+    wm_tags = ['v'] #wordnet select only lemmas which pos-taggs is in wm_tags
+    data1 = nlt.gui_main(sentence,spacy_tags,wm_tags,spacy_nlp,pos)
+    result.append(data1)
+
+    # Generate data by Replacing only word with NOUN pos-tags by synonym 
+    spacy_tags = ['NOUN'] #list of tag to extract from sentence using spacy
+    wm_tags = ['n'] #wordnet select only lemmas which pos-taggs is in wm_tags
+    data2 = nlt.gui_main(sentence,spacy_tags,wm_tags,spacy_nlp,pos)
+    result.append(data2)
+    
+    # Generate data by Replacing only word with NOUN and VERB pos-tags by synonym
+    spacy_tags = ['VERB','NOUN'] #list of tag to extract from sentence using spacy
+    wm_tags = ['v','n'] #wordnet select only lemmas which pos-taggs is in wm_tags
+    data3 = nlt.gui_main(sentence,spacy_tags,wm_tags,spacy_nlp,pos)
+    result.append(data3)
+
+    return result
+
 def gui_sbss(sent,spacy_nlp,flag):
     """
-    Apply Weak Supervision using the SBSS component to generate data using nltk_wordnet.py module, use this function for GUI
+    Apply Weak Supervision to generate parpahrases using nltk_wordnet.py module, use this function for GUI
     :param sent: :param data: Python dictionary, key:initial utterance, value: list of paraphrases
     :param spacy_nlp: spacy Universal sentence embedding model
     :param flag: integer, flag=0 mean the pipeline start with weak-supervision, otherwise flag=1 
-    :return a list of 3 paraphrases generated using the SBSS part of the weak-supervision component of the pipeline
+    :return a Python dictionary, Key:initial expression, value: list of paraphrases
     """
 
     if flag == 0:#the pipeline start with the weak supervision SBSS component
@@ -460,5 +488,5 @@ if __name__ == "__main__":
     #flag 0 mean start with weak supervision, 1 mean start with another component(e.g. pivot-translation or trnasformer)
     flag = 0
     d = {'book a flight from lyon to sydney':[],'meat shop near me':[]}
-    a = gui_sbss_weak_supervision_generation(d,spacy_nlp,flag)
+    a = gui_sbss(d,spacy_nlp,flag)
     print(a)
