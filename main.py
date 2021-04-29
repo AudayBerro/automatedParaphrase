@@ -447,4 +447,7 @@ def generate_from_gui(sentence,pipeline_config):
     """
 
 if __name__ == "__main__":
-    main()
+    #main()
+    a = gui_sbss_weak_supervision_generation('book a flight from lyon to sydney')
+    for i in a:
+        print(i)
