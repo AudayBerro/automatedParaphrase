@@ -213,15 +213,31 @@ def gui_pivot_transaltion(sent,pivot_level,flag):
     :param flag: integer, flag=0 mean the pipeline start with pivot-translation, otherwise flag=1 
     :return a Python dictionary, Key is the initial expression and value is a list of paraphrases candidates
     """
+    result = dict()
     #load all the supported model
     model_list = marian.load_model() #for now we only support HuggingFace Marian MT and OpenNMT
 
     if flag == 0:
-        pass
-    elif flag == 1:
-        pass
+        for k,v in sent.items():
+            result[k] =  marian.multi_translate(k,model_list,pivot_level)
+            
+    elif flag == 1:#the pipeline have started with another component(e.g. Weak-supervision, T5, etc)
+        for k,v in sent.items():
+            candidates = set()#will contain the generated paraphrases
 
-    result = dict()
+            #generate paraphrases for the initial expression k
+            paraphrases = marian.multi_translate(k,model_list,pivot_level)
+            candidates.update(paraphrases)
+
+            #generate paraphrases for each element in the values list
+            if v:#check if v not empty
+                for element in v:
+                    paraphrases = marian.multi_translate(element,model_list,pivot_level)
+                    candidates.update(paraphrases)
+                
+                candidates.update(v)#add K list of parpahrases to result to avoid loosing previous parpahrases 
+            result[k] = list(candidates)
+
     return result
 
 ####  COMMANDE LINE MODE CODE  ####
@@ -542,5 +558,9 @@ if __name__ == "__main__":
     
     a = gui_srss_weak_supervision_generation(d)
     print("srss 0:",a)
-    c = gui_srss_weak_supervision_generation(a)
-    print("sbss 1:",c)
+    c = gui_pivot_transaltion(d,1,0)
+    print("p-1- 0:",c)
+    c = gui_pivot_transaltion(d,1,flag)
+    print("p-1- flag=0:",c)
+    c = gui_pivot_transaltion(a,1,flag)
+    print("p-1- flag=1:",c)
