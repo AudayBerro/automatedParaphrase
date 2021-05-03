@@ -205,6 +205,18 @@ def gui_srss_weak_supervision_generation(sent):
 
     return result
 
+def gui_pivot_transaltion(sent,pivot_level):
+    """
+    Generate Paraphrases using Pretrained Translation Model e.g. Huggingface MarianMT
+    :param sent: python dictionary, key:initial sentence, value list of paraphrases candidates
+    :param pivot_level: integer that indicate the pivot language level, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
+    :return a Python dictionary, Key is the initial expression and value is a list of paraphrases candidates
+    """
+    #load all the supported model
+    model_list = marian.load_model() #for now we only support HuggingFace Marian MT and OpenNMT
+
+    result = dict()
+    return result
 
 ####  COMMANDE LINE MODE CODE  ####
 
