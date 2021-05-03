@@ -153,30 +153,32 @@ def gui_sbss(sent,spacy_nlp,flag):
     :param flag: integer, flag=0 mean the pipeline start with weak-supervision, otherwise flag=1 
     :return a Python dictionary, Key:initial expression, value: list of paraphrases
     """
-
+    result = dict()
     if flag == 0:#the pipeline start with the weak supervision SBSS component
         for k,v in sent.items():
             paraphrases = sbss_weak_supervision_generation(k,spacy_nlp)
-            sent[k] = paraphrases
+            result[k] = paraphrases
 
     elif flag == 1:#the pipeline have started with another component(e.g. Pivot-translation, T5, etc)
         for k,v in sent.items():
-            result = set()#will contain the generated paraphrases
+            candidates = set()#will contain the generated paraphrases
 
             #generate paraphrases for the initial expression k
             paraphrases = sbss_weak_supervision_generation(k,spacy_nlp)
-            result.update(paraphrases)
+            candidates.update(paraphrases)
 
             #generate paraphrases for each element in the values list
             if v:#check if v not empty
+                print("not empty")
+                print(v)
                 for element in v:
                     paraphrases = sbss_weak_supervision_generation(element,spacy_nlp)
-                    result.update(paraphrases)
+                    candidates.update(paraphrases)
                 
-                result.update(v)#add K list of parpahrases to result to avoid loosing previous parpahrases 
-            sent[k] = result
+                candidates.update(v)#add K list of parpahrases to result to avoid loosing previous parpahrases 
+            result[k] = list(candidates)
 
-    return sent
+    return result
 
 def gui_srss_weak_supervision_generation(sent):
     """
@@ -198,7 +200,7 @@ def gui_srss_weak_supervision_generation(sent):
                 result.update(paraphrases)
             
             result.update(v)
-        sent[k] = result
+        sent[k] = list(result)
 
     return sent
 
@@ -504,7 +506,13 @@ if __name__ == "__main__":
     flag = 1
     d = {'book a flight from lyon to sydney':[],'meat shop near me':[]}
     #a = gui_sbss(d,spacy_nlp,flag)
-    a = gui_srss_weak_supervision_generation(d)
-    print(a)
-    a = gui_sbss(a,spacy_nlp,flag)
-    print(a)
+    # a = gui_srss_weak_supervision_generation(d)
+    # print("srss: ",a)
+    # b = gui_sbss(d,spacy_nlp,0)
+    # print("sbss: a",b)
+    a = gui_sbss(d,spacy_nlp,0)
+    print("sbss d",a)
+    c = gui_sbss(d,spacy_nlp,flag)
+    print("sbss d",c)
+    c = gui_sbss(a,spacy_nlp,flag)
+    print("sbss d",c)
