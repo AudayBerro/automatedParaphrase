@@ -184,23 +184,24 @@ def gui_srss_weak_supervision_generation(sent):
     :param sent: python dictionary, key:initial sentence, value list of paraphrases candidates
     :return a python dictionary containing a list generated paraphrases
     """
+    result = dict()
     for k,v in sent.items():
-        result = set()
+        candidates = set()
 
         #generate parpahrases for the initial expression k
         paraphrases = para.gui_main(k)
-        result.update(paraphrases)
+        candidates.update(paraphrases)
 
         #generate paraphrases for each element in the values list
         if v:#check if v not empty
             for element in v:
                 paraphrases = para.gui_main(element)
-                result.update(paraphrases)
+                candidates.update(paraphrases)
             
-            result.update(v)
-        sent[k] = list(result)
+            candidates.update(v)
+        result[k] = list(candidates)
 
-    return sent
+    return result
 
 def weak_supervision_generation2(file_path):
     """
@@ -508,9 +509,15 @@ if __name__ == "__main__":
     # print("srss: ",a)
     # b = gui_sbss(d,spacy_nlp,0)
     # print("sbss: a",b)
-    a = gui_sbss(d,spacy_nlp,0)
-    print("sbss d",a)
-    c = gui_sbss(d,spacy_nlp,flag)
-    print("sbss d",c)
-    c = gui_sbss(a,spacy_nlp,flag)
-    print("sbss d",c)
+    # a = gui_sbss(d,spacy_nlp,0)
+    # print("sbss d",a)
+    # c = gui_sbss(d,spacy_nlp,flag)
+    # print("sbss d",c)
+    # c = gui_sbss(a,spacy_nlp,flag)
+    # print("sbss d",c)
+
+    
+    a = gui_srss_weak_supervision_generation(d)
+    print("srss 0:",a)
+    c = gui_srss_weak_supervision_generation(a)
+    print("sbss 1:",c)
