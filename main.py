@@ -156,8 +156,8 @@ def gui_sbss(sent,spacy_nlp,flag):
     result = dict()
     if flag == 0:#the pipeline start with the weak supervision SBSS component
         for k,v in sent.items():
-            paraphrases = sbss_weak_supervision_generation(k,spacy_nlp)
-            result[k] = paraphrases
+            paraphrases = set(sbss_weak_supervision_generation(k,spacy_nlp))# convert to set to remove redundancy before adding candidate
+            result[k] = list(paraphrases) #convert to list before the insertion
 
     elif flag == 1:#the pipeline have started with another component(e.g. Pivot-translation, T5, etc)
         for k,v in sent.items():
@@ -169,8 +169,6 @@ def gui_sbss(sent,spacy_nlp,flag):
 
             #generate paraphrases for each element in the values list
             if v:#check if v not empty
-                print("not empty")
-                print(v)
                 for element in v:
                     paraphrases = sbss_weak_supervision_generation(element,spacy_nlp)
                     candidates.update(paraphrases)
