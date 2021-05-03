@@ -145,6 +145,8 @@ def sbss_weak_supervision_generation(sentence,spacy_nlp):
 
     return result
 
+####  GRAPHICAL USER INTERFACE MODE CODE  ####
+
 def gui_sbss(sent,spacy_nlp,flag):
     """
     Apply Weak Supervision to generate parpahrases using nltk_wordnet.py module, use this function for GUI
@@ -202,6 +204,9 @@ def gui_srss_weak_supervision_generation(sent):
         result[k] = list(candidates)
 
     return result
+
+
+####  COMMANDE LINE MODE CODE  ####
 
 def weak_supervision_generation2(file_path):
     """
