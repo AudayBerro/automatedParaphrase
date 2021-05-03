@@ -156,7 +156,10 @@ def multi_translate(utterance,model,pivot_level=1):
     tmp = normalize_text(tmp)
     response.add(tmp)
     response.add(tmp2)
-  return response
+
+    #convert to set to remove duplicate
+    response = set(response)
+  return list(response)#convert to list
 
 def translate_file(file_path,model,pivot_level):
   """
