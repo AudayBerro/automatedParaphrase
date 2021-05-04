@@ -99,13 +99,14 @@ def extract_paraphrases(beam_outputs,tokenizer,utterance):
             final_outputs.append(sent)
     return final_outputs
 
-def t5_paraphraser(sent,model_name="auday/paraphraser_model2",flag=0,num_seq=10):
+def t5_paraphraser(sent,model_name="auday/paraphraser_model2",flag=0,num_seq=10,max_len=256):
     """
     This function generate parpahrases candidates using pretrained Huggingface T5 transformers model
     :param sent: python dictionary, key:initial sentence, value list of paraphrases candidates
     :param model_name: name of the HuggingFace T5 model to load
     :param flag: integer, flag=0 mean the pipeline start with T5 component, otherwise flag=1
     :param num_seq: number of independently computed returned sequences for each element in the batch. Higher value return more sentences
+    :param max_len: The maximum length of the sequence to be generated
     :return a Python dictionary containing a list of paraphrases. Key:initial exression, value a list of paraphrases 
     """
 
