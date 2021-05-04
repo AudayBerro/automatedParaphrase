@@ -126,14 +126,16 @@ def t5_paraphraser(sent,model_name="auday/paraphraser_model2",flag=0,num_seq=10,
     pr_green("... done")
 
     #check GPU availability
-    pr_green("Check GPU availability",end="")
+    pr_gray("\nCheck GPU availability")
     device = check_device()
-    pr_green ("\tdevice: ",device)
+    pr_green ("... device: "+str(device))
     model = model.to(device)
 
     #######################################
     ## T5 paraphrases generation section ##
     #######################################
+
+    
 
 def test():
     set_seed(42)
