@@ -109,6 +109,31 @@ def t5_paraphraser(sent,model_name="auday/paraphraser_model2",flag=0,num_seq=10)
     :return a Python dictionary containing a list of paraphrases. Key:initial exression, value a list of paraphrases 
     """
 
+    ###############################
+    ## T5 initialisation section ##
+    ###############################
+    set_seed(42)#set the seed for generating random numbers for REPRODUCIBILITY
+
+    #load pre-trained T5 paraphraser
+    pr_gray("\nLoad Huggingface T5 pre-trained paraphraser model:")
+    model = load_model(model_name)
+    pr_green("... done")
+
+    #load T5 tokenizer
+    pr_gray("\nLoad Huggingface T5 Tokenizer model:")
+    tokenizer = load_tokenizer()
+    pr_green("... done")
+
+    #check GPU availability
+    pr_green("Check GPU availability",end="")
+    device = check_device()
+    pr_green ("\tdevice: ",device)
+    model = model.to(device)
+
+    #######################################
+    ## T5 paraphrases generation section ##
+    #######################################
+
 def test():
     set_seed(42)
 
