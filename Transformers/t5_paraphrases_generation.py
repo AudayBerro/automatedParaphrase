@@ -15,7 +15,7 @@ def load_model(model_name):
     :param model_name: name of the HuggingFace T5 model to load
     :return HuggingFace T5 model
     """
-    model = T5ForConditionalGeneration.from_pretrained(model_name) #auday/t5_paraphraser/model1   auday/t5_paraphraser/model2
+    model = T5ForConditionalGeneration.from_pretrained(model_name) #auday/paraphraser_model1   auday/paraphraser_model2
     return model
 
 def load_tokenizer(model_name='t5-base'):
@@ -94,10 +94,11 @@ def test():
     set_seed(42)
 
     print("Load T5 model")
-    model = load_model()
+    model_name = "auday/paraphraser_model2"
+    model = load_model(model_name)
     print("\tsuccess")
 
-    print("Load T5 Tokenier")
+    print("Load T5 Tokenizer")
     tokenizer = load_tokenizer()
     print("\tsuccess")
 
