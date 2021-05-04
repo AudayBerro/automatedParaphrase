@@ -60,7 +60,8 @@ def translate(utterance,model,tok,trg="NONE"):
     """
     if trg != 'NONE':
         utterance = '>>'+trg+'<<  '+utterance
-    translated = model.generate(**tok.prepare_translation_batch([utterance]))
+    # translated = model.generate(**tok.prepare_translation_batch([utterance]))#old version transformers==3.0.0
+    translated = model.generate(**tok(utterance, return_tensors="pt", padding=True))
     result = [tok.decode(t, skip_special_tokens=True) for t in translated]
     return result[0]
 
