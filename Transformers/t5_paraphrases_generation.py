@@ -135,7 +135,71 @@ def t5_paraphraser(sent,model_name="auday/paraphraser_model2",flag=0,num_seq=10,
     ## T5 paraphrases generation section ##
     #######################################
 
-    
+    result = dict()
+    if flag == 0:#the pipeline start with the weak supervision SBSS component
+        for k,v in sent.items():
+            #convert sentence to T5 format
+            text =  convert_to_t5_format(k)
+
+            #encode the sentence
+            encoding = encode_input(tokenizer,text)
+            input_ids, attention_masks = encoding["input_ids"].to(device), encoding["attention_mask"].to(device)
+
+            # set top_k = 50 and set top_p = 0.95 and num_return_sequences = 3
+            #generate paraphrases
+            beam_outputs = generate_paraphrase(model,input_ids,attention_masks,max_len)
+
+            #extract(decode) the generated paraphrases
+            paraphrases = extract_paraphrases(beam_outputs,tokenizer,k)
+            result[k] = list(paraphrases) #convert to list before the insertion
+
+    elif flag == 1:#the pipeline have started with another component(e.g. Pivot-translation, T5, etc)
+        for k,v in sent.items():
+            #convert sentence to T5 format
+            candidates = set()#will contain the generated paraphrases
+
+            #generate paraphrases for the initial expression k
+            #convert sentence to T5 format
+            text =  convert_to_t5_format(k)
+
+            #encode the sentence
+            encoding = encode_input(tokenizer,text)
+            input_ids, attention_masks = encoding["input_ids"].to(device), encoding["attention_mask"].to(device)
+
+            # set top_k = 50 and set top_p = 0.95 and num_return_sequences = 3
+            #generate paraphrases
+            beam_outputs = generate_paraphrase(model,input_ids,attention_masks,max_len)
+
+            #extract(decode) the generated paraphrases
+            paraphrases = extract_paraphrases(beam_outputs,tokenizer,k)
+            candidates.update(list(paraphrases))#convert to list before the insertion
+
+            #generate paraphrases for each element in the values list
+            if v:#check if v not empty
+                for element in v:
+                    #convert sentence to T5 format
+                    candidates = set()#will contain the generated paraphrases
+
+                    #generate paraphrases for the initial expression k
+                    #convert sentence to T5 format
+                    text =  convert_to_t5_format(element)
+
+                    #encode the sentence
+                    encoding = encode_input(tokenizer,text)
+                    input_ids, attention_masks = encoding["input_ids"].to(device), encoding["attention_mask"].to(device)
+
+                    # set top_k = 50 and set top_p = 0.95 and num_return_sequences = 3
+                    #generate paraphrases
+                    beam_outputs = generate_paraphrase(model,input_ids,attention_masks,max_len)
+
+                    #extract(decode) the generated paraphrases
+                    paraphrases = extract_paraphrases(beam_outputs,tokenizer,element)
+                    candidates.update(list(paraphrases))#convert to list before the insertion
+                
+                candidates.update(v)#add K list of parpahrases to result to avoid loosing previous parpahrases 
+            result[k] = list(candidates)
+
+    return result
 
 def test():
     set_seed(42)
