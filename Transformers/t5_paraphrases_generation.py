@@ -90,13 +90,13 @@ def extract_paraphrases(beam_outputs,tokenizer,utterance):
     :param beam_outputs: T5 generated Paraphrases in a form of torch.FloatTensor
     :param tokenizer: T5 Tokenizer
     :param utterance: initial expression to paraphrase
-    :return a Python list containing the generated paraphrases 
+    :return a Python set containing the generated paraphrases 
     """
-    final_outputs =[]
+    final_outputs = set()
     for beam_output in beam_outputs:
         sent = tokenizer.decode(beam_output, skip_special_tokens=True,clean_up_tokenization_spaces=True)
         if sent.lower() != utterance.lower() and sent not in final_outputs:
-            final_outputs.append(sent)
+            final_outputs.add(sent)
     return final_outputs
 
 def t5_paraphraser(sent,model_name="auday/paraphraser_model2",flag=0,num_seq=10,max_len=256):
