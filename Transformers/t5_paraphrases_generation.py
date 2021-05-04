@@ -3,6 +3,14 @@ from transformers import T5ForConditionalGeneration,T5Tokenizer
 
 """" This code generate paraphrases using Huggingface T5 model's """
 
+def pr_gray(msg):
+    """ Pring msg in gray color font"""
+    print("\033[7m{}\033[00m" .format(msg))
+
+def pr_green(msg):
+    """ Pring msg in green color font"""
+    print("\033[92m{}\033[00m" .format(msg))
+
 def set_seed(seed):
     """ Set the seed for generating random numbers for REPRODUCIBILITY """
     torch.manual_seed(seed)
