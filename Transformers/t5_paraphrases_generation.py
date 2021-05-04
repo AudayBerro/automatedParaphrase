@@ -54,13 +54,14 @@ def encode_input(tokenizer,text):
     encoding = tokenizer.encode_plus(text,pad_to_max_length=True, return_tensors="pt")
     return encoding
 
-def generate_paraphrase(model,input_ids,attention_masks,max_len=256):
+def generate_paraphrase(model,input_ids,attention_masks,max_len=256,num_seq=10):
     """
     Generate Parpahrases using T5 model
     :param model: Huggingface T5 model
     :param input_ids: Indices of input sequence tokens in the T5 vocabulary
     :param attention_masks: Mask to avoid performing attention on padding token indices
     :param max_len: The maximum length of the sequence to be generated
+    :param num_seq: int, optional, defaults to 1 – The number of independently computed returned sequences for each element in the batch. Higher value retur more sentences
     return list of generated paraphrases in a form of torch.FloatTensor or dictionary if config.return_dict=True(in this code is set to False)
     """
     # set top_k = 50 and set top_p = 0.95 and num_return_sequences = 3
@@ -71,13 +72,13 @@ def generate_paraphrase(model,input_ids,attention_masks,max_len=256):
         top_k=120, # (int, optional, defaults to 50)– The number of highest probability vocabulary tokens to keep for top-k-filtering.
         top_p=0.98, # (float, optional, defaults to 1.0)– If set to float < 1, only the most probable tokens with probabilities that add up to top_p or higher are kept for generation.
         early_stopping=True, # Whether to stop the beam search when at least num_beams sentences are finished per batch or not.
-        num_return_sequences=10 # (int, optional, defaults to 1) – The number of independently computed returned sequences for each element in the batch.
+        num_return_sequences=num_seq
     )
     return beam_outputs
 
 def extract_paraphrases(beam_outputs,tokenizer,utterance):
     """
-    This funciton extract paraphrases from beam_outputs
+    This funciton extract paraphrases from beam_outputs# (int, optional, defaults to 1) – The number of independently computed returned se# (int, optional, defaults to 1) – The number of independently computed returned sequences for each element in the batch.quences for each element in the batch.
     :param beam_outputs: T5 generated Paraphrases in a form of torch.FloatTensor
     :param tokenizer: T5 Tokenizer
     :param utterance: initial expression to paraphrase
