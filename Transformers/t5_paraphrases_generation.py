@@ -61,7 +61,7 @@ def generate_paraphrase(model,input_ids,attention_masks,max_len=256,num_seq=10):
     :param input_ids: Indices of input sequence tokens in the T5 vocabulary
     :param attention_masks: Mask to avoid performing attention on padding token indices
     :param max_len: The maximum length of the sequence to be generated
-    :param num_seq: int, optional, defaults to 1 – The number of independently computed returned sequences for each element in the batch. Higher value retur more sentences
+    :param num_seq: int, optional, defaults to 1 – The number of independently computed returned sequences for each element in the batch. Higher value return more sentences
     return list of generated paraphrases in a form of torch.FloatTensor or dictionary if config.return_dict=True(in this code is set to False)
     """
     # set top_k = 50 and set top_p = 0.95 and num_return_sequences = 3
@@ -90,6 +90,16 @@ def extract_paraphrases(beam_outputs,tokenizer,utterance):
         if sent.lower() != utterance.lower() and sent not in final_outputs:
             final_outputs.append(sent)
     return final_outputs
+
+def t5_paraphraser(sent,model_name="auday/paraphraser_model2",flag=0,num_seq=10):
+    """
+    This function generate parpahrases candidates using pretrained Huggingface T5 transformers model
+    :param sent: python dictionary, key:initial sentence, value list of paraphrases candidates
+    :param model_name: name of the HuggingFace T5 model to load
+    :param flag: integer, flag=0 mean the pipeline start with T5 component, otherwise flag=1
+    :param num_seq: number of independently computed returned sequences for each element in the batch. Higher value return more sentences
+    :return a Python dictionary containing a list of paraphrases. Key:initial exression, value a list of paraphrases 
+    """
 
 def test():
     set_seed(42)
