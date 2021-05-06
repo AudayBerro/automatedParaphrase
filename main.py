@@ -19,6 +19,7 @@ from evaluation import bleu_score,gleu_score,chrf_score,diversity_metrics
 from nltk.translate.bleu_score import SmoothingFunction,sentence_bleu
 from nltk.translate.gleu_score import sentence_gleu
 from nltk.translate.chrf_score import sentence_chrf
+from Transformers import t5_paraphrases_generation as t5
 
 #time and color in console
 import time
@@ -535,32 +536,50 @@ def generate_from_gui(sentence,pipeline_config):
     #load spaCy USE embedding model
     spacy_nlp = nlt.load_spacy_nlp('en_use_lg')
 
-if __name__ == "__main__":
+def test():
+    """ A simple test function to run the code """
     #main()
     #load spaCy USE embedding model
     spacy_nlp = nlt.load_spacy_nlp('en_use_lg')
 
     #flag 0 mean start with weak supervision, 1 mean start with another component(e.g. pivot-translation or trnasformer)
     flag = 1
-    d = {'book a flight from lyon to sydney':[],'meat shop near me':[]}
-    #a = gui_sbss(d,spacy_nlp,flag)
-    # a = gui_srss_weak_supervision_generation(d)
-    # print("srss: ",a)
-    # b = gui_sbss(d,spacy_nlp,0)
-    # print("sbss: a",b)
+    # d = {'book a flight from lyon to sydney':[],'meat shop near me':[]}
+    # #a = gui_sbss(d,spacy_nlp,flag)
+    # a = gui_srss_weak_supervision_generation(d)template engine
     # a = gui_sbss(d,spacy_nlp,0)
     # print("sbss d",a)
-    # c = gui_sbss(d,spacy_nlp,flag)
+    # c = gui_sbss(d,spacy_nlp,flag)c=
     # print("sbss d",c)
     # c = gui_sbss(a,spacy_nlp,flag)
     # print("sbss d",c)
 
-    
-    a = gui_srss_weak_supervision_generation(d)
-    print("srss 0:",a)
-    c = gui_pivot_transaltion(d,1,0)
-    print("p-1- 0:",c)
-    c = gui_pivot_transaltion(d,1,flag)
-    print("p-1- flag=0:",c)
-    c = gui_pivot_transaltion(a,1,flag)
-    print("p-1- flag=1:",c)
+    # a = gui_sbss(d,spacy_nlp,flag)
+    # print("sbss 0:",a)
+    # b = gui_srss_weak_supervision_generation(a)
+    # print("srss 0:",b)
+    # f = gui_pivot_transaltion(a,1,flag)
+    # print("p-1- 0:",f)
+
+    # # #universal sentence encoder filtering
+    # print("Start Universal Sentence Encoder filtering ")
+    # use_filtered = use.get_embedding(f)
+    # print("USE: ",use_filtered)
+
+    # bert_filtered_paraphrases = bert.bert_selection(use_filtered)
+    # print("BERT: ",bert_filtered_paraphrases)
+    # bert_filtered_paraphrases = sort_collection(bert_filtered_paraphrases)
+    # # print("SORTED BERT: ",bert_filtered_paraphrases)
+    d = {'book a flight from lyon to sydney':[],'meat shop near me':[]}
+    # #a = gui_sbss(d,spacy_nlp,flag)
+    # a = gui_srss_weak_supervision_generation(d)
+    # print("srss: ",a)
+
+    b = t5.t5_paraphraser(d)
+    print("t5 0:",b)
+
+    c = t5.t5_paraphraser(b,"auday/paraphraser_model2",1)
+    print("t5 1:",c) 
+if __name__ == "__main__":
+    #main()
+    test()
