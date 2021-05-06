@@ -535,8 +535,41 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
     :return a list of paraphrases
     """
 
-    #load spaCy USE embedding model
+    # load spaCy USE embedding model
     spacy_nlp = nlt.load_spacy_nlp('en_use_lg')
+
+    # pipeline configuration
+    if pipeline_config == "c1":# Pivot-Translation
+        pass
+    elif pipeline_config == "c2":# Weak-supervision
+        pass
+    elif pipeline_config == "c3":# T5
+        pass
+    elif pipeline_config == "c4":# Weak-Supervision => Pivot-Translation
+        pass
+    elif pipeline_config == "c5":# Weak-Supervision => T5
+        pass
+    elif pipeline_config == "c6":# Weak-Supervision => Pivot-Translation => T5
+        pass
+    elif pipeline_config == "c7":# Weak-Supervision  => T5 => Pivot-Translation
+        pass
+    elif pipeline_config == "c8":# Pivot-Translation => Weak-Supervision
+        pass
+    elif pipeline_config == "c9":# Pivot-Translation => T5
+        pass
+    elif pipeline_config == "c10":# Pivot-Translation => Weak-Supervision => T5
+        pass
+    elif pipeline_config == "c11":# Pivot-Translation => T5 => Weak-Supervision
+        pass
+    elif pipeline_config == "c12":# T5 => Weak-Supervision
+        pass
+    elif pipeline_config == "c13":# T5 => Pivot-Translation
+        pass
+    elif pipeline_config == "c14":# T5 => Pivot-Translation => Weak-Supervision
+        pass
+    elif pipeline_config == "c15":# T5 => Weak-Supervision => Pivot-Translation
+        pass
+
 
 def test(utterance):
     """ A simple test function to run the code """
