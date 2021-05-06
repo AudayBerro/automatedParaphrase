@@ -12,9 +12,9 @@
     <body>
 
         <div class="head">
-            <form method='post'>
+            <form id="mainform">
                 <div class="container ">
-                    <input type="search"  placeholder="insert a sentence to paraphrase" >
+                    <input type="text" name="user_utterance"  placeholder="insert a sentence to paraphrase" />
                     <input type="submit" value="generate" />
                 </div>
                 <div class="container ">
@@ -22,47 +22,47 @@
                         <tr>
                             <td> Configuration: </td>
                             <td>
-                                <select id="monselect">
+                                <select id="monselect" name="configuration">
                                     <!-- run pipeline with one component -->
-                                    <option value="valeur1" name="l1" id="c1">Pivot-Translation</option>
-                                    <option value="valeur2" name="l2" id="c2" >Weak-Supervision</option>
-                                    <option value="valeur3" name="l3" id="c3">T5</option>
+                                    <option value="c1" name="l1" id="c1">Pivot-Translation</option>
+                                    <option value="c2" name="l2" id="c2" >Weak-Supervision</option>
+                                    <option value="c3" name="l3" id="c3">T5</option>
                                     <!-- pipeline start with weak supervision -->
-                                    <option value="valeur4" name="l4" id="c4">Weak-Supervision + Pivot-Translation</option>
-                                    <option value="valeur5" name="l5" id="c5">Weak-Supervision + T5</option>
-                                    <option value="valeur6" name="l6" id="c6">Weak-Supervision + Pivot-Translation + T5</option>
-                                    <option value="valeur7" name="l7" id="c7">Weak-Supervision  + T5 + Pivot-Translation</option>
+                                    <option value="c4" name="l4" id="c4">Weak-Supervision + Pivot-Translation</option>
+                                    <option value="c5" name="l5" id="c5">Weak-Supervision + T5</option>
+                                    <option value="c6" name="l6" id="c6">Weak-Supervision + Pivot-Translation + T5</option>
+                                    <option value="c7" name="l7" id="c7">Weak-Supervision  + T5 + Pivot-Translation</option>
                                     <!-- pipeline start with pivot translation -->
-                                    <option value="valeur8" name="l8" id="c8">Pivot-Translation + Weak-Supervision</option>
-                                    <option value="valeur9" name="l9" id="c9">Pivot-Translation + T5</option>
-                                    <option value="valeur10" name="l10" id="c10">Pivot-Translation + Weak-Supervision + T5</option>
-                                    <option value="valeur11" name="l11" id="c11">Pivot-Translation + T5 + Weak-Supervision</option>
+                                    <option value="c8" name="l8" id="c8">Pivot-Translation + Weak-Supervision</option>
+                                    <option value="c9" name="l9" id="c9">Pivot-Translation + T5</option>
+                                    <option value="c10" name="l10" id="c10">Pivot-Translation + Weak-Supervision + T5</option>
+                                    <option value="c11" name="l11" id="c11">Pivot-Translation + T5 + Weak-Supervision</option>
                                     <!-- pipeline start with T5 -->
-                                    <option value="valeur12" name="l12" id="c12">T5 + Weak-Supervision</option>
-                                    <option value="valeur13" name="l13" id="c13">T5 + Pivot-Translation</option>
-                                    <option value="valeur14" name="l14" id="c14">T5 + Pivot-Translation + Weak-Supervision</option>
-                                    <option value="valeur15" name="l15" id="c15">T5 + Weak-Supervision + Pivot-Translation</option>
+                                    <option value="c12" name="l12" id="c12">T5 + Weak-Supervision</option>
+                                    <option value="c13" name="l13" id="c13">T5 + Pivot-Translation</option>
+                                    <option value="c14" name="l14" id="c14">T5 + Pivot-Translation + Weak-Supervision</option>
+                                    <option value="c15" name="l15" id="c15">T5 + Weak-Supervision + Pivot-Translation</option>
 
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <td> Pivot Level: </td>
-                            <td> <input type="radio" name="r2" id="pivot1"> 1</td>
-                            <td> <input type="radio" name="r2" id="pivot2"> 2</td>
+                            <td> <input type="radio" name="pivot_level" id="pivot1" value="1"> 1</td>
+                            <td> <input type="radio" name="pivot_level" id="pivot2" value="2"> 2</td>
                             <td> </td>
                             <td> </td>
                         </tr>
                         <tr>
                             <td> Use pre-trained: </td>
-                            <td> <input type="radio" name="r3" id="pre1"> Yes</td>
-                            <td> <input type="radio" name="r3" id="pre2"> No</td>
+                            <td> <input type="radio" name="pre_trained_mt" id="pre1" value="yes"> Yes</td>
+                            <td> <input type="radio" name="pre_trained_mt" id="pre2" value="no"> No</td>
                             <td> </td>
                             <td> </td>
                         </tr>
                     </table>
                 </div>
-            </form>>
+            </form>
         </div>
         <div class="container main-wrap">
             <div class="result">
@@ -77,9 +77,6 @@
                 </ul>
             </div>
         </div>
-
-        <script src="js/jquery.js"></script>
-        <script src="js/app.js"></script>
         <script src="{{ url_for('static',filename='js/script.js') }}"></script>
 
     </body>
