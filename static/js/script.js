@@ -9,7 +9,7 @@ var serializeForm = function (form) {
 
 document.getElementById('monselect').addEventListener('change',function(){
     var disable = false;
-    if(this.value=='valeur2'){
+    if( ['c2','c3','c5','c12'].includes(this.value) ){
         disable = true;
     }
     
