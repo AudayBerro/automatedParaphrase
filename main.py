@@ -525,18 +525,20 @@ def main():
     t2 = "Overall elapsed time: "+str(datetime.timedelta(0,time.time()-t1))
     pr_green(t2)
 
-def generate_from_gui(sentence,pipeline_config):
+def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None):
     """
     Generate parpahrases using Graphical User Interface(GUI) of the pipeline implemented in index.html 
     :param sentence: user sentence to parpahrase obtained from the GUI
     :param pipeline_config: user configuration of the pipline from the GUI
+    :param pivot_level: pivot translation level to use for the Pivot-Translation component
+    :param pre_trained: Machine Translation model option to use for the Pivot-Translation component
     :return a list of paraphrases
     """
 
     #load spaCy USE embedding model
     spacy_nlp = nlt.load_spacy_nlp('en_use_lg')
 
-def test():
+def test(utterance):
     """ A simple test function to run the code """
     #main()
     #load spaCy USE embedding model
@@ -566,20 +568,19 @@ def test():
     # use_filtered = use.get_embedding(f)
     # print("USE: ",use_filtered)
 
-    # bert_filtered_paraphrases = bert.bert_selection(use_filtered)
+    # bert_filtered_paraphrases = bert.bert,'meat shop near me':[]_selection(use_filtered)
     # print("BERT: ",bert_filtered_paraphrases)
     # bert_filtered_paraphrases = sort_collection(bert_filtered_paraphrases)
     # # print("SORTED BERT: ",bert_filtered_paraphrases)
-    d = {'book a flight from lyon to sydney':[],'meat shop near me':[]}
+    d = {utterance:[]}
     # #a = gui_sbss(d,spacy_nlp,flag)
     # a = gui_srss_weak_supervision_generation(d)
     # print("srss: ",a)
 
     b = t5.t5_paraphraser(d)
-    print("t5 0:",b)
 
     c = t5.t5_paraphraser(b,"auday/paraphraser_model2",1)
-    print("t5 1:",c) 
+    return c
 if __name__ == "__main__":
     #main()
     test()
