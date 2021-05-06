@@ -528,11 +528,11 @@ def main():
 def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None):
     """
     Generate parpahrases using Graphical User Interface(GUI) of the pipeline implemented in index.html 
-    :param sentence: user sentence to parpahrase obtained from the GUI
-    :param pipeline_config: user configuration of the pipline from the GUI
-    :param pivot_level: pivot translation level to use for the Pivot-Translation component
-    :param pre_trained: Machine Translation model option to use for the Pivot-Translation component
-    :return a list of paraphrases
+    :param sentence: user sentence to parpahrase obtained from the GUI. Value from templates/index.html <input type="text" name="user_utterance"/>
+    :param pipeline_config: user configuration of the pipline from the GUI. Value from templates/index.html <select id="monselect" name="configuration">
+    :param pivot_level: pivot translation level to use for the Pivot-Translation component. Value from templates/index.html <input type="radio" name="pivot_level"/>
+    :param pre_trained: Machine Translation model option to use for the Pivot-Translation component. Value from templates/index.html <input type="radio" name="pre_trained_mt"/>
+    :return a Python dictionary, key:initial expression, value: list of paraphrases
     """
 
     # load spaCy USE embedding model
