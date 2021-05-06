@@ -31,6 +31,19 @@ html{
     max-height: 400px;
     overflow-y: auto;
 }
+.result.loading{
+    position: relative;
+}
+.result.loading:after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(/static/img/loading.gif) center/50px no-repeat rgba(255,255,255,0.3);
+}
+
 
 .result ul{
     list-style: none;
