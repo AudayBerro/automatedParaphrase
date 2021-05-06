@@ -206,7 +206,7 @@ def gui_srss_weak_supervision_generation(sent):
 
     return result
 
-def gui_pivot_transaltion(sent,pivot_level,flag):
+def gui_pivot_translation(sent,pivot_level,flag):
     """
     Generate Paraphrases using Pretrained Translation Model e.g. Huggingface MarianMT
     :param sent: python dictionary, key:initial sentence, value list of paraphrases candidates
