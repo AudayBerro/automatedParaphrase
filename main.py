@@ -541,23 +541,28 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
 
     # T5 pre-trained paraphraser model to load
     model_name="auday/paraphraser_model2"
-    num_seq = 40 # default 10
+    num_seq = 10 # default 10
     max_len = 256
 
+    #convert sentence to dictionary
+    sentence = {sentence:[]}
     # pipeline configuration
     if pipeline_config == "c1":# Pivot-Translation
         #convert pivot_level to integer
         pivot_level = int(pivot_level)
         #run pivot translation component
         result = gui_pivot_translation(sentence,pivot_level,flag)
+
     elif pipeline_config == "c2":# Weak-supervision
         #start the pipeline with Weak-Supervision SBSS component
         result = gui_sbss(sentence,spacy_nlp,flag)
 
         #Run Weak-Supervision SRSS component
         result = gui_srss_weak_supervision_generation(result)
+
     elif pipeline_config == "c3":# T5
         result = t5.t5_paraphraser(sentence,model_name,flag,num_seq,max_len)
+
     elif pipeline_config == "c4":# Weak-Supervision => Pivot-Translation
         ################################################
         ### Start the pipeline with Weak-Supervision ###
@@ -567,6 +572,16 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
 
         #Run Weak-Supervision SRSS component
         result = gui_srss_weak_supervision_generation(result)
+
+        #############################
+        ### Run Pivot-Translation ###
+        #############################
+        flag = 1 # set flag to 1
+        #convert pivot_level to integer
+        pivot_level = int(pivot_level)
+        #run pivot translation component
+        result = gui_pivot_translation(result,pivot_level,flag)
+
     elif pipeline_config == "c5":# Weak-Supervision => T5
         ################################################
         ### Start the pipeline with Weak-Supervision ###
@@ -576,6 +591,13 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
 
         #Run Weak-Supervision SRSS component
         result = gui_srss_weak_supervision_generation(result)
+
+        #############################
+        ### Run T5 ###
+        #############################
+        flag = 1 # set flag to 1
+        result = t5.t5_paraphraser(result,model_name,flag,num_seq,max_len)
+
     elif pipeline_config == "c6":# Weak-Supervision => Pivot-Translation => T5
         ################################################
         ### Start the pipeline with Weak-Supervision ###
@@ -598,8 +620,8 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
         #############################
         ### Run T5 ###
         #############################
-        flag = 1 # set flag to 1
         result = t5.t5_paraphraser(result,model_name,flag,num_seq,max_len)
+
     elif pipeline_config == "c7":# Weak-Supervision  => T5 => Pivot-Translation
         ################################################
         ### Start the pipeline with Weak-Supervision ###
@@ -609,6 +631,21 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
 
         #Run Weak-Supervision SRSS component
         result = gui_srss_weak_supervision_generation(result)
+
+        #############################
+        ### Run T5 ###
+        #############################
+        flag = 1
+        result = t5.t5_paraphraser(result,model_name,flag,num_seq,max_len)
+
+        #############################
+        ### Run Pivot-Translation ###
+        #############################
+        #convert pivot_level to integer
+        pivot_level = int(pivot_level)
+        #run pivot translation component
+        result = gui_pivot_translation(result,pivot_level,flag)
+
     elif pipeline_config == "c8":# Pivot-Translation => Weak-Supervision
         #################################################
         ### Start the pipeline with Pivot-Translation ###
@@ -626,6 +663,7 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
 
         #Run Weak-Supervision SRSS component
         result = gui_srss_weak_supervision_generation(result)
+
     elif pipeline_config == "c9":# Pivot-Translation => T5
         #################################################
         ### Start the pipeline with Pivot-Translation ###
@@ -640,6 +678,7 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
         #############################
         flag = 1
         result = t5.t5_paraphraser(result,model_name,flag,num_seq,max_len)
+
     elif pipeline_config == "c10":# Pivot-Translation => Weak-Supervision => T5
         #################################################
         ### Start the pipeline with Pivot-Translation ###
@@ -662,6 +701,7 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
         ### Run T5 ###
         ##############
         result = t5.t5_paraphraser(result,model_name,flag,num_seq,max_len)
+
     elif pipeline_config == "c11":# Pivot-Translation => T5 => Weak-Supervision
         #################################################
         ### Start the pipeline with Pivot-Translation ###
@@ -680,11 +720,11 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
         #############################
         ### Run Weak-Supervision ###
         #############################
-        flag = 1 # set flag to 1
         result = gui_sbss(result,spacy_nlp,flag)
 
         #Run Weak-Supervision SRSS component
         result = gui_srss_weak_supervision_generation(result)
+
     elif pipeline_config == "c12":# T5 => Weak-Supervision
         ##################################
         ### Start the pipeline with T5 ###
@@ -699,6 +739,7 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
 
         #Run Weak-Supervision SRSS component
         result = gui_srss_weak_supervision_generation(result)
+
     elif pipeline_config == "c13":# T5 => Pivot-Translation
         ##################################
         ### Start the pipeline with T5 ###
@@ -713,6 +754,7 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
         pivot_level = int(pivot_level)
         #run pivot translation component
         result = gui_pivot_translation(result,pivot_level,flag)
+
     elif pipeline_config == "c14":# T5 => Pivot-Translation => Weak-Supervision
         ##################################
         ### Start the pipeline with T5 ###
@@ -731,7 +773,6 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
         #############################
         ### Run Weak-Supervision ###
         #############################
-        flag = 1 # set flag to 1
         result = gui_sbss(result,spacy_nlp,flag)
 
         #Run Weak-Supervision SRSS component
@@ -754,56 +795,11 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
         #############################
         ### Run Pivot-Translation ###
         #############################
-        flag = 1 # set flag to 1
         #convert pivot_level to integer
         pivot_level = int(pivot_level)
         #run pivot translation component
         result = gui_pivot_translation(result,pivot_level,flag)
-
-
-def test(utterance):
-    """ A simple test function to run the code """
-    #main()
-    #load spaCy USE embedding model
-    spacy_nlp = nlt.load_spacy_nlp('en_use_lg')
-
-    #flag 0 mean start with weak supervision, 1 mean start with another component(e.g. pivot-translation or trnasformer)
-    flag = 1
-    # d = {'book a flight from lyon to sydney':[],'meat shop near me':[]}
-    # #a = gui_sbss(d,spacy_nlp,flag)
-    # a = gui_srss_weak_supervision_generation(d)template engine
-    # a = gui_sbss(d,spacy_nlp,0)
-    # print("sbss d",a)
-    # c = gui_sbss(d,spacy_nlp,flag)c=
-    # print("sbss d",c)
-    # c = gui_sbss(a,spacy_nlp,flag)
-    # print("sbss d",c)
-
-    # a = gui_sbss(d,spacy_nlp,flag)
-    # print("sbss 0:",a)
-    # b = gui_srss_weak_supervision_generation(a)
-    # print("srss 0:",b)
-    # f = gui_pivot_translation(a,1,flag)
-    # print("p-1- 0:",f)
-
-    # # #universal sentence encoder filtering
-    # print("Start Universal Sentence Encoder filtering ")
-    # use_filtered = use.get_embedding(f)
-    # print("USE: ",use_filtered)
-
-    # bert_filtered_paraphrases = bert.bert,'meat shop near me':[]_selection(use_filtered)
-    # print("BERT: ",bert_filtered_paraphrases)
-    # bert_filtered_paraphrases = sort_collection(bert_filtered_paraphrases)
-    # # print("SORTED BERT: ",bert_filtered_paraphrases)
-    d = {utterance:[]}
-    # #a = gui_sbss(d,spacy_nlp,flag)
-    # a = gui_srss_weak_supervision_generation(d)
-    # print("srss: ",a)
-
-    b = t5.t5_paraphraser(d)
-
-    c = t5.t5_paraphraser(b,"auday/paraphraser_model2",1)
-    return c
-if __name__ == "__main__":
-    #main()
-    test()
+    else:
+        result = {"Error":"Error in the pipeline"}
+    
+    return result
