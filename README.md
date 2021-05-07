@@ -4,6 +4,7 @@
 # Automated Paraphrasing Tool
 
 We offer a tool to automatically generate paraphrases. The tool first generate paraphrases, remove semantically irrelevant and de-duplicate paraphrases by applying **cosine similarity** on **word embedding vector** of different embedding model as proposed by Parikh[[1]](#1).
+The pipeline can be run through a command line see `section 6` or by using the pipeline web interface see `section5`.
 
 ## Features
 
