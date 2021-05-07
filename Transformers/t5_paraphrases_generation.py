@@ -49,7 +49,8 @@ def convert_to_t5_format(sentence):
     :param sentence: sentence to convert to T5 format
     :return a T5 compatible sentence: "paraphrase:"+sentence+"</s>" 
     """
-    sentence =  "paraphrase: " + sentence + " </s>"
+    # sentence =  "paraphrase: " + sentence + " </s>"#deprecated old version
+    sentence =  "paraphrase: " + sentence
     return sentence
 
 def encode_input(tokenizer,text):
@@ -59,7 +60,8 @@ def encode_input(tokenizer,text):
     :param text: sentence to encode
     :return the encoded sentence
     """
-    encoding = tokenizer.encode_plus(text,pad_to_max_length=True, return_tensors="pt")
+    # encoding = tokenizer.encode_plus(text,pad_to_max_length=True, return_tensors="pt")# deprecated old version
+    encoding = tokenizer.encode_plus(text,padding='max_length', return_tensors="pt")
     return encoding
 
 def generate_paraphrase(model,input_ids,attention_masks,max_len=256,num_seq=10):
@@ -146,7 +148,7 @@ def t5_paraphraser(sent,model_name="auday/paraphraser_model2",tokenizer_name='t5
     ###############################
     ## T5 initialisation section ##
     ###############################
-    model,tokenizer,device = initialisation("auday/paraphraser_model2",'t5-base')
+    model,tokenizer,device = initialisation("auday/paraphraser_model2",'t5-base',40)
 
     #######################################
     ## T5 paraphrases generation section ##
