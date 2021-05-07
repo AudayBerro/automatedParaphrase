@@ -49,6 +49,6 @@ document.addEventListener('submit',function(event){
 	}).catch(function (error) {
         console.warn(error);
         document.querySelector('.result').classList.remove('loading');
-        document.getElementById('box').innerHTML=error;
+        document.getElementById('box').innerHTML=error.statusText;
 	});
 })
