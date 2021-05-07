@@ -53,9 +53,8 @@ In order to generate paraphrases, follow these steps:
    > **Note**: By default we use en_use_lg model, if you want to use another model, modify **load_model** in ./synonym/nltk_wordnet.py line 76 
 
 5. Run the pipeline using the web interface
-
-      a. run ```app.py``` script
-      b. open any browser and enter the following URL:```http://127.0.0.1:5000/``` or ```http://localhost:5000/```
+        a. run ```app.py``` script
+        b. open any browser and enter the following URL:```http://127.0.0.1:5000/``` or ```http://localhost:5000/```
 
 6. Run the pipeline using the command line
 Open **config.ini** configuration file and update the values.
