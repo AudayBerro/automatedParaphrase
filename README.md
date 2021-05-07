@@ -52,22 +52,23 @@ In order to generate paraphrases, follow these steps:
    ```
    > **Note**: By default we use en_use_lg model, if you want to use another model, modify **load_model** in ./synonym/nltk_wordnet.py line 76 
 
-5. Open **config.ini** configuration file and update the values.
+5. Run the pipeline using the web interface
+    a. run ```app.py``` script
+    b. open any browser and enter the following URL:```http://127.0.0.1:5000/``` or ```http://localhost:5000/```
+
+6. Run the pipeline using the command line
+Open **config.ini** configuration file and update the values.
 
    >  **Note**: Please make sure you fulfilled the required configs in **config.ini** file - especially DEEPL and MYMEMORY.
 
-  
+    a. Put the sentence you want to paraphrase in a file, sentences should be separated by a line break. Save the file in the **dataset** folder(we suggest to save the file with txt extension).
+    
+    b. Generate paraphrases by runing the following command:
+        ```
+        $ python main.py -f dataset.txt -l 1 -p false
+        ```
 
-6. Put the sentence you want to paraphrase in a file, sentences should be separated by a line break. Save the file in the **dataset** folder(we suggest to save the file with txt extension).
-
-  
-
-7. Generate paraphrases by runing the following command:
-   ```
-   $ python main.py -f dataset.txt -l 1 -p false
-   ```
-
-## Model Parameter
+## Command line pipeline Parameter
 | Parameter | Description |
 | ------ | ------ |
 | **-f** | initial data file path, utterances should be separated by a breakline and file extension **.txt** |
