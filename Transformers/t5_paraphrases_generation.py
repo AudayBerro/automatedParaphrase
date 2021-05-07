@@ -99,7 +99,7 @@ def extract_paraphrases(beam_outputs,tokenizer,utterance):
             final_outputs.add(sent)
     return final_outputs
 
-def initialisation(model_name,tokenizer,seed):
+def initialisation(model_name,tokenizer,seed=None):
     """
     This function initialise T5 by loading model and tokenizer
     :param model_name: name of the HuggingFace T5 model to load
@@ -107,7 +107,9 @@ def initialisation(model_name,tokenizer,seed):
     :param seed: seed for generating random numbers for REPRODUCIBILITY
     :return T5-model and T5-tokenizer
     """
-    #set_seed(42)#set the seed for generating random numbers for REPRODUCIBILITY
+    # check seed for generating random numbers for REPRODUCIBILITY
+    if seed:
+        set_seed(seed)
 
     #load pre-trained T5 paraphraser
     pr_gray("\nLoad Huggingface T5 pre-trained paraphraser model:")
@@ -128,21 +130,23 @@ def initialisation(model_name,tokenizer,seed):
     return model,tokenizer,device
 
 
-def t5_paraphraser(sent,model_name="auday/paraphraser_model2",flag=0,num_seq=10,max_len=256):
+def t5_paraphraser(sent,model_name="auday/paraphraser_model2",tokenizer_name='t5-base',flag=0,num_seq=10,max_len=256,seed=43):
     """
     This function generate parpahrases candidates using pretrained Huggingface T5 transformers model
     :param sent: python dictionary, key:initial sentence, value list of paraphrases candidates
     :param model_name: name of the HuggingFace T5 model to load
+    :param tokenizer_name: T5 tokenizer to load
     :param flag: integer, flag=0 mean the pipeline start with T5 component, otherwise flag=1
     :param num_seq: number of independently computed returned sequences for each element in the batch. Higher value return more sentences
     :param max_len: The maximum length of the sequence to be generated
+    :param seed: integer to ensure the result's reproducibility, get always same parpahrases when using same seed
     :return a Python dictionary containing a list of paraphrases. Key:initial exression, value a list of paraphrases 
     """
 
     ###############################
     ## T5 initialisation section ##
     ###############################
-    model,tokenizer,device = initialisation("auday/paraphraser_model2",'t5-base',40)
+    model,tokenizer,device = initialisation("auday/paraphraser_model2",'t5-base')
 
     #######################################
     ## T5 paraphrases generation section ##
@@ -216,7 +220,7 @@ def t5_paraphraser(sent,model_name="auday/paraphraser_model2",flag=0,num_seq=10,
 
 def test():
     sentence = {"book a flight from lyon to sydney":[]}
-    final_outputs = t5_paraphraser(sentence)
+    final_outputs = t5_paraphraser(sentence,seed=40)
 
     for k,v in final_outputs.items():
         print("\t{}: {}".format(k, v))
