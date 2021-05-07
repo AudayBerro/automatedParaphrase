@@ -169,7 +169,7 @@ def t5_paraphraser(sent,model,tokenizer,device,flag=0,num_seq=40,max_len=256):
 
             # set top_k = 50 and set top_p = 0.95 and num_return_sequences = 3
             #generate paraphrases
-            beam_outputs = generate_paraphrase(model,input_ids,attention_masks,max_len)
+            beam_outputs = generate_paraphrase(model,input_ids,attention_masks,max_len,num_seq)
 
             #extract(decode) the generated paraphrases
             paraphrases = extract_paraphrases(beam_outputs,tokenizer,k)
@@ -190,7 +190,7 @@ def t5_paraphraser(sent,model,tokenizer,device,flag=0,num_seq=40,max_len=256):
 
             # set top_k = 50 and set top_p = 0.95 and num_return_sequences = 3
             #generate paraphrases
-            beam_outputs = generate_paraphrase(model,input_ids,attention_masks,max_len)
+            beam_outputs = generate_paraphrase(model,input_ids,attention_masks,max_len,num_seq)
 
             #extract(decode) the generated paraphrases
             paraphrases = extract_paraphrases(beam_outputs,tokenizer,k)
@@ -212,7 +212,7 @@ def t5_paraphraser(sent,model,tokenizer,device,flag=0,num_seq=40,max_len=256):
 
                     # set top_k = 50 and set top_p = 0.95 and num_return_sequences = 3
                     #generate paraphrases
-                    beam_outputs = generate_paraphrase(model,input_ids,attention_masks,max_len)
+                    beam_outputs = generate_paraphrase(model,input_ids,attention_masks,max_len,num_seq)
 
                     #extract(decode) the generated paraphrases
                     paraphrases = extract_paraphrases(beam_outputs,tokenizer,element)
