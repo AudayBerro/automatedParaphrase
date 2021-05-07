@@ -132,7 +132,7 @@ def initialisation(model_name,tokenizer,seed=None):
     return model,tokenizer,device
 
 
-def t5_paraphraser(sent,model_name="auday/paraphraser_model2",tokenizer_name='t5-base',flag=0,num_seq=10,max_len=256,seed=43):
+def t5_paraphraser(sent,model_name="auday/paraphraser_model2",tokenizer_name='t5-base',flag=0,num_seq=40,max_len=256,seed=None):
     """
     This function generate parpahrases candidates using pretrained Huggingface T5 transformers model
     :param sent: python dictionary, key:initial sentence, value list of paraphrases candidates
@@ -148,7 +148,10 @@ def t5_paraphraser(sent,model_name="auday/paraphraser_model2",tokenizer_name='t5
     ###############################
     ## T5 initialisation section ##
     ###############################
-    model,tokenizer,device = initialisation("auday/paraphraser_model2",'t5-base',40)
+    if seed:
+        model,tokenizer,device = initialisation("auday/paraphraser_model2",'t5-base',seed)
+    else:
+        model,tokenizer,device = initialisation("auday/paraphraser_model2",'t5-base')#load without seed
 
     #######################################
     ## T5 paraphrases generation section ##
@@ -222,7 +225,7 @@ def t5_paraphraser(sent,model_name="auday/paraphraser_model2",tokenizer_name='t5
 
 def test():
     sentence = {"book a flight from lyon to sydney":[]}
-    final_outputs = t5_paraphraser(sentence,seed=40)
+    final_outputs = t5_paraphraser(sentence)
 
     for k,v in final_outputs.items():
         print("\t{}: {}".format(k, v))
