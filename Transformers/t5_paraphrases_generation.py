@@ -99,21 +99,15 @@ def extract_paraphrases(beam_outputs,tokenizer,utterance):
             final_outputs.add(sent)
     return final_outputs
 
-def t5_paraphraser(sent,model_name="auday/paraphraser_model2",flag=0,num_seq=10,max_len=256):
+def initialisation(model_name,tokenizer,seed):
     """
-    This function generate parpahrases candidates using pretrained Huggingface T5 transformers model
-    :param sent: python dictionary, key:initial sentence, value list of paraphrases candidates
+    This function initialise T5 by loading model and tokenizer
     :param model_name: name of the HuggingFace T5 model to load
-    :param flag: integer, flag=0 mean the pipeline start with T5 component, otherwise flag=1
-    :param num_seq: number of independently computed returned sequences for each element in the batch. Higher value return more sentences
-    :param max_len: The maximum length of the sequence to be generated
-    :return a Python dictionary containing a list of paraphrases. Key:initial exression, value a list of paraphrases 
+    :param tokenizer: name of the HuggingFace T5 tokenizer to load
+    :param seed: seed for generating random numbers for REPRODUCIBILITY
+    :return T5-model and T5-tokenizer
     """
-
-    ###############################
-    ## T5 initialisation section ##
-    ###############################
-    set_seed(42)#set the seed for generating random numbers for REPRODUCIBILITY
+    #set_seed(42)#set the seed for generating random numbers for REPRODUCIBILITY
 
     #load pre-trained T5 paraphraser
     pr_gray("\nLoad Huggingface T5 pre-trained paraphraser model:")
@@ -130,6 +124,25 @@ def t5_paraphraser(sent,model_name="auday/paraphraser_model2",flag=0,num_seq=10,
     device = check_device()
     pr_green ("... device: "+str(device))
     model = model.to(device)
+
+    return model,tokenizer,device
+
+
+def t5_paraphraser(sent,model_name="auday/paraphraser_model2",flag=0,num_seq=10,max_len=256):
+    """
+    This function generate parpahrases candidates using pretrained Huggingface T5 transformers model
+    :param sent: python dictionary, key:initial sentence, value list of paraphrases candidates
+    :param model_name: name of the HuggingFace T5 model to load
+    :param flag: integer, flag=0 mean the pipeline start with T5 component, otherwise flag=1
+    :param num_seq: number of independently computed returned sequences for each element in the batch. Higher value return more sentences
+    :param max_len: The maximum length of the sequence to be generated
+    :return a Python dictionary containing a list of paraphrases. Key:initial exression, value a list of paraphrases 
+    """
+
+    ###############################
+    ## T5 initialisation section ##
+    ###############################
+    model,tokenizer,device = initialisation("auday/paraphraser_model2",'t5-base',40)
 
     #######################################
     ## T5 paraphrases generation section ##
@@ -202,53 +215,11 @@ def t5_paraphraser(sent,model_name="auday/paraphraser_model2",flag=0,num_seq=10,
     return result
 
 def test():
-    set_seed(42)
+    sentence = {"book a flight from lyon to sydney":[]}
+    final_outputs = t5_paraphraser(sentence)
 
-    print("Load T5 model")
-    model_name = "auday/paraphraser_model2"
-    model = load_model(model_name)
-    print("\tsuccess")
-
-    print("Load T5 Tokenizer")
-    tokenizer = load_tokenizer()
-    print("\tsuccess")
-
-    print("Check GPU availability")
-    device = check_device()
-    print ("\tdevice ",device)
-
-
-    model = model.to(device)
-
-    sentence = "how does COVID-19 spread?"
-
-    print("Convert sentence to T5 format ")
-    text =  convert_to_t5_format(sentence)
-    print("\tsuccess")
-    print("\tsentence: ",sentence)
-    print("\tconverted sentence: ",text)
-
-    max_len = 256
-
-    print("Encode the sentence")
-    encoding = encode_input(tokenizer,text)
-    print("\tsuccess")
-
-    input_ids, attention_masks = encoding["input_ids"].to(device), encoding["attention_mask"].to(device)
-
-
-    # set top_k = 50 and set top_p = 0.95 and num_return_sequences = 3
-    print("Generated Parpahrases")
-    beam_outputs = generate_paraphrase(model,input_ids,attention_masks,max_len)
-    print("\tsuccess")
-
-    print (" Original Question ::")
-    print (sentence)
-    print ("\nParaphrased Questions :: ")
-    final_outputs = extract_paraphrases(beam_outputs,tokenizer,sentence)
-
-    for i, final_output in enumerate(final_outputs):
-        print("\t{}: {}".format(i, final_output))
+    for k,v in final_outputs.items():
+        print("\t{}: {}".format(k, v))
 
 if __name__ == "__main__":
     test()
