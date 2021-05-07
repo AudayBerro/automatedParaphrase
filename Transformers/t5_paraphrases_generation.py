@@ -223,12 +223,12 @@ def t5_paraphraser(sent,model_name="auday/paraphraser_model2",tokenizer_name='t5
 
     return result
 
-def test():
-    sentence = {"book a flight from lyon to sydney":[]}
-    final_outputs = t5_paraphraser(sentence)
+# def test():
+#     sentence = {"book a flight from lyon to sydney":[]}
+#     final_outputs = t5_paraphraser(sentence)
 
-    for k,v in final_outputs.items():
-        print("\t{}: {}".format(k, v))
+#     for k,v in final_outputs.items():
+#         print("\t{}: {}".format(k, v))
 
-if __name__ == "__main__":
-    test()
+# if __name__ == "__main__":
+#     test()
