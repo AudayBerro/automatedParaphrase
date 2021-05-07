@@ -568,8 +568,7 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
     :return a Python dictionary, key:initial expression, value: list of paraphrases
     """
 
-    # load spaCy USE embedding model
-    spacy_nlp = load_library('load_spacy_nlp','en_use_lg')
+    # initialise flag
     flag = 0
 
     # T5 pre-trained paraphraser model to load
