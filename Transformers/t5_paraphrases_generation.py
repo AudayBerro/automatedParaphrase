@@ -132,7 +132,7 @@ def initialisation(model_name="auday/paraphraser_model2",tokenizer='t5-base',see
     return model,tokenizer,device
 
 
-def t5_paraphraser(sent,model,tokenizer,device,flag=0,num_seq=40,max_len=256,seed=None):
+def t5_paraphraser(sent,model,tokenizer,device,flag=0,num_seq=40,max_len=256):
     """
     This function generate parpahrases candidates using pretrained Huggingface T5 transformers model
     :param sent: python dictionary, key:initial sentence, value list of paraphrases candidates
@@ -142,7 +142,6 @@ def t5_paraphraser(sent,model,tokenizer,device,flag=0,num_seq=40,max_len=256,see
     :param flag: integer, flag=0 mean the pipeline start with T5 component, otherwise flag=1
     :param num_seq: number of independently computed returned sequences for each element in the batch. Higher value return more sentences
     :param max_len: The maximum length of the sequence to be generated
-    :param seed: integer to ensure the result's reproducibility, get always same parpahrases when using same seed
     :return a Python dictionary containing a list of paraphrases. Key:initial exression, value a list of paraphrases 
     """
 
