@@ -152,7 +152,7 @@ SQLAlchemy==1.2.19
 srsly==1.0.1
 tensorboard==2.3.0
 tensorboard-plugin-wit==1.7.0
-tensorflow==2.3.0
+tensorflow==2.4.0
 tensorflow-cpu==1.15.0
 tensorflow-estimator==2.3.0
 tensorflow-hub==0.4.0
