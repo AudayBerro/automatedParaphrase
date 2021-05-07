@@ -24,6 +24,36 @@ from Transformers import t5_paraphrases_generation as t5
 #time and color in console
 import time
 import datetime
+#model_name='en_use_lg'
+
+cache = {} #global variable containing single instance 
+
+def load_library(*args):
+    """ 
+    Load dependencies library respecting the Singleton design pattern to avoid repetitive reload
+    :param args: model to load dependencies for
+    :return an instance of the model
+    """
+    global cache
+    if args[0]=='load_spacy_nlp':
+        if not(args[0] in cache):
+            lib =  nlt.load_spacy_nlp(args[1])
+            return lib
+
+    if args[0]=='load_t5':
+        if not(args[0] in cache):
+            lib =  nlt.load_spacy_nlp(args[1])
+            return lib
+
+    if args[0]=='load_marian':
+        if not(args[0] in cache):
+            lib =  nlt.load_spacy_nlp(args[1])
+            return lib
+    
+    return cache[args[0]]
+
+
+# load_library('load_spacy_nlp','tr','test1')
 
 def pr_green(msg):
     """ Pring msg in green color font"""
@@ -536,7 +566,7 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
     """
 
     # load spaCy USE embedding model
-    spacy_nlp = nlt.load_spacy_nlp('en_use_lg')
+    spacy_nlp = load_library('load_spacy_nlp','en_use_lg')
     flag = 0
 
     # T5 pre-trained paraphraser model to load
