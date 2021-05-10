@@ -282,7 +282,8 @@ def bert_selection(pool,model,tokenizer):#embeddings using Huggingface trandform
             cos_sim = get_similarity(vector1,vector2)
             # cos_sim2 = ukplab_similarity(vectora,vectorb)
             if cos_sim > 0.5 and cos_sim <= 0.95:
-                paraphrases.append((candidate,cos_sim))
+                #paraphrases.append((candidate,cos_sim))#add as a couple (paraphrase,cosine similarity score)
+                paraphrases.append(candidate)
         result[key] = paraphrases
     return result
 
