@@ -56,9 +56,11 @@ def load_library(*args):
     
     if args[0]=='load_use':
         if not(args[0] in cache):
+            print("1")
             #args[1] = moddel name to load
             cache[args[0]] = use.load_model(args[1])
             return cache[args[0]]
+    print("2")
     return cache[args[0]]
 
 
@@ -959,4 +961,34 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
     ################################################################
     #  by: Kevin Woods - https://www.asciiart.eu/computers/linux   #
     ################################################################
+
+    #load Universal Sentence Encoder Library
+    use_model_name = "https://tfhub.dev/google/universal-sentence-encoder-large/5"
+    embed = load_library('load_use',use_model_name)
+    result = use.get_embedding(result,embed)
     return result
+
+if __name__ == '__main__':
+    #T5 pre-trained paraphraser model to load
+    t5_model_name="auday/paraphraser_model2"
+    num_seq = 40 # default 10
+    max_len = 256
+    flag = 0
+    d = {'how does covid-19 spread':["how does it spread","book a flight from lyon to sydney",'i feel cold']}
+    t5_model = load_library('load_t5',t5_model_name,'t5-base')#t5_model[0]=model; t5_model[1]=tokenizer; t5_model[2]=device
+    result = t5.t5_paraphraser(d,t5_model[0],t5_model[1],t5_model[2],flag,num_seq,max_len)
+    print("T5: ",result)
+
+    use_model_name = "https://tfhub.dev/google/universal-sentence-encoder-large/5"
+    embed = load_library('load_use',use_model_name)
+    result = use.get_embedding(result,embed)
+    print("USE: ",result)
+
+    t5_model = load_library('load_t5',t5_model_name,'t5-base')#t5_model[0]=model; t5_model[1]=tokenizer; t5_model[2]=device
+    result = t5.t5_paraphraser(result,t5_model[0],t5_model[1],t5_model[2],1,num_seq,max_len)
+    print("T5: ",result)
+
+
+    embed = load_library('load_use',use_model_name)
+    result = use.get_embedding(result,embed)
+    print("USE: ",result)
