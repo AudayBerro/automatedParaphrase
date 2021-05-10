@@ -56,11 +56,16 @@ def load_library(*args):
     
     if args[0]=='load_use':
         if not(args[0] in cache):
-            print("1")
             #args[1] = moddel name to load
             cache[args[0]] = use.load_model(args[1])
             return cache[args[0]]
-    print("2")
+    
+    if args[0]=='load_bert':
+        if not(args[0] in cache):
+            #args[1] = moddel name to load
+            cache[args[0]] = bert.load_model(args[1],args[2])
+            return cache[args[0]]
+    #load_model(model_name="bert-base-uncased",tokenizer_name='bert-base-uncased')
     return cache[args[0]]
 
 
@@ -962,10 +967,19 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
     #  by: Kevin Woods - https://www.asciiart.eu/computers/linux   #
     ################################################################
 
-    #load Universal Sentence Encoder Library
+    #load Universal Sentence Encoder~USE Library
     use_model_name = "https://tfhub.dev/google/universal-sentence-encoder-large/5"
     embed = load_library('load_use',use_model_name)
+
+    #discard semanticallu unrelated candidate using USE embedding model
     result = use.get_embedding(result,embed)
+
+    #load BERT embedding model
+    bert_model_name = "bert-base-uncased"
+    bert_tokenizer_name = 'bert-base-uncased'
+    bert_model,bert_tokenizer = load_library(bert_model_name,bert_tokenizer_name)
+    result = bert.bert_selection(result,bert_model,bert_tokenizer)
+
     return result
 
 if __name__ == '__main__':
@@ -989,6 +1003,15 @@ if __name__ == '__main__':
     print("T5: ",result)
 
 
-    embed = load_library('load_use',use_model_name)
-    result = use.get_embedding(result,embed)
-    print("USE: ",result)
+    # embed = load_library('load_use',use_model_name)
+    # result = use.get_embedding(result,embed)
+    # print("USE: ",result)
+
+    #load BERT embedding model
+    bert_model_name = "bert-base-uncased"
+    bert_tokenizer_name = 'bert-base-uncased'
+    bert_model,bert_tokenizer = load_library('load_bert',bert_model_name,bert_tokenizer_name)
+    result = bert.bert_selection(result,bert_model,bert_tokenizer)
+
+    print("BERT: ",result)
+    bert_model,bert_tokenizer = load_library('load_bert',bert_model_name,bert_tokenizer_name)
