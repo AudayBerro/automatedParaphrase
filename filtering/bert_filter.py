@@ -5,6 +5,33 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
 """ BERT Word embeddings for similarity """
+def pr_gray(msg):
+    """ Pring msg in gray color font"""
+    print("\033[7m{}\033[00m" .format(msg))
+
+def pr_green(msg):
+    """ Pring msg in green color font"""
+    print("\033[92m{}\033[00m" .format(msg))
+
+def load_model(model_name="bert-base-uncased",tokenizer_name='bert-base-uncased'):
+    """
+    Load Huggingface BERT Transformer model
+    :param model_name: Huggingface BERT model to load
+    :param tokenizer_name: Huggingface BERT tokenizer to load
+    :return an instance of BERT and an instance of BERT tokenizer
+    """
+    pr_gray("\nLoad BERT Tokenizer:")
+    tokenizer = BertTokenizer.from_pretrained(tokenizer_name)
+    pr_green("... done")
+
+    # to get hidden layer in the output uncomment the following above code line, see https://huggingface.co/transformers/model_doc/bert.html for details
+    # model = BertForPreTraining.from_pretrained('bert-base-uncased')
+    # config = BertConfig.from_pretrained("bert-base-uncased", output_hidden_states=True)
+    # model = BertModel.from_pretrained("bert-base-uncased", config=config) #return hidden state in the output
+    pr_gray("\nLoad BERT model:")
+    model = BertModel.from_pretrained(model_name,output_hidden_states = True)
+    pr_green("... done")
+    return model,tokenizer
 
 def concatenate_output(outputs):
     """
@@ -224,19 +251,16 @@ def get_similarity(vector1,vector2):
     return np.asscalar(cos_lib)#convert numpy array to float
 
 
-def bert_selection(pool):#ebeddings using Huggingface trandformers library
+def bert_selection(pool,model,tokenizer):#embeddings using Huggingface trandformers library
     """
     Remove paraphrases that are not semantically equivalent to the initial expression and duplicate(filtering+deduplication)
     :param pool: a Python dictionary, Key is the initial expression, value is a set of paraphrases
+    :param model: a BERT embedding model instance
+    :param tokenizer: a BERT tokenizer instance
     :return a Python dictionary where not semantically equivalent paraphrases and duplicate are removed
     """
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-
-    # to get hidden layer in the output uncomment the following above code line, see https://huggingface.co/transformers/model_doc/bert.html for details
-    # model = BertForPreTraining.from_pretrained('bert-base-uncased')
-    # config = BertConfig.from_pretrained("bert-base-uncased", output_hidden_states=True)
-    # model = BertModel.from_pretrained("bert-base-uncased", config=config) #return hidden state in the output
-    model = BertModel.from_pretrained("bert-base-uncased",output_hidden_states = True)
+    # Set the model in evaluation mode to deactivate the DropOut modules
+    # This is IMPORTANT to have reproducible results during evaluation!
     model.eval()
     
     result = dict()
@@ -262,7 +286,7 @@ def bert_selection(pool):#ebeddings using Huggingface trandformers library
         result[key] = paraphrases
     return result
 
-def bert_filtering(pool):#ebeddings using Huggingface trandformers library
+def bert_filtering(pool):#embeddings using Huggingface trandformers library
     """
     Remove paraphrases that are not semantically equivalent to the initial expression 
     :param pool: a Python dictionary, Key is the initial expression, value is a set of paraphrases
@@ -383,13 +407,9 @@ def ukplab_filtering(pool):#embeddings using UKPLab sentence_transformers librar
 
 
 if __name__ == "__main__":
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-
-    # to get hidden layer in the output uncomment the following above code line, see https://huggingface.co/transformers/model_doc/bert.html for details
-    # model = BertForPreTraining.from_pretrained('bert-base-uncased')
-    # config = BertConfig.from_pretrained("bert-base-uncased", output_hidden_states=True)
-    # model = BertModel.from_pretrained("bert-base-uncased", config=config) #return hidden state in the output
-    model = BertModel.from_pretrained("bert-base-uncased",output_hidden_states = True) # model = BertModel.from_pretrained("bert-base-uncased",output_hidden_states = True
+    model_name="bert-base-uncased"
+    tokenizer_name='bert-base-uncased'
+    model,tokenizer = load_model(model_name,tokenizer_name)
     model.eval()
     
     u1 = "how"
@@ -409,3 +429,8 @@ if __name__ == "__main__":
     # vectorb2 = token_vector_mean(b[0][0])
     cos_sim = get_similarity(vector1,vector2)
     print(cos_sim)
+
+    d= {'how does covid-19 spread': ['How does Covid-19 spread across India?', 'How does DVD19 reach a high level of popular appeal?', 'What is the way to spread DVD19?', 'How much did covid-19 spread across the world?', 'How did Covid-19 spread?', 'How is covid-19 spread among people?', 'How does VHD-19 spreading in India?', 'How does covid-19 spread?', 'How is covid-19 spread?', 'How did DVD19 go viral?', 'How is covid-19 flooded?', 'How does the Video-CD-19 spread?', 'How does DVD19 spread and reach a high level?', 'How did virus of Covid-19 spread?', 'How can DVD19 be spread?', 'How does DVD19 reach the maximum level?', 'How did DVD19 spread?', 'How did DVD19 spread throughout the world?', 'How can DVD19 be spread globally?', 'How did COD-19 spread across country?', 'How does CKV-19 spread?', 'How can DVD19 be spread across all the media?', 'How is DVD19 spreading?', 'What are the spreads of Covid-19?', 'How does DVD19 spread so rapidly?', 'How does DVD19 spread quickly?', 'How Does Covid-19 spread?', 'Does Covid-19 spread to all the countries?', 'How is Covid-19 spread?', 'How does covid-19 spread across India?', 'How DVD19 SPREAD?', 'How does DVD19 reach a high level of spread?', 'Is Covid-19 spread by media?', 'How is vid-19 spread in india?', 'Does DVD19 have a high rate of spreading?', 'How does DVD19 reach a high level?', 'How does DVD19 spread?', 'How DVD19 reach a high level?', 'How did Covid-19 spread out?', 'How do you spread DVD19?', 'How does DVD19 reach a high level of popularity?', 'How did copd-19 spread out?', 'How does Covid-19 spread?', 'How do DVD19 spread?', 'How does DVD19 spread over the globe?', 'How does DVD19 reach a high level of dissemination?', 'How did covid-19 spread?', 'How does covid-19 spread on the social media?', 'How did DVD-19 spread to other countries?', 'Can DVD19 be spread to a large audience?', 'Does vid-19 spread widely?', 'How can DVD19 spread at a high level?']}
+
+    result = bert_selection(d,model,tokenizer)
+    print(result)
