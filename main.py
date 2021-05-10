@@ -396,7 +396,11 @@ def online_transaltion(file_path,api_key,valid_mail,pivot_level,cut_off):
 
     print("Start BERT filtering ",end="")
     t = time.time()
-    bert_filtered_paraphrases = bert.bert_selection(use_filtered_paraphrases)
+    #load BERT embedding model
+    bert_model_name = "bert-base-uncased"
+    bert_tokenizer_name = 'bert-base-uncased'
+    bert_model,bert_tokenizer = load_library(bert_model_name,bert_tokenizer_name)
+    bert_filtered_paraphrases = bert.bert_selection(use_filtered_paraphrases,bert_model,bert_tokenizer)
     print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
     # write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
 
@@ -460,7 +464,11 @@ def pretrained_transaltion(file_path,pivot_level,cut_off):
     # write_to_folder(use_filtered_paraphrases,"Universal Sentence Encoder Filtering:","paraphrases.txt")
     
     print("Start BERT filtering ", end="")
-    bert_filtered_paraphrases = bert.bert_selection(use_filtered_paraphrases)
+    #load BERT embedding model
+    bert_model_name = "bert-base-uncased"
+    bert_tokenizer_name = 'bert-base-uncased'
+    bert_model,bert_tokenizer = load_library(bert_model_name,bert_tokenizer_name)
+    bert_filtered_paraphrases = bert.bert_selection(use_filtered_paraphrases,bert_model,bert_tokenizer)
     print("\t- Elapsed time: ",str(datetime.timedelta(0,time.time()-t)))
     # write_to_folder(bert_filtered_paraphrases,"BERT filtering:","paraphrases.txt")
 
