@@ -35,12 +35,12 @@ def load_library(*args):
     :return an instance of the model
     """
     global cache
-    if args[0]=='load_spacy_nlp':
+    if args[0]=='load_spacy_nlp':# load spaCy NLP tagger model
         if not(args[0] in cache):
             cache[args[0]] =  nlt.load_spacy_nlp(args[1])
             return cache[args[0]]
 
-    if args[0]=='load_t5':
+    if args[0]=='load_t5':# load Huggingface T5 transformer
         if not(args[0] in cache):
             # check if seed is set
             if len(args) == 4:
@@ -49,11 +49,10 @@ def load_library(*args):
                 cache[args[0]] =  t5.initialisation(args[1],args[2])
             return cache[args[0]]#model,tokenizer,device
 
-    if args[0]=='load_marian':
+    if args[0]=='load_marian':# load Huggingface Marian Machine Translation Model
         if not(args[0] in cache):
             cache[args[0]] =  marian.load_model()
             return cache[args[0]]
-    return cache[args[0]]
 
 
 # load_library('load_spacy_nlp','tr','test1')
