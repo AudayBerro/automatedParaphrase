@@ -53,6 +53,13 @@ def load_library(*args):
         if not(args[0] in cache):
             cache[args[0]] =  marian.load_model()
             return cache[args[0]]
+    
+    if args[0]=='load_use':
+        if not(args[0] in cache):
+            #args[1] = moddel name to load
+            cache[args[0]] = use.load_model(args[1])
+            return cache[args[0]]
+    return cache[args[0]]
 
 
 # load_library('load_spacy_nlp','tr','test1')
