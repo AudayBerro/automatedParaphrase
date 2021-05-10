@@ -573,6 +573,45 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
     :param pre_trained: Machine Translation model option to use for the Pivot-Translation component. Value from templates/index.html <input type="radio" name="pre_trained_mt"/>
     :return a Python dictionary, key:initial expression, value: list of paraphrases
     """
+    ####################### (1) OVER-GENERATION STAGE ##########################
+    #                            _..----------.._                       
+    #                   .-=""        _       ""=-.                  
+    #                .-"    _.--""j _\""""--._    "-.               
+    #             .-"  .-i   \   / / \;       ""--.  "-.            
+    #           .'  .-"  : ( "  : :                "-.  `.          
+    #         .'  .'      `.`.   \ \                  `.  `.        
+    #        /  .'      .---" ""--`."-./'---.           `.  \       
+    #       /  /      .'                    '-.           \  \      
+    #      /  /      /                         `.          \  \     
+    #     /  /      /                  ,--._   (            \  \    
+    #    ,  /    '-')                  `---'    `.           \  .   
+    #   .  :      .'                              "-._.-.     ;  ,  
+    #   ;  ;     /            :;         ,-"-.    ,--.   )    :  :  
+    #  :  :     :             ::        :_    "-. '-'   `,     ;  ; 
+    #  |  |     :              \\     .--."-.    `._ _   ;     |  | 
+    #  ;  ;     :              / "---"    "-."-.    l.`./      :  : 
+    # :  :      ;             :              `. "-._; \         ;  ;
+    # ;  ;      ;             ;                `..___/\\        :  :
+    # ;  ;      ;             :                        \\    _  :  :
+    # :  :     /              '.                        ;;.__)) ;  ;
+    #  ;  ; .-'                 "-...______...--._      ::`--' :  : 
+    #  |  |  `--'\                                "-.    \`._, |  | 
+    #  :  :       \                                  `.   "-"  ;  ; 
+    #   ;  ;       `.                                  \      :   ' 
+    #   '  :        ;                                   ;     ;  '  
+    #    '  \    _  : :`.                               :    /  /   
+    #     \  \   \`-' ; ; ._                             ;  /  /    
+    #      \  \   `--'  : ; "-.                          : /  /     
+    #       \  \        ;/     \                         ;/  /      
+    #        \  `.              ;                        '  /       
+    #         `.  "-.   bug    /                          .'        
+    #           `.   "-..__..-"                         .'          
+    #             "-.                                .-"            
+    #                "-._                        _.-"               
+    #                    """---...______...---"""
+    #
+    #   Art by Blazej Kozlowski - https://www.asciiart.eu
+    ############################################################################
 
     # initialise flag
     flag = 0
@@ -896,4 +935,28 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
     else:
         result = {"Error":"Error in the pipeline configuration"}
     
+    ############# (2) CANDIDATE SELECTION STAGE ###################
+    #                                  ,        ,
+    #                                 /(        )`
+    #                                 \ \___   / |
+    #                                 /- _  `-/  '
+    #                                (/\/ \ \   /\
+    #                                / /   | `    \
+    #                                O O   ) /    |
+    #                                `-^--'`<     '
+    #                               (_.)  _  )   /
+    #                                `.___/`    /
+    #                                  `-----' /
+    #                     <----.     __ / __   \
+    #                     <----|====O)))==) \) /====
+    #                     <----'    `--' `.__,' \
+    #                                  |        |
+    #                                   \       /
+    #                              ______( (_  / \______
+    #                            ,'  ,-----'   |        \
+    #                            `--{__________)        \/
+    #
+    ################################################################
+    #  by: Kevin Woods - https://www.asciiart.eu/computers/linux   #
+    ################################################################
     return result
