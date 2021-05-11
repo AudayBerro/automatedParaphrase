@@ -985,7 +985,7 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
     #load BERT embedding model
     bert_model_name = "bert-base-uncased"
     bert_tokenizer_name = 'bert-base-uncased'
-    bert_model,bert_tokenizer = load_library(bert_model_name,bert_tokenizer_name)
+    bert_model,bert_tokenizer = load_library('load_bert',bert_model_name,bert_tokenizer_name)
     result = bert.bert_selection(result,bert_model,bert_tokenizer)
 
     return result
