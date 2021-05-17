@@ -1,5 +1,5 @@
 from transformers import MarianMTModel,MarianTokenizer
-from translator import open_nmt
+#from translator import open_nmt
 import os
 import contractions
 import re,string
@@ -207,7 +207,7 @@ def load_model():
     :return Python dictionary - key: model name - value: list containing respectively MarianModel and MarianTokenizer e.g. {'en2ru':[model,tokenizer]}
     """
     response = dict()
-    #load model to translate from en to ['French','Spanish','Italian','Portuguese']
+    #load model to translate from en to ['French fr','Spanish es','Italian it','Portuguese pt','Romanian ro','Corsican co']
     pr_green("\nLoad Huggingface Marian MT model:")
     pr_gray("\tload English to Romance model")
     mname1 = 'Helsinki-NLP/opus-mt-en-ROMANCE'
@@ -243,22 +243,71 @@ def load_model():
     es2ru_tok = MarianTokenizer.from_pretrained(mname)
     response['es2ru']=[es2ru_model,es2ru_tok]
 
-    #load French to Russian model
-    mname = 'Helsinki-NLP/opus-mt-fr-ru'
-    pr_gray("\tload French to Russian model")
-    fr2ru_model = MarianMTModel.from_pretrained(mname)
-    fr2ru_tok = MarianTokenizer.from_pretrained(mname)
-    response['fr2ru']=[fr2ru_model,fr2ru_tok]
-    
-    #Load Open-NMT translation model
-    pr_green("\nLoad Open-NMT translation model:")
-    pr_gray("\tload English to German model")
-    en2de = open_nmt.load_model("en-de")
-    response['open-en2de']=en2de
-
+    #load German to English model
+    mname = 'Helsinki-NLP/opus-mt-de-en'
     pr_gray("\tload German to English model")
-    de2en = open_nmt.load_model("de-en")
-    response['open-de2en']=de2en
+    de2en_model = MarianMTModel.from_pretrained(mname)
+    de2en_tok = MarianTokenizer.from_pretrained(mname)
+    response['de2en']=[de2en_model,de2en_tok]
+
+    #load English to German model
+    mname = 'Helsinki-NLP/opus-mt-en-de'
+    pr_gray("\tload English to German model")
+    en2de_model = MarianMTModel.from_pretrained(mname)
+    en2de_tok = MarianTokenizer.from_pretrained(mname)
+    response['en2de']=[en2de_model,en2de_tok]
+
+    #load English to Arabic model
+    mname = 'Helsinki-NLP/opus-mt-en-ar'
+    pr_gray("\tload English to Arabic model")
+    en2ar_model = MarianMTModel.from_pretrained(mname)
+    en2ar_tok = MarianTokenizer.from_pretrained(mname)
+    response['en2ar']=[en2ar_model,en2ar_tok]
+
+    #load Arabic to English model
+    mname = 'Helsinki-NLP/opus-mt-ar-en'
+    pr_gray("\tload Arabic to English model")
+    ar2en_model = MarianMTModel.from_pretrained(mname)
+    ar2en_tok = MarianTokenizer.from_pretrained(mname)
+    response['ar2en']=[ar2en_model,ar2en_tok]
+
+    #load English to Chinese model
+    mname = 'Helsinki-NLP/opus-mt-en-zh'
+    pr_gray("\tload English to Chinese model")
+    en2zh_model = MarianMTModel.from_pretrained(mname)
+    en2zh_tok = MarianTokenizer.from_pretrained(mname)
+    response['en2zh']=[en2zh_model,en2zh_tok]
+    
+    #load Chinese to English model
+    mname = 'Helsinki-NLP/opus-mt-zh-en'
+    pr_gray("\tload Chinese to English model")
+    zh2en_model = MarianMTModel.from_pretrained(mname)
+    zh2en_tok = MarianTokenizer.from_pretrained(mname)
+    response['zh2en']=[zh2en_model,zh2en_tok]
+
+    #load Japanese to English model
+    mname = 'Helsinki-NLP/opus-mt-jap-en'
+    pr_gray("\tload Japanese to English model")
+    jap2en_model = MarianMTModel.from_pretrained(mname)
+    jap2en_tok = MarianTokenizer.from_pretrained(mname)
+    response['jap2en']=[jap2en_model,jap2en_tok]
+
+    #load English to Japanese model
+    mname = 'Helsinki-NLP/opus-mt-en-jap'
+    pr_gray("\tload English to Japanese model")
+    en2jap_model = MarianMTModel.from_pretrained(mname)
+    en2jap_tok = MarianTokenizer.from_pretrained(mname)
+    response['en2jap']=[en2jap_model,en2jap_tok]
+
+    # #Load Open-NMT translation model
+    # pr_green("\nLoad Open-NMT translation model:")
+    # pr_gray("\tload English to German model")
+    # en2de = open_nmt.load_model("en-de")
+    # response['open-en2de']=en2de
+
+    # pr_gray("\tload German to English model")
+    # de2en = open_nmt.load_model("de-en")
+    # response['open-de2en']=de2en
 
     return response
 
