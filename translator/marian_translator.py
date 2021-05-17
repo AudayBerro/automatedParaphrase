@@ -75,61 +75,58 @@ def multi_translate(utterance,model,pivot_level=1):
   :return list of utterance translations
   """
   response = set()
-  if pivot_level == 0 or pivot_level == 1:  
+  if pivot_level == 0 or pivot_level == 1:#one pivot language
+
+    # Translate to Romance language: ['French fr','Spanish es','Italian it','Portuguese pt','Romanian ro']
+    # Translate to Italian
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="it")
-    tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])
-    #translate with Open-NMT
-    tmp2 = open_nmt.translate(tmp,model['open-en2de'])
-    tmp2 = open_nmt.translate(tmp2,model['open-de2en'])
-    tmp2 = expand_contractions(tmp2)
-    tmp2 = normalize_text(tmp2)
-    tmp = expand_contractions(tmp)
-    tmp = normalize_text(tmp)
-    response.add(tmp)
-    response.add(tmp2)
+    tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])#translate back to English
+    response.add(tmp)#add the generated paraphrase candidate
 
-    tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="es")
-    tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])
-    #translate with Open-NMT
-    tmp2 = open_nmt.translate(tmp,model['open-en2de'])
-    tmp2 = open_nmt.translate(tmp2,model['open-de2en'])
-    tmp2 = expand_contractions(tmp2)
-    tmp2 = normalize_text(tmp2)
-    tmp = expand_contractions(tmp)
-    tmp = normalize_text(tmp)
-    response.add(tmp)
-    response.add(tmp2)
-
+    # Translate to French
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="fr")
-    tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])
-    #translate with Open-NMT
-    tmp2 = open_nmt.translate(tmp,model['open-en2de'])
-    tmp2 = open_nmt.translate(tmp2,model['open-de2en'])
-    tmp2 = expand_contractions(tmp2)
-    tmp2 = normalize_text(tmp2)
-    tmp = expand_contractions(tmp)
-    tmp = normalize_text(tmp)
-    response.add(tmp)
-    response.add(tmp2)
+    tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])#translate back to English
+    response.add(tmp)#add the generated paraphrase candidate
 
+    # Translate to Spanish
+    tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="es")
+    tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])#translate back to English
+    response.add(tmp)#add the generated paraphrase candidate
+
+    # Translate to Portuguese
+    tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="pt")
+    tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])#translate back to English
+    response.add(tmp)#add the generated paraphrase candidate
+
+    # Translate to Romanian
+    tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="ro")
+    tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])#translate back to English
+    response.add(tmp)#add the generated paraphrase candidate
+
+    # Translate to German
+    tmp = translate(utterance,model['en2de'][0],model['en2de'][1])
+    tmp = translate(tmp,model['de2en'][0],model['de2en'][1])#translate back to English
+    response.add(tmp)#add the generated paraphrase candidate
+
+    # Translate to Russian
     tmp = translate(utterance,model['en2ru'][0],model['en2ru'][1])
-    tmp = translate(tmp,model['ru2en'][0],model['ru2en'][1])
-    #translate with Open-NMT
-    tmp2 = open_nmt.translate(tmp,model['open-en2de'])
-    tmp2 = open_nmt.translate(tmp2,model['open-de2en'])
-    tmp2 = expand_contractions(tmp2)
-    tmp2 = normalize_text(tmp2)
-    tmp = expand_contractions(tmp)
-    tmp = normalize_text(tmp)
-    response.add(tmp)
-    response.add(tmp2)
+    tmp = translate(tmp,model['ru2en'][0],model['ru2en'][1])#translate back to English
+    response.add(tmp)#add the generated paraphrase candidate
 
-    #translate using Open-NMT
-    tmp2 = open_nmt.translate(tmp,model['open-en2de'])
-    tmp2 = open_nmt.translate(tmp2,model['open-de2en'])
-    tmp2 = expand_contractions(tmp)
-    tmp2 = normalize_text(tmp)
-    response.add(tmp)
+    # Translate to Arabic
+    tmp = translate(utterance,model['en2ar'][0],model['en2ar'][1])
+    tmp = translate(tmp,model['ar2en'][0],model['ar2en'][1])#translate back to English
+    response.add(tmp)#add the generated paraphrase candidate
+
+    # Translate to Chinese
+    tmp = translate(utterance,model['en2zh'][0],model['en2zh'][1])
+    tmp = translate(tmp,model['zh2en'][0],model['zh2en'][1])#translate back to English
+    response.add(tmp)#add the generated paraphrase candidate
+
+    # Translate to Japanese
+    tmp = translate(utterance,model['en2jap'][0],model['en2jap'][1])
+    tmp = translate(tmp,model['jap2en'][0],model['jap2en'][1])#translate back to English
+    response.add(tmp)#add the generated paraphrase candidate
     
   if pivot_level == 0 or pivot_level == 2:
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="es")
