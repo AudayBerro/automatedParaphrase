@@ -1,8 +1,7 @@
-from transformers import MarianMTModel,MarianTokenizer
-#from translator import open_nmt
-import os
 import contractions
 import re,string
+
+from transformers import MarianMTModel,MarianTokenizer
 
 """ This code translate sentence using Huggingface Marian Machine Translation Pretrained Model """
 
@@ -335,12 +334,11 @@ def main(model_list):
       print("\t",i)
       
 if __name__ == "__main__":
+  import os
   #load all the model
   print("load model")
   model_list = load_model(2)
   print(len(model_list))
-  import sys
-  sys.exit()
   main(model_list)
   dataset = ['How does COVID-19 spread?','Book a flight from lyon to sydney?','Reserve a Restaurant at Paris']
   print("start translation")
