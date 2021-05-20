@@ -16,6 +16,9 @@ def index():
         # get user sentence
         sentence = data['user_utterance']
 
+        # get candidate selection(pruning) flag
+        pruning = data['pruning']
+
         #check if User configuration contain Pivot-transaltion component: config != ['c2','c3','c5','c12']
         non_pivot_config = ['c2','c3','c5','c12']
         if config not in non_pivot_config:
@@ -26,9 +29,9 @@ def index():
 
                 # Machine Translator option: pre-trained MT(e.g. Huggingface Marian MT) or Online MT model(Deepl,Google)
                 pre_trained_mt = data['pre_trained_mt']#return string
-                paraphrases = main.generate_from_gui(sentence,config,pivot_level,pre_trained_mt)
+                paraphrases = main.generate_from_gui(sentence,config,pruning,pivot_level,pre_trained_mt)
         else:
-            paraphrases = main.generate_from_gui(sentence,config)
+            paraphrases = main.generate_from_gui(sentence,config,pruning)
         return jsonify(paraphrases)
     return render_template('index.html')
 

@@ -576,53 +576,18 @@ def main():
     t2 = "Overall elapsed time: "+str(datetime.timedelta(0,time.time()-t1))
     pr_green(t2)
 
-def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None):
+def generate_from_gui(sentence,pipeline_config,pruning="On",pivot_level=None,pre_trained=None):
     """
     Generate parpahrases using Graphical User Interface(GUI) of the pipeline implemented in index.html 
     :param sentence: user sentence to parpahrase obtained from the GUI. Value from templates/index.html <input type="text" name="user_utterance"/>
     :param pipeline_config: user configuration of the pipline from the GUI. Value from templates/index.html <select id="monselect" name="configuration">
+    :param pruning: defines Candidate Filtering application after Over-generation. pruning="On" apply candidate selection - otherwise "Off"
     :param pivot_level: pivot translation level to use for the Pivot-Translation component. Value from templates/index.html <input type="radio" name="pivot_level"/>
     :param pre_trained: Machine Translation model option to use for the Pivot-Translation component. Value from templates/index.html <input type="radio" name="pre_trained_mt"/>
     :return a Python dictionary, key:initial expression, value: list of paraphrases
     """
+    ############################################################################
     ####################### (1) OVER-GENERATION STAGE ##########################
-    #                            _..----------.._                       
-    #                   .-=""        _       ""=-.                  
-    #                .-"    _.--""j _\""""--._    "-.               
-    #             .-"  .-i   \   / / \;       ""--.  "-.            
-    #           .'  .-"  : ( "  : :                "-.  `.          
-    #         .'  .'      `.`.   \ \                  `.  `.        
-    #        /  .'      .---" ""--`."-./'---.           `.  \       
-    #       /  /      .'                    '-.           \  \      
-    #      /  /      /                         `.          \  \     
-    #     /  /      /                  ,--._   (            \  \    
-    #    ,  /    '-')                  `---'    `.           \  .   
-    #   .  :      .'                              "-._.-.     ;  ,  
-    #   ;  ;     /            :;         ,-"-.    ,--.   )    :  :  
-    #  :  :     :             ::        :_    "-. '-'   `,     ;  ; 
-    #  |  |     :              \\     .--."-.    `._ _   ;     |  | 
-    #  ;  ;     :              / "---"    "-."-.    l.`./      :  : 
-    # :  :      ;             :              `. "-._; \         ;  ;
-    # ;  ;      ;             ;                `..___/\\        :  :
-    # ;  ;      ;             :                        \\    _  :  :
-    # :  :     /              '.                        ;;.__)) ;  ;
-    #  ;  ; .-'                 "-...______...--._      ::`--' :  : 
-    #  |  |  `--'\                                "-.    \`._, |  | 
-    #  :  :       \                                  `.   "-"  ;  ; 
-    #   ;  ;       `.                                  \      :   ' 
-    #   '  :        ;                                   ;     ;  '  
-    #    '  \    _  : :`.                               :    /  /   
-    #     \  \   \`-' ; ; ._                             ;  /  /    
-    #      \  \   `--'  : ; "-.                          : /  /     
-    #       \  \        ;/     \                         ;/  /      
-    #        \  `.              ;                        '  /       
-    #         `.  "-.   bug    /                          .'        
-    #           `.   "-..__..-"                         .'          
-    #             "-.                                .-"            
-    #                "-._                        _.-"               
-    #                    """---...______...---"""
-    #
-    #   Art by Blazej Kozlowski - https://www.asciiart.eu
     ############################################################################
 
     # initialise flag
@@ -660,9 +625,9 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
         result = t5.t5_paraphraser(sentence,t5_model[0],t5_model[1],t5_model[2],flag,num_seq,max_len)
 
     elif pipeline_config == "c4":# Weak-Supervision => Pivot-Translation
-        ################################################
+        
         ### Start the pipeline with Weak-Supervision ###
-        ################################################
+        
         #start the pipeline with Weak-Supervision SBSS component
         # load spaCy USE embedding model
         spacy_nlp = load_library('load_spacy_nlp','en_use_lg')
@@ -671,10 +636,9 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
 
         #Run Weak-Supervision SRSS component
         result = gui_srss_weak_supervision_generation(result)
-
-        #############################
+        
         ### Run Pivot-Translation ###
-        #############################
+        
         flag = 1 # set flag to 1
         #convert pivot_level to integer
         pivot_level = int(pivot_level)
@@ -682,9 +646,9 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
         result = gui_pivot_translation(result,pivot_level,flag)
 
     elif pipeline_config == "c5":# Weak-Supervision => T5
-        ################################################
+        
         ### Start the pipeline with Weak-Supervision ###
-        ################################################
+        
         #start the pipeline with Weak-Supervision SBSS component
         # load spaCy USE embedding model
         spacy_nlp = load_library('load_spacy_nlp','en_use_lg')
@@ -693,19 +657,18 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
 
         #Run Weak-Supervision SRSS component
         result = gui_srss_weak_supervision_generation(result)
-
-        #############################
+        
         ### Run T5 ###
-        #############################
+        
         flag = 1 # set flag to 1
         # load T5 model and tokenizer
         t5_model = load_library('load_t5',model_name,'t5-base')#t5_model[0]=model; t5_model[1]=tokenizer; t5_model[2]=device
         result = t5.t5_paraphraser(sentence,t5_model[0],t5_model[1],t5_model[2],flag,num_seq,max_len)
 
     elif pipeline_config == "c6":# Weak-Supervision => Pivot-Translation => T5
-        ################################################
+        
         ### Start the pipeline with Weak-Supervision ###
-        ################################################
+        
         #start the pipeline with Weak-Supervision SBSS component
         # load spaCy USE embedding model
         spacy_nlp = load_library('load_spacy_nlp','en_use_lg')
@@ -714,27 +677,25 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
 
         #Run Weak-Supervision SRSS component
         result = gui_srss_weak_supervision_generation(result)
-
-        #############################
+        
         ### Run Pivot-Translation ###
-        #############################
+        
         flag = 1 # set flag to 1
         #convert pivot_level to integer
         pivot_level = int(pivot_level)
         #run pivot translation component
         result = gui_pivot_translation(result,pivot_level,flag)
-
-        #############################
+        
         ### Run T5 ###
-        #############################
+        
         # load T5 model and tokenizer
         t5_model = load_library('load_t5',model_name,'t5-base')#t5_model[0]=model; t5_model[1]=tokenizer; t5_model[2]=device
         result = t5.t5_paraphraser(sentence,t5_model[0],t5_model[1],t5_model[2],flag,num_seq,max_len)
 
     elif pipeline_config == "c7":# Weak-Supervision  => T5 => Pivot-Translation
-        ################################################
+        
         ### Start the pipeline with Weak-Supervision ###
-        ################################################
+        
         #start the pipeline with Weak-Supervision SBSS component
         # load spaCy USE embedding model
         spacy_nlp = load_library('load_spacy_nlp','en_use_lg')
@@ -743,35 +704,32 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
 
         #Run Weak-Supervision SRSS component
         result = gui_srss_weak_supervision_generation(result)
-
-        #############################
+        
         ### Run T5 ###
-        #############################
+        
         flag = 1
         # load T5 model and tokenizer
         t5_model = load_library('load_t5',model_name,'t5-base')#t5_model[0]=model; t5_model[1]=tokenizer; t5_model[2]=device
         result = t5.t5_paraphraser(sentence,t5_model[0],t5_model[1],t5_model[2],flag,num_seq,max_len)
-
-        #############################
+        
         ### Run Pivot-Translation ###
-        #############################
+        
         #convert pivot_level to integer
         pivot_level = int(pivot_level)
         #run pivot translation component
         result = gui_pivot_translation(result,pivot_level,flag)
 
     elif pipeline_config == "c8":# Pivot-Translation => Weak-Supervision
-        #################################################
+        
         ### Start the pipeline with Pivot-Translation ###
-        #################################################
+        
         #convert pivot_level to integer
         pivot_level = int(pivot_level)
         #run pivot translation component
         result = gui_pivot_translation(sentence,pivot_level,flag)
-
-        #############################
+        
         ### Run Weak-Supervision ###
-        #############################
+        
         flag = 1 # set flag to 1
         # load spaCy USE embedding model
         spacy_nlp = load_library('load_spacy_nlp','en_use_lg')
@@ -782,34 +740,32 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
         result = gui_srss_weak_supervision_generation(result)
 
     elif pipeline_config == "c9":# Pivot-Translation => T5
-        #################################################
+        
         ### Start the pipeline with Pivot-Translation ###
-        #################################################
+        
         #convert pivot_level to integer
         pivot_level = int(pivot_level)
         #run pivot translation component
-        result = gui_pivot_translation(sentence,pivot_level,flag) 
-
-        #############################
+        result = gui_pivot_translation(sentence,pivot_level,flag)
+        
         ### Run T5 ###
-        #############################
+        
         flag = 1
         # load T5 model and tokenizer
         t5_model = load_library('load_t5',model_name,'t5-base')#t5_model[0]=model; t5_model[1]=tokenizer; t5_model[2]=device
         result = t5.t5_paraphraser(sentence,t5_model[0],t5_model[1],t5_model[2],flag,num_seq,max_len)
 
     elif pipeline_config == "c10":# Pivot-Translation => Weak-Supervision => T5
-        #################################################
+        
         ### Start the pipeline with Pivot-Translation ###
-        #################################################
+        
         #convert pivot_level to integer
         pivot_level = int(pivot_level)
         #run pivot translation component
         result = gui_pivot_translation(sentence,pivot_level,flag)
-
-        #############################
+        
         ### Run Weak-Supervision ###
-        #############################
+        
         flag = 1 # set flag to 1
         # load spaCy USE embedding model
         spacy_nlp = load_library('load_spacy_nlp','en_use_lg')
@@ -817,34 +773,31 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
 
         #Run Weak-Supervision SRSS component
         result = gui_srss_weak_supervision_generation(result)
-
-        ##############
+        
         ### Run T5 ###
-        ##############
+        
         # load T5 model and tokenizer
         t5_model = load_library('load_t5',model_name,'t5-base')#t5_model[0]=model; t5_model[1]=tokenizer; t5_model[2]=device
         result = t5.t5_paraphraser(sentence,t5_model[0],t5_model[1],t5_model[2],flag,num_seq,max_len)
 
     elif pipeline_config == "c11":# Pivot-Translation => T5 => Weak-Supervision
-        #################################################
+        
         ### Start the pipeline with Pivot-Translation ###
-        #################################################
+        
         #convert pivot_level to integer
         pivot_level = int(pivot_level)
         #run pivot translation component
         result = gui_pivot_translation(sentence,pivot_level,flag)
-
-        #############################
+        
         ### Run T5 ###
-        #############################
+        
         flag = 1 # set flag to 1
         # load T5 model and tokenizer
         t5_model = load_library('load_t5',model_name,'t5-base')#t5_model[0]=model; t5_model[1]=tokenizer; t5_model[2]=device
         result = t5.t5_paraphraser(sentence,t5_model[0],t5_model[1],t5_model[2],flag,num_seq,max_len)
-
-        #############################
+        
         ### Run Weak-Supervision ###
-        #############################
+        
         # load spaCy USE embedding model
         spacy_nlp = load_library('load_spacy_nlp','en_use_lg')
 
@@ -854,16 +807,15 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
         result = gui_srss_weak_supervision_generation(result)
 
     elif pipeline_config == "c12":# T5 => Weak-Supervision
-        ##################################
+        
         ### Start the pipeline with T5 ###
-        ##################################
+        
         # load T5 model and tokenizer
         t5_model = load_library('load_t5',model_name,'t5-base')#t5_model[0]=model; t5_model[1]=tokenizer; t5_model[2]=device
         result = t5.t5_paraphraser(sentence,t5_model[0],t5_model[1],t5_model[2],flag,num_seq,max_len)
-
-        #############################
+        
         ### Run Weak-Supervision ###
-        #############################
+
         flag = 1 # set flag to 1
         # load spaCy USE embedding model
         spacy_nlp = load_library('load_spacy_nlp','en_use_lg')
@@ -874,16 +826,13 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
         result = gui_srss_weak_supervision_generation(result)
 
     elif pipeline_config == "c13":# T5 => Pivot-Translation
-        ##################################
+        
         ### Start the pipeline with T5 ###
-        ##################################
         # load T5 model and tokenizer
         t5_model = load_library('load_t5',model_name,'t5-base')#t5_model[0]=model; t5_model[1]=tokenizer; t5_model[2]=device
         result = t5.t5_paraphraser(sentence,t5_model[0],t5_model[1],t5_model[2],flag,num_seq,max_len)
-
-        #############################
+        
         ### Run Pivot-Translation ###
-        #############################
         flag = 1 # set flag to 1
         #convert pivot_level to integer
         pivot_level = int(pivot_level)
@@ -891,25 +840,20 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
         result = gui_pivot_translation(result,pivot_level,flag)
 
     elif pipeline_config == "c14":# T5 => Pivot-Translation => Weak-Supervision
-        ##################################
+        
         ### Start the pipeline with T5 ###
-        ##################################
         # load T5 model and tokenizer
         t5_model = load_library('load_t5',model_name,'t5-base')#t5_model[0]=model; t5_model[1]=tokenizer; t5_model[2]=device
         result = t5.t5_paraphraser(sentence,t5_model[0],t5_model[1],t5_model[2],flag,num_seq,max_len)
-
-        #############################
+        
         ### Run Pivot-Translation ###
-        #############################
         flag = 1 # set flag to 1
         #convert pivot_level to integer
         pivot_level = int(pivot_level)
         #run pivot translation component
         result = gui_pivot_translation(result,pivot_level,flag)
-
-        #############################
+        
         ### Run Weak-Supervision ###
-        #############################
         # load spaCy USE embedding model
         spacy_nlp = load_library('load_spacy_nlp','en_use_lg')
 
@@ -918,16 +862,13 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
         #Run Weak-Supervision SRSS component
         result = gui_srss_weak_supervision_generation(result)
     elif pipeline_config == "c15":# T5 => Weak-Supervision => Pivot-Translation
-        ##################################
+
         ### Start the pipeline with T5 ###
-        ##################################
         # load T5 model and tokenizer
         t5_model = load_library('load_t5',model_name,'t5-base')#t5_model[0]=model; t5_model[1]=tokenizer; t5_model[2]=device
         result = t5.t5_paraphraser(sentence,t5_model[0],t5_model[1],t5_model[2],flag,num_seq,max_len)
 
-        #############################
         ### Run Weak-Supervision ###
-        #############################
         flag = 1 # set flag to 1
         # load spaCy USE embedding model
         spacy_nlp = load_library('load_spacy_nlp','en_use_lg')
@@ -936,10 +877,7 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
 
         #Run Weak-Supervision SRSS component
         result = gui_srss_weak_supervision_generation(result)
-
-        #############################
-        ### Run Pivot-Translation ###
-        #############################
+        
         #convert pivot_level to integer
         pivot_level = int(pivot_level)
         #run pivot translation component
@@ -947,43 +885,23 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
     else:
         result = {"Error":"Error in the pipeline configuration"}
     
-    ############# (2) CANDIDATE SELECTION STAGE ###################
-    #                                  ,        ,
-    #                                 /(        )`
-    #                                 \ \___   / |
-    #                                 /- _  `-/  '
-    #                                (/\/ \ \   /\
-    #                                / /   | `    \
-    #                                O O   ) /    |
-    #                                `-^--'`<     '
-    #                               (_.)  _  )   /
-    #                                `.___/`    /
-    #                                  `-----' /
-    #                     <----.     __ / __   \
-    #                     <----|====O)))==) \) /====
-    #                     <----'    `--' `.__,' \
-    #                                  |        |
-    #                                   \       /
-    #                              ______( (_  / \______
-    #                            ,'  ,-----'   |        \
-    #                            `--{__________)        \/
-    #
     ################################################################
-    #  by: Kevin Woods - https://www.asciiart.eu/computers/linux   #
+    ############# (2) CANDIDATE SELECTION STAGE ####################
     ################################################################
 
-    # load Universal Sentence Encoder~USE Library
-    use_model_name = "https://tfhub.dev/google/universal-sentence-encoder-large/5"
-    embed = load_library('load_use',use_model_name)
+    if pruning == "On":
+        # load Universal Sentence Encoder~USE Library
+        use_model_name = "https://tfhub.dev/google/universal-sentence-encoder-large/5"
+        embed = load_library('load_use',use_model_name)
 
-    #discard semanticallu unrelated candidate using USE embedding model
-    result = use.get_embedding(result,embed)
+        #discard semantically unrelated candidate using USE embedding model
+        result = use.get_embedding(result,embed)
 
-    #load BERT embedding model
-    bert_model_name = "bert-base-uncased"
-    bert_tokenizer_name = 'bert-base-uncased'
-    bert_model,bert_tokenizer = load_library('load_bert',bert_model_name,bert_tokenizer_name)
-    result = bert.bert_selection(result,bert_model,bert_tokenizer)
+        #load BERT embedding model
+        bert_model_name = "bert-base-uncased"
+        bert_tokenizer_name = 'bert-base-uncased'
+        bert_model,bert_tokenizer = load_library('load_bert',bert_model_name,bert_tokenizer_name)
+        result = bert.bert_selection(result,bert_model,bert_tokenizer)
 
     return result
 
