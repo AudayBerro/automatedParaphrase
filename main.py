@@ -51,7 +51,7 @@ def load_library(*args):
 
     if args[0]=='load_marian':# load Huggingface Marian Machine Translation Model
         if not(args[0] in cache):
-            cache[args[0]] =  marian.load_model()
+            cache[args[0]] =  marian.concurrent_model_loader()
             return cache[args[0]]
     
     if args[0]=='load_use':
@@ -67,9 +67,6 @@ def load_library(*args):
             return cache[args[0]]
     #load_model(model_name="bert-base-uncased",tokenizer_name='bert-base-uncased')
     return cache[args[0]]
-
-
-# load_library('load_spacy_nlp','tr','test1')
 
 def pr_green(msg):
     """ Pring msg in green color font"""
@@ -252,7 +249,7 @@ def gui_srss_weak_supervision_generation(sent):
 
     return result
 
-def gui_pivot_translation(sent,pivot_level,flag):
+def gui_pivot_translation(sent,pivot_level=0,flag=0):
     """
     Generate Paraphrases using Pretrained Translation Model e.g. Huggingface MarianMT
     :param sent: python dictionary, key:initial sentence, value list of paraphrases candidates
@@ -262,7 +259,7 @@ def gui_pivot_translation(sent,pivot_level,flag):
     """
     result = dict()
     #load all the supported model
-    model_list = load_library('load_marian') #for now we only support HuggingFace Marian MT and OpenNMT
+    model_list = load_library('load_marian') #for now only support HuggingFace Marian MT
 
     if flag == 0:
         for k,v in sent.items():
@@ -427,7 +424,7 @@ def pretrained_transaltion(file_path,pivot_level,cut_off):
     """
     #load all the model
     # print("load model")
-    model_list = marian.load_model()
+    model_list = marian.load_model(pivot_level)
     
     #wordnet
     print("Start weak supervision data generation ",end="")
@@ -975,7 +972,7 @@ def generate_from_gui(sentence,pipeline_config,pivot_level=None,pre_trained=None
     #  by: Kevin Woods - https://www.asciiart.eu/computers/linux   #
     ################################################################
 
-    #load Universal Sentence Encoder~USE Library
+    # load Universal Sentence Encoder~USE Library
     use_model_name = "https://tfhub.dev/google/universal-sentence-encoder-large/5"
     embed = load_library('load_use',use_model_name)
 

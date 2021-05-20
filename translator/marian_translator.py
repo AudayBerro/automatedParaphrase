@@ -1,5 +1,6 @@
 import contractions
-import re,string
+import re,string,time
+import concurrent.futures
 
 from transformers import MarianMTModel,MarianTokenizer
 
@@ -128,7 +129,6 @@ def multi_translate(utterance,model,pivot_level=1):
     response.add(tmp)#add the generated paraphrase candidate
     
   if pivot_level == 0 or pivot_level == 2:# two pivot language
-
     # Translate Spanish => Russian = > English
     tmp = translate(utterance,model['en2romance'][0],model['en2romance'][1],trg="es")
     tmp = translate(tmp,model['es2ru'][0],model['es2ru'][1])#translate to russian
@@ -137,7 +137,7 @@ def multi_translate(utterance,model,pivot_level=1):
 
     # Translate Japanese => Spanish = > English
     tmp = translate(utterance,model['en2jap'][0],model['en2jap'][1])#translate to Japanese
-    tmp = translate(tmp,model['jap2es'][0],model['jap2es'][1])#translate to Spanish
+    tmp = translate(tmp,model['ja2es'][0],model['ja2es'][1])#translate to Spanish
     tmp = translate(tmp,model['romance2en'][0],model['romance2en'][1])#translate back to English
     response.add(tmp)#add the generated paraphrase candidate
 
@@ -194,28 +194,77 @@ def translate_list(data,model,pivot_level):
     paraphrases[sentence]=tmp
   return paraphrases
 
-def load_model(pivot_level=1):
+def get_model(param):
+  """
+  Load Hugginface marian Machine Translator model and tokenizer
+  :param param: Huggingface MarianMt Helsinki-NLP/{model_name} to load (https://huggingface.co/Helsinki-NLP); param[0]=label - param[1]=model_name
+  :return a tuple result = (Huggingface MarianMt Model, Marian MT Tokenizer, Marian MT label)
+  """
+  mt_model = MarianMTModel.from_pretrained(param[1]) #param[0]=label ; param[1]=model_name to load
+  mt_tokenizer = MarianTokenizer.from_pretrained(param[1]) #load tokenizer
+  return mt_model,mt_tokenizer,param[0]
+
+def concurrent_model_loader():
+  """
+  Return a List of Huggingface Marian MT model, same as load_model but load concurrently
+  :return Python dictionary - key: model name - value: list containing respectively MarianModel and MarianTokenizer e.g. {'en2ru':[model,tokenizer]}
+  """
+  response = dict()
+
+  # set containing list of model to load with their respective label
+  models_to_load = {
+    ('en2romance','Helsinki-NLP/opus-mt-en-ROMANCE'),
+    ('romance2en','Helsinki-NLP/opus-mt-ROMANCE-en'),
+    ('de2en','Helsinki-NLP/opus-mt-de-en'),
+    ('ru2en','Helsinki-NLP/opus-mt-ru-en'),
+    ('en2ar','Helsinki-NLP/opus-mt-en-ar'),
+    ('en2zh','Helsinki-NLP/opus-mt-en-zh'),
+    ('en2jap','Helsinki-NLP/opus-mt-en-jap'),
+    ('en2ru','Helsinki-NLP/opus-mt-en-ru'),
+    ('en2de','Helsinki-NLP/opus-mt-en-de'),
+    ('ar2en','Helsinki-NLP/opus-mt-ar-en'),
+    ('zh2en','Helsinki-NLP/opus-mt-zh-en'),
+    ('jap2en','Helsinki-NLP/opus-mt-jap-en'),
+    ('zh2de','Helsinki-NLP/opus-mt-zh-de'),
+    ('es2ru','Helsinki-NLP/opus-mt-es-ru'),
+    ('ar2de','Helsinki-NLP/opus-mt-ar-de'),
+    ('ja2es','Helsinki-NLP/opus-mt-ja-es')
+  }
+
+  # load model and tokenizer concurrently through thread 
+  with concurrent.futures.ThreadPoolExecutor() as executor:
+
+    # results = [executor.submit(get_model2,model_name) for model_name in models_to_load.values()]
+    results = executor.map( get_model, models_to_load)
+
+    # unpack and add MarianMT model, MarianMT tokenizer and label
+    for model,tokenizer,label in results:
+        response[label] = [model,tokenizer]
+  
+  return response
+
+def load_model():
     """
     Return a List of Huggingface Marian MT model
-    :param pivot_level: integer, single-pivot or multi-pivot range,1 =single-pivot, 2=double-pivot, 0=apply single and double
     :return Python dictionary - key: model name - value: list containing respectively MarianModel and MarianTokenizer e.g. {'en2ru':[model,tokenizer]}
     """
+
     response = dict()
 
     #Required model used in One-Pivot and Two-Pivot
     #English to Romance: ['French fr','Spanish es','Italian it','Portuguese pt','Romanian ro']
     pr_green("\nLoad Huggingface Marian MT model:")
     pr_gray("\tload English to Romance model")
-    mname1 = 'Helsinki-NLP/opus-mt-en-ROMANCE'
-    en2romance_model = MarianMTModel.from_pretrained(mname1) #load model
-    en2romance_tok = MarianTokenizer.from_pretrained(mname1) #load tokenizer
+    mname = 'Helsinki-NLP/opus-mt-en-ROMANCE'
+    en2romance_model = MarianMTModel.from_pretrained(mname) #load model
+    en2romance_tok = MarianTokenizer.from_pretrained(mname) #load tokenizer
     response['en2romance']=[en2romance_model,en2romance_tok]
 
     #Romance to English: ['French','Spanish','Italian','Portuguese']
     pr_gray("\tload Romance to English model")
-    mname2 = 'Helsinki-NLP/opus-mt-ROMANCE-en'
-    romance_en_model = MarianMTModel.from_pretrained(mname2) #load model
-    romance_en_tok = MarianTokenizer.from_pretrained(mname2) #load tokenizer
+    mname = 'Helsinki-NLP/opus-mt-ROMANCE-en'
+    romance_en_model = MarianMTModel.from_pretrained(mname) #load model
+    romance_en_tok = MarianTokenizer.from_pretrained(mname) #load tokenizer
     response['romance2en']=[romance_en_model,romance_en_tok]
 
     #load German to English model
@@ -253,71 +302,78 @@ def load_model(pivot_level=1):
     en2jap_tok = MarianTokenizer.from_pretrained(mname)
     response['en2jap']=[en2jap_model,en2jap_tok]
 
-    if pivot_level == 0 or pivot_level==1:#one pivot language
+    # if pivot_level == 0 or pivot_level==1:#one pivot language
+    #load english to russian model
+    mname = 'Helsinki-NLP/opus-mt-en-ru'
+    pr_gray("\tload English to Russian model")
+    en2ru_model = MarianMTModel.from_pretrained(mname)
+    en2ru_tok = MarianTokenizer.from_pretrained(mname)
+    response['en2ru']=[en2ru_model,en2ru_tok]
 
-      #load english to russian model
-      mname = 'Helsinki-NLP/opus-mt-en-ru'
-      pr_gray("\tload English to Russian model")
-      en2ru_model = MarianMTModel.from_pretrained(mname)
-      en2ru_tok = MarianTokenizer.from_pretrained(mname)
-      response['en2ru']=[en2ru_model,en2ru_tok]
+    #load English to German model
+    mname = 'Helsinki-NLP/opus-mt-en-de'
+    pr_gray("\tload English to German model")
+    en2de_model = MarianMTModel.from_pretrained(mname)
+    en2de_tok = MarianTokenizer.from_pretrained(mname)
+    response['en2de']=[en2de_model,en2de_tok]
 
-      #load English to German model
-      mname = 'Helsinki-NLP/opus-mt-en-de'
-      pr_gray("\tload English to German model")
-      en2de_model = MarianMTModel.from_pretrained(mname)
-      en2de_tok = MarianTokenizer.from_pretrained(mname)
-      response['en2de']=[en2de_model,en2de_tok]
-
-      #load Arabic to English model
-      mname = 'Helsinki-NLP/opus-mt-ar-en'
-      pr_gray("\tload Arabic to English model")
-      ar2en_model = MarianMTModel.from_pretrained(mname)
-      ar2en_tok = MarianTokenizer.from_pretrained(mname)
-      response['ar2en']=[ar2en_model,ar2en_tok]
-      
-      #load Chinese to English model
-      mname = 'Helsinki-NLP/opus-mt-zh-en'
-      pr_gray("\tload Chinese to English model")
-      zh2en_model = MarianMTModel.from_pretrained(mname)
-      zh2en_tok = MarianTokenizer.from_pretrained(mname)
-      response['zh2en']=[zh2en_model,zh2en_tok]
-
-      #load Japanese to English model
-      mname = 'Helsinki-NLP/opus-mt-jap-en'
-      pr_gray("\tload Japanese to English model")
-      jap2en_model = MarianMTModel.from_pretrained(mname)
-      jap2en_tok = MarianTokenizer.from_pretrained(mname)
-      response['jap2en']=[jap2en_model,jap2en_tok]
+    #load Arabic to English model
+    mname = 'Helsinki-NLP/opus-mt-ar-en'
+    pr_gray("\tload Arabic to English model")
+    ar2en_model = MarianMTModel.from_pretrained(mname)
+    ar2en_tok = MarianTokenizer.from_pretrained(mname)
+    response['ar2en']=[ar2en_model,ar2en_tok]
     
-    if pivot_level==0 or pivot_level==2:#Two-pivot language
-      #load Chinese to German model
-      mname = 'Helsinki-NLP/opus-mt-zh-de'
-      pr_gray("\tload Chinese to German model")
-      zh2de_model = MarianMTModel.from_pretrained(mname)
-      zh2de_tok = MarianTokenizer.from_pretrained(mname)
-      response['zh2de']=[zh2de_model,zh2de_tok]
+    #load Chinese to English model
+    mname = 'Helsinki-NLP/opus-mt-zh-en'
+    pr_gray("\tload Chinese to English model")
+    zh2en_model = MarianMTModel.from_pretrained(mname)
+    zh2en_tok = MarianTokenizer.from_pretrained(mname)
+    response['zh2en']=[zh2en_model,zh2en_tok]
 
-      #load Spanish to Russian model
-      mname = 'Helsinki-NLP/opus-mt-es-ru'
-      pr_gray("\tload Spanish to Russian model")
-      es2ru_model = MarianMTModel.from_pretrained(mname)
-      es2ru_tok = MarianTokenizer.from_pretrained(mname)
-      response['es2ru']=[es2ru_model,es2ru_tok]
+    #load Japanese to English model
+    mname = 'Helsinki-NLP/opus-mt-jap-en'
+    pr_gray("\tload Japanese to English model")
+    jap2en_model = MarianMTModel.from_pretrained(mname)
+    jap2en_tok = MarianTokenizer.from_pretrained(mname)
+    response['jap2en']=[jap2en_model,jap2en_tok]
+    
+    # if pivot_level==0 or pivot_level==2:#Two-pivot language
+    #load Chinese to German model
+    mname = 'Helsinki-NLP/opus-mt-zh-de'
+    pr_gray("\tload Chinese to German model")
+    zh2de_model = MarianMTModel.from_pretrained(mname)
+    zh2de_tok = MarianTokenizer.from_pretrained(mname)
+    response['zh2de']=[zh2de_model,zh2de_tok]
 
-      #load Arabic to German model
-      mname = 'Helsinki-NLP/opus-mt-ar-de'
-      pr_gray("\tload Arabic to German model")
-      ar2de_model = MarianMTModel.from_pretrained(mname)
-      ar2de_tok = MarianTokenizer.from_pretrained(mname)
-      response['ar2de']=[ar2de_model,ar2de_tok]
+    #load Spanish to Russian model
+    mname = 'Helsinki-NLP/opus-mt-es-ru'
+    pr_gray("\tload Spanish to Russian model")
+    es2ru_model = MarianMTModel.from_pretrained(mname)
+    es2ru_tok = MarianTokenizer.from_pretrained(mname)
+    response['es2ru']=[es2ru_model,es2ru_tok]
 
-      #load Japanes to Spanish model
-      mname = 'Helsinki-NLP/opus-mt-ja-es'
-      pr_gray("\tload Japanese to Spanish model")
-      ja2es_model = MarianMTModel.from_pretrained(mname)
-      ja2es_tok = MarianTokenizer.from_pretrained(mname)
-      response['ja2es']=[ja2es_model,ja2es_tok]
+    #load Arabic to German model
+    mname = 'Helsinki-NLP/opus-mt-ar-de'
+    pr_gray("\tload Arabic to German model")
+    ar2de_model = MarianMTModel.from_pretrained(mname)
+    ar2de_tok = MarianTokenizer.from_pretrained(mname)
+    response['ar2de']=[ar2de_model,ar2de_tok]
+
+    #load Japanes to Spanish model
+    mname = 'Helsinki-NLP/opus-mt-ja-es'
+    pr_gray("\tload Japanese to Spanish model")
+    ja2es_model = MarianMTModel.from_pretrained(mname)
+    ja2es_tok = MarianTokenizer.from_pretrained(mname)
+    response['ja2es']=[ja2es_model,ja2es_tok]
+
+    #load North-EU to North-EU model
+    # # North-Eu={de:German,nl:Dutch,af:Afrikaans,da:Danish,fo:Faroese,is:Icelandic,no:Norwegian,Swedish:sv}
+    # mname = 'Helsinki-NLP/opus-mt-NORTH_EU-NORTH_EU'
+    # pr_gray("\tload Japanese to Spanish model")
+    # ja2es_model = MarianMTModel.from_pretrained(mname)
+    # ja2es_tok = MarianTokenizer.from_pretrained(mname)
+    # response['ja2es']=[ja2es_model,ja2es_tok]
 
     return response
 
@@ -336,8 +392,13 @@ def main(model_list):
 if __name__ == "__main__":
   import os
   #load all the model
+  t1 = time.perf_counter()
   print("load model")
-  model_list = load_model(2)
+  model_list = concurrent_model_loader()
+  t2 = time.perf_counter()
+  print(f'Finished in {round(t2-t1,2)} second(s)')
+  import sys
+  sys.exit()
   print(len(model_list))
   main(model_list)
   dataset = ['How does COVID-19 spread?','Book a flight from lyon to sydney?','Reserve a Restaurant at Paris']
