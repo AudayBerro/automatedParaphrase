@@ -76,3 +76,9 @@ button{
 table td{
     padding: 10px;
 }
+
+.slider_value{
+    width:50px;
+    text-align: center;
+    margin-right: 30px;
+}

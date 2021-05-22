@@ -576,7 +576,7 @@ def main():
     t2 = "Overall elapsed time: "+str(datetime.timedelta(0,time.time()-t1))
     pr_green(t2)
 
-def generate_from_gui(sentence,pipeline_config,pruning="On",pivot_level=None,pre_trained=None):
+def generate_from_gui(sentence,pipeline_config,pruning="Off",pivot_level=None,pre_trained=None,num_seq = None):
     """
     Generate parpahrases using Graphical User Interface(GUI) of the pipeline implemented in index.html 
     :param sentence: user sentence to parpahrase obtained from the GUI. Value from templates/index.html <input type="text" name="user_utterance"/>
@@ -584,6 +584,7 @@ def generate_from_gui(sentence,pipeline_config,pruning="On",pivot_level=None,pre
     :param pruning: defines Candidate Filtering application after Over-generation. pruning="On" apply candidate selection - otherwise "Off"
     :param pivot_level: pivot translation level to use for the Pivot-Translation component. Value from templates/index.html <input type="radio" name="pivot_level"/>
     :param pre_trained: Machine Translation model option to use for the Pivot-Translation component. Value from templates/index.html <input type="radio" name="pre_trained_mt"/>
+    :param num_seq: int,T5 parameter, number of independently computed returned sequences
     :return a Python dictionary, key:initial expression, value: list of paraphrases
     """
     ############################################################################
@@ -595,7 +596,7 @@ def generate_from_gui(sentence,pipeline_config,pruning="On",pivot_level=None,pre
 
     # T5 pre-trained paraphraser model to load
     model_name="auday/paraphraser_model2"
-    num_seq = 40 # default 10
+    #num_seq = num_seq # default 10
     max_len = 256
     #t5_paraphraser(sent,model,tokenizer,device,flag=0,num_seq=40,max_len=256): initialisation(model_name="auday/paraphraser_model2",tokenizer='t5-base',seed=None)
     

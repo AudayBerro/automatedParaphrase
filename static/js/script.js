@@ -7,14 +7,32 @@ var serializeForm = function (form) {
 	return obj;
 };
 
+function updateTextInput(val) {
+    document.getElementById('slider_value_input').value=val; 
+}
+
+
 document.getElementById('monselect').addEventListener('change',function(){
-    var disable = false;
+
+    var disable_pivot = false;//disable pre_trained_mt and pruning radio when Pivot-Translagtion component not in the configuration
+    var disable_slider = false;//disable slider_value_input and num_seq_slider radio when T5 component not in the configuration
+
+    // pre_trained_mt and pruning radio section
     if( ['c2','c3','c5','c12'].includes(this.value) ){
-        disable = true;
+        disable_pivot = true;
     }
     
     document.querySelectorAll('#pivot1,#pivot2,#pre1,#pre2').forEach(function(e,i){
-    e.disabled = disable
+    e.disabled = disable_pivot
+    })
+
+    //slider_value_input and prnum_seq_slideruning radio section
+    if( ['c1','c2','c4','c8'].includes(this.value) ){
+        disable_slider = true;
+    }
+    
+    document.querySelectorAll('#slider_value_input,#num_seq_slider').forEach(function(e,i){
+    e.disabled = disable_slider
     })
     
 })

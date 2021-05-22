@@ -101,7 +101,7 @@ def extract_paraphrases(beam_outputs,tokenizer,utterance):
             final_outputs.add(sent)
     return final_outputs
 
-def initialisation(model_name="auday/paraphraser_model2",tokenizer='t5-base',seed=None):
+def initialisation(model_name="auday/paraphraser_model2",tokenizer='t5-base',seed=40):
     """
     This function initialise T5 by loading model and tokenizer
     :param model_name: name of the HuggingFace T5 model to load
@@ -112,7 +112,7 @@ def initialisation(model_name="auday/paraphraser_model2",tokenizer='t5-base',see
     # check seed for generating random numbers for REPRODUCIBILITY
     if seed:
         set_seed(seed)
-
+    
     #load pre-trained T5 paraphraser
     pr_gray("\nLoad Huggingface T5 pre-trained paraphraser model:")
     model = load_model(model_name)
