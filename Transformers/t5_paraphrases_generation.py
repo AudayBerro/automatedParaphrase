@@ -64,7 +64,7 @@ def encode_input(tokenizer,text):
     encoding = tokenizer.encode_plus(text,padding='max_length', return_tensors="pt")
     return encoding
 
-def generate_paraphrase(model,input_ids,attention_masks,max_len=256,num_seq=10):
+def generate_paraphrase(model,input_ids,attention_masks,max_len=256,num_seq=30):
     """
     Generate Parpahrases using T5 model
     :param model: Huggingface T5 model
