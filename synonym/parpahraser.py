@@ -7,7 +7,7 @@ import contractions
 import re
 
 sim_model = spacy_universal_sentence_encoder.load_model('en_use_lg')
-nlp = spacy.load('en')
+nlp = spacy.load('en_core_web_lg')
 
 
 def get_similarity(token,synonym):
