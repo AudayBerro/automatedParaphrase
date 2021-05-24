@@ -40,7 +40,7 @@ Keras-Preprocessing==1.1.2
 Markdown==3.3.4
 MarkupSafe==2.0.1
 murmurhash==1.0.5
-nltk==3.3
+nltk==3.4.5
 numpy==1.19.5
 oauthlib==3.1.0
 opt-einsum==3.3.0
