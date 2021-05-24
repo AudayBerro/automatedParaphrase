@@ -24,16 +24,16 @@ In order to generate paraphrases, follow these steps:
 
 *  `Linux`
 
-   Create the virtual environment: ```virtualenv -p python3 venv ``` 
-   Activate the virtual environment: ``` source ./env/bin/activate ```
+   Create the virtual environment: ```virtualenv -p python3.6.9 my_venv ``` 
+   Activate the virtual environment: ``` source ./my_venv/bin/activate ```
 
 *  `Windows`
 
-   Create the virtual environment: ``` c:\>c:\Python35\python -m venv c:\path\to\myenv ```
+   Create the virtual environment: ``` c:\>c:\Python35\python -m my_venv c:\path\to\myenv ```
 
    >Unlike most Unix systems and services, Windows does not include a system supported installation of Python. [#Windows Python installation and Creation of virtual environments](https://docs.python.org/3/using/windows.html#using-on-windows)
 
-    Activate the virtual environment: ``` .\env\Scripts\activate.bat ```
+    Activate the virtual environment: ``` .\my_venv\Scripts\activate.bat ```
 
 2. Install the required packages inside the environment:
 
@@ -56,7 +56,7 @@ In order to generate paraphrases, follow these steps:
 
 5. Run the pipeline using the web interface
    >- run `app.py` script: ```python app.py```
-   >- open any browser and enter the following URL:```http://127.0.0.1:5000/``` or ```http://localhost:5000/```
+   >- open any browser and enter the following URL: ```http://localhost:5000/```
 
 6. Run the pipeline using the command line
 Open **config.ini** configuration file and update the values.
