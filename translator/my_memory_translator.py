@@ -1,6 +1,6 @@
 import requests
 import os
-from yandex import Translater as yandex_trans
+# from yandex import Translater as yandex_trans
 import re,string
 import contractions
 import random
@@ -51,23 +51,23 @@ def expand_contractions(text):
 
     return contractions.fix(text)
 
-def yandex_translate(utterance,source,target,api_key):
-    """
-    Translate a sentence
-    :param utterance: sentence to translate
-    :param source: source language
-    :param target: target language
-    :param api_key: Yandex Translate API token https://translate.yandex.com/developers/keys
-    :return Translated utterance 
-    """
+# def yandex_translate(utterance,source,target,api_key):
+#     """
+#     Translate a sentence
+#     :param utterance: sentence to translate
+#     :param source: source language
+#     :param target: target language
+#     :param api_key: Yandex Translate API token https://translate.yandex.com/developers/keys
+#     :return Translated utterance 
+#     """
 
-    tr = yandex_trans.Translater()
-    tr.set_key(api_key) 
-    tr.set_from_lang(source)
-    tr.set_to_lang(target)
-    tr.set_text(utterance) #text_to_translate
-    response = tr.translate()
-    return normalize_text(response)
+#     tr = yandex_trans.Translater()
+#     tr.set_key(api_key) 
+#     tr.set_from_lang(source)
+#     tr.set_to_lang(target)
+#     tr.set_text(utterance) #text_to_translate
+#     response = tr.translate()
+#     return normalize_text(response)
 
 def replace_quote(utterance):
     """
