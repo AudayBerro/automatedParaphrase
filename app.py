@@ -9,7 +9,6 @@ def index():
     if request.method == 'POST':
         
         data = request.get_json(force=True)
-        print(data)
 
         # get user pipeline selected configuration option
         config = data['configuration']#return string

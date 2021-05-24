@@ -39,8 +39,11 @@ document.getElementById('monselect').addEventListener('change',function(){
 
 document.addEventListener('submit',function(event){
     event.preventDefault();
-// console.log(new FormData(document.querySelector('#mainform')));//return false;
+    // console.log(new FormData(document.querySelector('#mainform')));//return false;
     document.querySelector('.result').classList.add('loading') ;
+
+    //scroll to top of result
+    document.querySelector('.result').scrollTo(0,0);
 	fetch('http://localhost:5000/', {
         method: 'POST',
         headers: {
