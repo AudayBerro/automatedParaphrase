@@ -1,5 +1,5 @@
 from transformers import BertTokenizer, BertModel, BertConfig
-from sentence_transformers import SentenceTransformer
+# from sentence_transformers import SentenceTransformer
 import torch
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
@@ -358,53 +358,53 @@ def bert_deduplication(pool):#remove deduplicate paraphrases
     return result
 
 
-def ukplab_similarity(vector1,vector2):
-    """
-    Cosine similarity using UKPLab sentence-transformers library  embeddings vector
-    :param vector1: UKPLab sentence-transformers embedding of sentence 1
-    :param vector1: UKPLab sentence-transformers embedding of sentence 2
-    :return cosine similarity between vector1 and vector2
-    """
-    a = vector1.reshape(1,-1)
-    # b = embedding_output2.reshape(1,-1)
-    b = vector2.reshape(1,-1)
-    cos_lib = cosine_similarity(a,b)
-    return np.asscalar(cos_lib)#convert numpy array to float
+# def ukplab_similarity(vector1,vector2):
+#     """
+#     Cosine similarity using UKPLab sentence-transformers library  embeddings vector
+#     :param vector1: UKPLab sentence-transformers embedding of sentence 1
+#     :param vector1: UKPLab sentence-transformers embedding of sentence 2
+#     :return cosine similarity between vector1 and vector2
+#     """
+#     a = vector1.reshape(1,-1)
+#     # b = embedding_output2.reshape(1,-1)
+#     b = vector2.reshape(1,-1)
+#     cos_lib = cosine_similarity(a,b)
+#     return np.asscalar(cos_lib)#convert numpy array to float
 
-def get_embeddings(utterance,embedder):# embeddings using UKPLab sentence_transformers library
-    """
-    UKPLab sentence-transformers  sentence embeddings
-    :param utterance: sentence to embed
-    :param embedder: UKPLab sentence-transformers model
-    :return sentence embedding using UKPLab sentence-transformers library
-    """
+# def get_embeddings(utterance,embedder):# embeddings using UKPLab sentence_transformers library
+#     """
+#     UKPLab sentence-transformers  sentence embeddings
+#     :param utterance: sentence to embed
+#     :param embedder: UKPLab sentence-transformers model
+#     :return sentence embedding using UKPLab sentence-transformers library
+#     """
 
-    sentence_embeddings = embedder.encode(utterance)
-    return sentence_embeddings
+#     sentence_embeddings = embedder.encode(utterance)
+#     return sentence_embeddings
 
-def ukplab_filtering(pool):#embeddings using UKPLab sentence_transformers library
-    """
-    Remove paraphrases that are not semantically equivalent to the initial expression using the UKPLab sentence-transformers library 
-    :param pool: a Python dictionary, Key is the initial expression, value is a set of paraphrases
-    :return a Python dictionary where not semantically equivalent paraphrases are removed
-    """
+# def ukplab_filtering(pool):#embeddings using UKPLab sentence_transformers library
+#     """
+#     Remove paraphrases that are not semantically equivalent to the initial expression using the UKPLab sentence-transformers library 
+#     :param pool: a Python dictionary, Key is the initial expression, value is a set of paraphrases
+#     :return a Python dictionary where not semantically equivalent paraphrases are removed
+#     """
 
-    embedder = SentenceTransformer('bert-base-nli-mean-tokens')
-    result = dict()
-    for key,value in pool.items():
-        a = get_embeddings(key,embedder)
-        vector1 = a[0]
-        print(key)
-        paraphrases = []
-        for candidate in value:
-            b = get_embeddings(candidate,embedder)
-            vector2 = b[0]
-            cos_sim = ukplab_similarity(vector1,vector2)
-            if cos_sim > 0.5:
-                paraphrases.append(candidate)
-                print(key,",",candidate,"= ",cos_sim)
-        result[key] = paraphrases
-    return result
+#     embedder = SentenceTransformer('bert-base-nli-mean-tokens')
+#     result = dict()
+#     for key,value in pool.items():
+#         a = get_embeddings(key,embedder)
+#         vector1 = a[0]
+#         print(key)
+#         paraphrases = []
+#         for candidate in value:
+#             b = get_embeddings(candidate,embedder)
+#             vector2 = b[0]
+#             cos_sim = ukplab_similarity(vector1,vector2)
+#             if cos_sim > 0.5:
+#                 paraphrases.append(candidate)
+#                 print(key,",",candidate,"= ",cos_sim)
+#         result[key] = paraphrases
+#     return result
 
 
 if __name__ == "__main__":
