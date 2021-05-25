@@ -91,6 +91,7 @@ document.addEventListener('submit',function(event){
 
                 }
                 else{
+                    document.getElementById('pop-up').innerHTML=''// remove old value
                     for(var elem in data[key]){
                         for(msg in data[key][elem]){
                             // metrics = metrics.concat(data[key][elem][msg])

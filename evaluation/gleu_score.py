@@ -112,7 +112,7 @@ def get_score(data,cut_off):
     result = []
 
     result.append("\n\t============================================================")
-    result.append(f"\t                  Cut_off parpameter = {cut_off}")
+    result.append(f"\t            Google's BLEU score = {cut_off}")
     result.append("\t============================================================")
     data = apply_cut_off(data,cut_off)
     

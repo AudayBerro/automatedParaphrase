@@ -109,6 +109,7 @@ table td{
   
   /* The Close Button */
   .close {
+      text-align: right;
     color: #aaaaaa;
     float: right;
     font-size: 28px;

@@ -10,7 +10,6 @@ from synonym import parpahraser as para
 import os
 import configparser
 #import spacy
-from datetime import datetime as dt
 import argparse
 import re,string
 from evaluation import bleu_score,gleu_score,chrf_score,diversity_metrics
@@ -543,7 +542,7 @@ def main():
     file_path = os.path.join(os.path.dirname(__file__), ".", "dataset/"+args.f) # data to paraphrase
 
     t1 = time.time() # to compute overall time execution
-    now = dt.now()
+    now = datetime.now()
     start_time = now.strftime("%H:%M:%S")
     pr_green("Starting time: "+start_time)
 
@@ -576,7 +575,7 @@ def main():
     t2 = "Overall elapsed time: "+str(datetime.timedelta(0,time.time()-t1))
     pr_green(t2)
 
-def generate_from_gui(sentence,pipeline_config,pruning="Off",pivot_level=None,pre_trained=None,num_seq = None):
+def generate_from_gui(sentence,pipeline_config,pruning="Off",pivot_level=None,pre_trained=None,num_seq = None,compute_metrics="Off"):
     """
     Generate parpahrases using Graphical User Interface(GUI) of the pipeline implemented in index.html 
     :param sentence: user sentence to parpahrase obtained from the GUI. Value from templates/index.html <input type="text" name="user_utterance"/>
@@ -585,6 +584,7 @@ def generate_from_gui(sentence,pipeline_config,pruning="Off",pivot_level=None,pr
     :param pivot_level: pivot translation level to use for the Pivot-Translation component. Value from templates/index.html <input type="radio" name="pivot_level"/>
     :param pre_trained: Machine Translation model option to use for the Pivot-Translation component. Value from templates/index.html <input type="radio" name="pre_trained_mt"/>
     :param num_seq: int,T5 parameter, number of independently computed returned sequences
+    :param metric_score: compute automated quality metrics socres(BLEU,GLEU,CHRF,...)
     :return a Python dictionary, key:initial expression, value: list of paraphrases
     """
     ############################################################################
@@ -905,7 +905,6 @@ def generate_from_gui(sentence,pipeline_config,pruning="Off",pivot_level=None,pr
         result = bert.bert_selection(result,bert_model,bert_tokenizer)
     
     # Apply automated quality  metrics(BLEU,CHRF,PINC,...)
-    compute_metrics="On"
     if compute_metrics == "On":
         # compute diversity metrics
         cut_off = -1
@@ -928,7 +927,6 @@ def generate_from_gui(sentence,pipeline_config,pruning="Off",pivot_level=None,pr
         metric_score.append(c)
 
         result['metric_score'] = metric_score
-        print(result)
 
     return result
 

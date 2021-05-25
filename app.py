@@ -22,6 +22,12 @@ def index():
         else:
             pruning = "Off"
         
+        # check if user want to compute paraphrases automated quality scores 
+        if "compute_metrics" in data:
+            compute_metrics = data['compute_metrics']
+        else:
+            compute_metrics = "Off"# default value don't compute
+        
         # check if pivot-level radio option is not disabled
         if "pivot_level" in data:
             # get selected pivot level option: 1-pivot or 2-pivot
@@ -39,7 +45,7 @@ def index():
         else:
             num_seq = None
         
-        paraphrases = main.generate_from_gui(sentence,config,pruning=pruning,pivot_level=pivot_level,pre_trained=pre_trained,num_seq=num_seq)
+        paraphrases = main.generate_from_gui(sentence,config,pruning=pruning,pivot_level=pivot_level,pre_trained=pre_trained,num_seq=num_seq,compute_metrics=compute_metrics)
 
         return jsonify(paraphrases)
     return render_template('index.html')

@@ -237,7 +237,7 @@ def main(data,cut_off):
     result = []
     for k,v in diversity_score.items():
         result.append("\t============================================================")
-        result.append(f"\t                  Cut_off parpameter = {k}")
+        result.append(f"\t                 TTR, PINC, Div = {k}")
         result.append("\t============================================================")
         result.append(f"\t\tMean TTR: {v[0]['Mean TTR']}")
         result.append(f"\t\tMean PINC: {v[1]['Mean PINC']}")

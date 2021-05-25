@@ -218,7 +218,7 @@ def get_bleu_score(data,cut_off):
     result = []
 
     result.append("\t============================================================")
-    result.append(f"\t                  Cut_off parpameter = {cut_off}            ")
+    result.append(f"\t                    BLEU score = {cut_off}")
     result.append("\t============================================================")
     data = apply_cut_off(data,cut_off)
     result.append("\t  Compute Individual N-gram BLEU-Score using mean: ")
@@ -247,7 +247,6 @@ def get_bleu_score(data,cut_off):
     result.append(f"\t\tIndividual 2-gram: {b2}")
     result.append(f"\t\tIndividual 3-gram: {b3}")
     result.append(f"\t\tIndividual 4-gram: {b4}")
-    result.append(f"\t============================================================")
 
     return result
 
