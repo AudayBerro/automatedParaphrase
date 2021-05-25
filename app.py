@@ -36,7 +36,6 @@ def index():
         # check T5 num_seq_slider(number of independently computed returned sequences for each element in the batch)
         if 'num_seq_slider' in data:
             num_seq = int(data['num_seq_slider'])
-            print(f"Num seq: {num_seq}")
         else:
             num_seq = None
         

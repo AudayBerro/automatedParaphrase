@@ -903,6 +903,32 @@ def generate_from_gui(sentence,pipeline_config,pruning="Off",pivot_level=None,pr
         bert_tokenizer_name = 'bert-base-uncased'
         bert_model,bert_tokenizer = load_library('load_bert',bert_model_name,bert_tokenizer_name)
         result = bert.bert_selection(result,bert_model,bert_tokenizer)
+    
+    # Apply automated quality  metrics(BLEU,CHRF,PINC,...)
+    compute_metrics="On"
+    if compute_metrics == "On":
+        # compute diversity metrics
+        cut_off = -1
+        metric_score = []
+        # Compute Mean-TTR, Mean-PINC and DIV scores:
+        diversity_score = diversity_metrics.main(result,cut_off)
+
+        metric_score.append(diversity_score)
+        
+        #paraphrases = remove_cosine_score(paraphrases)
+
+        # Compute BLEU, GLEU and CHRF scores
+        a = bleu_score.main(result,cut_off)
+        metric_score.append(a)
+
+        b = gleu_score.main(result,cut_off)
+        metric_score.append(b)
+
+        c = chrf_score.main(result,cut_off)
+        metric_score.append(c)
+
+        result['metric_score'] = metric_score
+        print(result)
 
     return result
 
