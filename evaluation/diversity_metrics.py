@@ -38,7 +38,7 @@ def apply_cut_off(pool,cut_off):
     :return ordred Python dictionary
     """
 
-    if cut_off == 0:
+    if cut_off <= 0:
         return pool
     else:
         result = {}
@@ -185,7 +185,7 @@ def get_div_score(data):
     
     return {"Diversity": total_d / len(data)}
 
-def main(data,cut_off):
+def get_scores(data,cut_off):
     """
     Compute PINC DIV TTR
     :param data: Dataset to be measured in terms of diversity. Python dictionary, key: initial utterance - value: list of paraphrases
@@ -193,7 +193,7 @@ def main(data,cut_off):
     :return Mean-TTR, Mean-PINC and DIV scores
     """
     
-    data = remove_cosine_score(data)
+    #data = remove_cosine_score(data)
     result = {}
     if cut_off == 0:
         cut_off = [3,5,10,20]
@@ -223,4 +223,24 @@ def main(data,cut_off):
         # print("\tMean TTR: "+str(ttr_score["Mean TTR"]))
         # print("\tMean PINC: "+str(pinc_score["Mean PINC"]))
         # print("\tDiversity: "+str(div_score['Diversity']))
+    return result
+
+def main(data,cut_off):
+    """
+    Compute PINC DIV TTR
+    :param data: Dataset to be measured in terms of diversity. Python dictionary, key: initial utterance - value: list of paraphrases
+    :param cut_off: cut_off parameter
+    :return Mean-TTR, Mean-PINC and DIV scores
+    """
+
+    diversity_score = get_scores(data,cut_off)
+    result = []
+    for k,v in diversity_score.items():
+        result.append("\t============================================================")
+        result.append(f"\t                  Cut_off parpameter = {k}")
+        result.append("\t============================================================")
+        result.append(f"\t\tMean TTR: {v[0]['Mean TTR']}")
+        result.append(f"\t\tMean PINC: {v[1]['Mean PINC']}")
+        result.append(f"\t\tDiversity: {v[2]['Diversity']}")
+    
     return result

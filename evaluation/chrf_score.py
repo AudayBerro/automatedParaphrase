@@ -10,7 +10,7 @@ def apply_cut_off(pool,cut_off):
     :return ordred Python dictionary
     """
 
-    if cut_off == 0:
+    if cut_off <= 0:
         return pool
     else:
         result = {}
@@ -101,34 +101,44 @@ def read_data(file_name):
   return d
 
 def get_score(data,cut_off):
+    """
+    Compute chrf-Score
+    :param data: python dictionary key initial utterance, value list of parpahrases
+    :param cut_off: integer that indicate how many parpahrases to select, e.g. cut_off = 3 will only select top highest 3 semantically related parpahrases and drop the rest
+    :return a python list containing CHRF scores and comment to print or save in file
+    """
     chrf = sentence_chrf
     # data = read_data("output.csv")
-    print("\n\t============================================================")
-    print("\t                  Cut_off parpameter = ",cut_off,"            ")
-    print("\t============================================================")
-    data = apply_cut_off(data,cut_off)
-    print("\t  Compute chrf-Score using mean: ", end="")
-    chrf_score = get_chrf_score_mean(data,chrf)
-    print(" ",chrf_score)
+    result = []
 
-    print("\t  Compute chrf-Score using median: ", end="")
+    result.append("\n\t============================================================")
+    result.append(f"\t                  Cut_off parpameter = {cut_off}")
+    result.append("\t============================================================")
+    data = apply_cut_off(data,cut_off)
+    
+    chrf_score = get_chrf_score_mean(data,chrf)
+    result.append(f"\t  Compute chrf-Score using mean: {chrf_score}")
+
+    # print("\t  Compute chrf-Score using median: ", end="")
     chrf_score = get_chrf_score_median(data,chrf)
-    print(" ",chrf_score)
+    result.append(f"\t  Compute chrf-Score using median: {chrf_score}")
+    return result
 
 def main(data,cut_off):
     """
     Compute chrf-Score for data
     :param data: python dictionary key initial utterance, value list of parpahrases
     :param cut_off: integer that indicate how many parpahrases to select, e.g. cut_off = 3 will only select top highest 3 semantically related parpahrases and drop the rest
+    :return a python List of scores and strings to print or save in a file
     """
-
+    result = []
     if cut_off == 0:
         cut_off = [0,3,5,10,20,50,100]
         
         for cut in cut_off:
-            get_score(data,cut)
+            result.extend(get_score(data,cut))
     else:
-        get_score(data,cut_off)
+       result.extend(get_score(data,cut_off))
 
 if __name__ == "__main__":
     main()

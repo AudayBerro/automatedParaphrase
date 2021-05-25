@@ -10,7 +10,7 @@ def apply_cut_off(pool,cut_off):
     :return ordred Python dictionary
     """
 
-    if cut_off == 0:
+    if cut_off <= 0:
         return pool
     else:
         result = {}
@@ -101,34 +101,48 @@ def read_data(file_name):
   return d
 
 def get_score(data,cut_off):
+    """
+    Compute Google-BLEU~(GLEU) Score
+    :param data: python dictionary key initial utterance, value list of parpahrases
+    :param cut_off: integer that indicate how many parpahrases to select, e.g. cut_off = 3 will only select top highest 3 semantically related parpahrases and drop the rest
+    :return a python list containing GLEU scores and comment to print or save in file
+    """
     gleu = sentence_gleu
     # data = read_data("output.csv")
-    print("\n\t============================================================")
-    print("\t                  Cut_off parpameter = ",cut_off,"            ")
-    print("\t============================================================")
-    data = apply_cut_off(data,cut_off)
-    print("\t  Compute GLEU-Score using mean: ", end="")
-    gleu_score = get_gleu_score_mean(data,gleu)
-    print(" ",gleu_score)
+    result = []
 
-    print("\t  Compute GLEU-Score using median: ", end="")
+    result.append("\n\t============================================================")
+    result.append(f"\t                  Cut_off parpameter = {cut_off}")
+    result.append("\t============================================================")
+    data = apply_cut_off(data,cut_off)
+    
+    gleu_score = get_gleu_score_mean(data,gleu)
+    result.append(f"\t  Compute GLEU-Score using mean: {gleu_score}")
+
+
     gleu_score = get_gleu_score_median(data,gleu)
-    print(" ",gleu_score)
+    result.append(f"\t  Compute GLEU-Score using median: {gleu_score}")
+
+    return result
 
 def main(data,cut_off):
     """
     Compute gleu-Score for data
     :param data: python dictionary key initial utterance, value list of parpahrases
     :param cut_off: integer that indicate how many parpahrases to select, e.g. cut_off = 3 will only select top highest 3 semantically related parpahrases and drop the rest
+    :return a python List of scores and strings to print or save in a file
     """
+    result = []
 
     if cut_off == 0:
         cut_off = [0,3,5,10,20,50,100]
         
         for cut in cut_off:
-            get_score(data,cut)
+            result.extend(get_score(data,cut))
     else:
-        get_score(data,cut_off)
+        result.extend(get_score(data,cut_off))
+    
+    return result
 
 if __name__ == "__main__":
     main()

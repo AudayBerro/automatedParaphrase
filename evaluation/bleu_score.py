@@ -13,7 +13,7 @@ def apply_cut_off(pool,cut_off):
     :return ordred Python dictionary
     """
 
-    if cut_off == 0:
+    if cut_off <= 0:
         return pool
     else:
         result = {}
@@ -207,54 +207,68 @@ def read_data(file_name):
   return d
 
 def get_bleu_score(data,cut_off):
+    """
+    Compute BLEU-Score
+    :param data: python dictionary key initial utterance, value list of parpahrases
+    :param cut_off: integer that indicate how many parpahrases to select, e.g. cut_off = 3 will only select top highest 3 semantically related parpahrases and drop the rest
+    :return a python list containing BLEU scores and comment to print or save in file
+    """
     bleu = sentence_bleu
     # data = read_data("output.csv")
-    print("\t============================================================")
-    print("\t                  Cut_off parpameter = ",cut_off,"            ")
-    print("\t============================================================")
+    result = []
+
+    result.append("\t============================================================")
+    result.append(f"\t                  Cut_off parpameter = {cut_off}            ")
+    result.append("\t============================================================")
     data = apply_cut_off(data,cut_off)
-    print("\t  Compute Individual N-gram BLEU-Score using mean: ")
+    result.append("\t  Compute Individual N-gram BLEU-Score using mean: ")
     b1,b2,b3,b4 = get_individual_bleu_score(data,bleu,0)
-    print("\t\tIndividual 1-gram: ",b1)
-    print("\t\tIndividual 2-gram: ",b2)
-    print("\t\tIndividual 3-gram: ",b3)
-    print("\t\tIndividual 4-gram: ",b4)
+    result.append(f"\t\tIndividual 1-gram: {b1}")
+    result.append(f"\t\tIndividual 2-gram: {b2}")
+    result.append(f"\t\tIndividual 3-gram: {b3}")
+    result.append(f"\t\tIndividual 4-gram: {b4}")
 
-    print("\t  Compute Individual N-gram BLEU-Score using median: ")
+    result.append(f"\t  Compute Individual N-gram BLEU-Score using median: ")
     b1,b2,b3,b4 = get_individual_bleu_score(data,bleu,1)
-    print("\t\tIndividual 1-gram: ",b1)
-    print("\t\tIndividual 2-gram: ",b2)
-    print("\t\tIndividual 3-gram: ",b3)
-    print("\t\tIndividual 4-gram: ",b4)
+    result.append(f"\t\tIndividual 1-gram: {b1}")
+    result.append(f"\t\tIndividual 2-gram: {b2}")
+    result.append(f"\t\tIndividual 3-gram: {b3}")
+    result.append(f"\t\tIndividual 4-gram: {b4}")
 
-    print("\t============================================================")
-    print("\t  Compute Cumulative N-gram BLEU-Score using mean: ")
+    result.append(f"\t============================================================")
+    result.append(f"\t  Compute Cumulative N-gram BLEU-Score using mean: ")
     b2,b3,b4 = get_cumulative_bleu_score(data,bleu,0)
-    print("\t\tIndividual 2-gram: ",b2)
-    print("\t\tIndividual 3-gram: ",b3)
-    print("\t\tIndividual 4-gram: ",b4)
+    result.append(f"\t\tIndividual 2-gram: {b2}")
+    result.append(f"\t\tIndividual 3-gram: {b3}")
+    result.append(f"\t\tIndividual 4-gram: {b4}")
 
-    print("\t  Compute Cumulative N-gram BLEU-Score using median: ")
+    result.append(f"\t  Compute Cumulative N-gram BLEU-Score using median: ")
     b2,b3,b4 = get_cumulative_bleu_score(data,bleu,1)
-    print("\t\tIndividual 2-gram: ",b2)
-    print("\t\tIndividual 3-gram: ",b3)
-    print("\t\tIndividual 4-gram: ",b4)
-    print("\t============================================================")
+    result.append(f"\t\tIndividual 2-gram: {b2}")
+    result.append(f"\t\tIndividual 3-gram: {b3}")
+    result.append(f"\t\tIndividual 4-gram: {b4}")
+    result.append(f"\t============================================================")
+
+    return result
 
 def main(data,cut_off):
     """
     Compute BLEU-Score for data
     :param data: python dictionary key initial utterance, value list of parpahrases
     :param cut_off: integer that indicate how many parpahrases to select, e.g. cut_off = 3 will only select top highest 3 semantically related parpahrases and drop the rest
+    :return a python List of scores and strings to print or save in a file
     """
 
+    result = []
     if cut_off == 0:
         cut_off = [0,3,5,10,20,50,100]
         
         for cut in cut_off:
-            get_bleu_score(data,cut)
+            result.extend(get_bleu_score(data,cut))
     else:
-        get_bleu_score(data,cut_off)
+        result.extend(get_bleu_score(data,cut_off))
+    
+    return result
 
 if __name__ == "__main__":
     main()
