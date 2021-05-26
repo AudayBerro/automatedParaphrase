@@ -16,7 +16,7 @@ The pipeline can be run through a command line see `section 6` or by using the p
 
  
 
-Installation & Usage
+Virtual Environment Installation
 ---------------
 In order to generate paraphrases, follow these steps:
   
@@ -56,11 +56,14 @@ In order to generate paraphrases, follow these steps:
    ```
    > **Note**: By default we use en_use_lg model, if you want to use another model, modify **load_model** in ./synonym/nltk_wordnet.py line 76 
 
-5. Run the pipeline using the web interface
+Usage
+---------------
+
+1. Run the pipeline using the web interface
    >- run `app.py` script: ```python app.py```
    >- open any browser and enter the following URL: ```http://localhost:5000/```
 
-6. Run the pipeline using the command line
+2. Run the pipeline using the command line
 Open **config.ini** configuration file and update the values.
 
    >  **Note**: Please make sure you fulfilled the required configs in **config.ini** file - especially DEEPL and MYMEMORY.
