@@ -1,3 +1,6 @@
+import nltk
+nltk.download('wordnet')#download wordnet
+
 from nltk.corpus import wordnet as wm
 from nltk.tokenize import word_tokenize
 # import wmd
