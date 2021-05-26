@@ -121,9 +121,7 @@ def multi_translate(utterance,model,pivot_level=1):
 
     # Translate to Arabic
     tmp = translate(utterance,model['en2ar'][0],model['en2ar'][1])
-    print(f"en2ar: {tmp}")
     tmp = translate(tmp,model['ar2en'][0],model['ar2en'][1])#translate back to English
-    print(f"ar2en: {tmp}")
     response.add(tmp)#add the generated paraphrase candidate
 
     # Translate to Chinese
