@@ -30,7 +30,8 @@ In order to generate paraphrases, follow these steps:
    ```
 
    Activate the virtual environment:
-   ``` source ./my_venv/bin/activate
+   ```
+   source ./my_venv/bin/activate
    ```
 
 *  `Windows`
@@ -62,12 +63,12 @@ If your working environment does not include the Python=3.6.9 version, apply the
 
 3. Once the download is complete, extract the gzipped tarball:
    ```
-   $ tar -xf Python-3.7.4.tgz
+   $ tar -xf Python-3.6.9.tgz
    ```
 
 4. Next, navigate to the Python source directory and run the configure script which will perform a number of checks to make sure all of the dependencies on your system are present:
    ```
-   $ cd Python-3.7.4
+   $ cd Python-3.6.9
    $ ./configure --enable-optimizations
    ```
    The **--enable-optimizations** option will optimize the Python binary by running multiple tests. This makes the build process slower.
@@ -86,7 +87,7 @@ If your working environment does not include the Python=3.6.9 version, apply the
 
 7. That’s it. Python 3.6.9 has been installed and ready to be used. Verify it by typing:
    ```
-   $ python3.7 --version
+   $ python3.6.9 --version
    ```
 
 Dependencies modules Installation
