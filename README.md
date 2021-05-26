@@ -20,7 +20,7 @@ Virtual Environment Installation
 ---------------
 In order to generate paraphrases, follow these steps:
   
-1. Create and activate a virtual environment using **Python 3** version:
+1. Create and activate a virtual environment using **Python 3.6.9** version:
 
 *  `Linux`
 
@@ -29,7 +29,7 @@ In order to generate paraphrases, follow these steps:
 
 *  `Windows`
 
-   - Download the desired **Pytho** version(do NOT add to *PATH*!), and remember the ``` path\to\new_python.exe``` of the newly installed version
+   - Download the desired **Python** version(do NOT add to *PATH*!), and remember the ``` path\to\new_python.exe``` of the newly installed version
    - Create the virtual environment open Command Prompt and enter : ``` virtualenv \path\to\my_env -p path\to\new_python.exe ```
 
    >Unlike most Unix systems and services, Windows does not include a system supported installation of Python. [#Windows Python installation and Creation of virtual environments](https://docs.python.org/3/using/windows.html#using-on-windows)
@@ -37,19 +37,36 @@ In order to generate paraphrases, follow these steps:
    - Activate the virtual environment: ``` .\my_venv\Scripts\activate.bat ```
    - Deactivate with ``` deactivate ```
 
-2. Install the required packages inside the environment:
+Download **Python 3.6.9**
+---------------
+If your working environment does not include the Python=3.6.9 version, apply the following instructions for installation:
+
+1. First, update the packages list and install the packages necessary to build Python source: ```$ sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev wget libbz2-dev ```
+
+2. Download the source code from the [Python download page](https://www.python.org/downloads/source/) using the following command: ```$ wget https://www.python.org/ftp/python/3.6.9/Python-3.6.9.tgz```
+
+3. Once the download is complete, extract the gzipped tarball: ``` tar -xf Python-3.7.4.tgz ```
+
+4. Next, navigate to the Python source directory and run the configure script which will perform a number of checks to make sure all of the dependencies on your system are present:
+   ```
+   $ cd Python-3.7.4
+   $ ./configure --enable-optimizations
+   ```
+Dependencies modules Installation
+---------------
+1. Install the required packages inside the environment:
 
    ``` 
    pip install -r requirements.txt
    ```
 
-3. Download Spacy models, for more models see [Spacy Models & Languages](https://spacy.io/models/en).
+2. Download Spacy models, for more models see [Spacy Models & Languages](https://spacy.io/models/en).
 
    ```
    python -m spacy download en_core_web_lg
    ```
 
-4. Make use of Google's Universal Sentence Encoder directly within [Spacy - Universal Sentence Encoder](https://github.com/MartinoMensio/spacy-universal-sentence-encoder).
+3. Make use of Google's Universal Sentence Encoder directly within [Spacy - Universal Sentence Encoder](https://github.com/MartinoMensio/spacy-universal-sentence-encoder).
 
    ```
    pip install spacy-universal-sentence-encoder
