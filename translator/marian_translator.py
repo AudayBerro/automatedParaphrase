@@ -63,7 +63,13 @@ def translate(utterance,model,tok,trg="NONE"):
     # translated = model.generate(**tok.prepare_translation_batch([utterance]))#old version transformers==3.0.0
     translated = model.generate(**tok(utterance, return_tensors="pt", padding=True))
     result = [tok.decode(t, skip_special_tokens=True) for t in translated]
-    return result[0]
+
+    result = result[0]
+
+    # check token indices sequence length is longer than the specified maximum sequence length max_length=512
+    if len(result) > 512:
+      result = result[:512]
+    return result
 
 
 def multi_translate(utterance,model,pivot_level=1):
@@ -115,7 +121,9 @@ def multi_translate(utterance,model,pivot_level=1):
 
     # Translate to Arabic
     tmp = translate(utterance,model['en2ar'][0],model['en2ar'][1])
+    print(f"en2ar: {tmp}")
     tmp = translate(tmp,model['ar2en'][0],model['ar2en'][1])#translate back to English
+    print(f"ar2en: {tmp}")
     response.add(tmp)#add the generated paraphrase candidate
 
     # Translate to Chinese
@@ -409,3 +417,18 @@ if __name__ == "__main__":
     print(key)
     for i in value:
       print("\t",i)
+  
+  # model_name1 = 'Helsinki-NLP/opus-mt-en-mul'
+  # model_name2 = 'Helsinki-NLP/opus-mt-mul-en'
+
+  # mt_model1 = MarianMTModel.from_pretrained(model_name1) #param[0]=label ; param[1]=model_name to load
+  # mt_tokenizer1 = MarianTokenizer.from_pretrained(model_name1) #load tokenizer
+
+  # mt_model2 = MarianMTModel.from_pretrained(model_name2) #param[0]=label ; param[1]=model_name to load
+  # mt_tokenizer2 = MarianTokenizer.from_pretrained(model_name2) #load tokenizer
+
+  # utterance = "book a flight from Lyon to Sydney?"
+  # tmp = translate(utterance,mt_model1,mt_tokenizer1,trg="fra")
+  # print(f"fr: {tmp}")
+  # tmp = translate(tmp,mt_model2,mt_tokenizer2)#translate back to English
+  # print(f"en: {tmp}")
