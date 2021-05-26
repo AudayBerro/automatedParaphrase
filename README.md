@@ -41,9 +41,13 @@ Download **Python 3.6.9**
 ---------------
 If your working environment does not include the Python=3.6.9 version, apply the following instructions for installation:
 
-1. First, update the packages list and install the packages necessary to build Python source: ```$ sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev wget libbz2-dev ```
+1. First, update the packages list and install the packages necessary to build Python source: 
+   ```
+   $ sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev libreadline-dev libffi-dev wget libbz2-dev 
+   ```
 
-2. Download the source code from the [Python download page](https://www.python.org/downloads/source/) using the following command: ```$ wget https://www.python.org/ftp/python/3.6.9/Python-3.6.9.tgz```
+2. Download the source code from the [Python download page](https://www.python.org/downloads/source/) using the following command:
+   ```$ wget https://www.python.org/ftp/python/3.6.9/Python-3.6.9.tgz```
 
 3. Once the download is complete, extract the gzipped tarball: ``` tar -xf Python-3.7.4.tgz ```
 
