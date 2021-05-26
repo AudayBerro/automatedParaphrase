@@ -24,8 +24,14 @@ In order to generate paraphrases, follow these steps:
 
 *  `Linux`
 
-   Create the virtual environment: ```virtualenv -p python3.6.9 my_venv ``` 
-   Activate the virtual environment: ``` source ./my_venv/bin/activate ```
+   Create the virtual environment:
+   ```
+   virtualenv -p python3.6.9 my_venv
+   ```
+
+   Activate the virtual environment:
+   ``` source ./my_venv/bin/activate
+   ```
 
 *  `Windows`
 
@@ -40,7 +46,7 @@ In order to generate paraphrases, follow these steps:
    - Activate the virtual environment:``` .\my_venv\Scripts\activate.bat ```
    - Deactivate with ``` deactivate ```
 
-Download **Python 3.6.9**
+Download **Python 3.6.9** - from [linuxize.com](https://linuxize.com/post/how-to-install-python-3-7-on-ubuntu-18-04/)
 ---------------
 If your working environment does not include the Python=3.6.9 version, apply the following instructions for installation:
 
@@ -64,6 +70,25 @@ If your working environment does not include the Python=3.6.9 version, apply the
    $ cd Python-3.7.4
    $ ./configure --enable-optimizations
    ```
+   The **--enable-optimizations** option will optimize the Python binary by running multiple tests. This makes the build process slower.
+
+5. Start the Python build process using **make**:
+   ```
+   $ make -j 8
+   ```
+   For faster build time, modify the **-j** flag according to your processor. If you do not know the number of cores in your processor, you can find it by typing **nproc**. The system used in this guide has 8 cores, so we are using the **-j8** flag
+
+6. When the build is done, install the Python binaries by running the following command:
+   ```
+   $ sudo make altinstall
+   ```
+   Do not use the standard **make install** as it will overwrite the default system python3 binary.
+
+7. That’s it. Python 3.6.9 has been installed and ready to be used. Verify it by typing:
+   ```
+   $ python3.7 --version
+   ```
+
 Dependencies modules Installation
 ---------------
 1. Install the required packages inside the environment:
