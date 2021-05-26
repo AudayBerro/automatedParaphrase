@@ -30,11 +30,14 @@ In order to generate paraphrases, follow these steps:
 *  `Windows`
 
    - Download the desired **Python** version(do NOT add to *PATH*!), and remember the ``` path\to\new_python.exe``` of the newly installed version
-   - Create the virtual environment open Command Prompt and enter : ``` virtualenv \path\to\my_env -p path\to\new_python.exe ```
+   - Create the virtual environment open Command Prompt and enter :
+      ```
+      virtualenv \path\to\my_env -p path\to\new_python.exe
+      ```
 
    >Unlike most Unix systems and services, Windows does not include a system supported installation of Python. [#Windows Python installation and Creation of virtual environments](https://docs.python.org/3/using/windows.html#using-on-windows)
 
-   - Activate the virtual environment: ``` .\my_venv\Scripts\activate.bat ```
+   - Activate the virtual environment:``` .\my_venv\Scripts\activate.bat ```
    - Deactivate with ``` deactivate ```
 
 Download **Python 3.6.9**
@@ -47,9 +50,14 @@ If your working environment does not include the Python=3.6.9 version, apply the
    ```
 
 2. Download the source code from the [Python download page](https://www.python.org/downloads/source/) using the following command:
-   ```$ wget https://www.python.org/ftp/python/3.6.9/Python-3.6.9.tgz```
+   ```
+   $ wget https://www.python.org/ftp/python/3.6.9/Python-3.6.9.tgz
+   ```
 
-3. Once the download is complete, extract the gzipped tarball: ``` tar -xf Python-3.7.4.tgz ```
+3. Once the download is complete, extract the gzipped tarball:
+   ```
+   $ tar -xf Python-3.7.4.tgz
+   ```
 
 4. Next, navigate to the Python source directory and run the configure script which will perform a number of checks to make sure all of the dependencies on your system are present:
    ```
