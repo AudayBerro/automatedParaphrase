@@ -29,11 +29,13 @@ In order to generate paraphrases, follow these steps:
 
 *  `Windows`
 
-   Create the virtual environment: ``` c:\>c:\Python35\python -m my_venv c:\path\to\myenv ```
+   - Download the desired **Pytho** version(do NOT add to *PATH*!), and remember the ``` path\to\new_python.exe``` of the newly installed version
+   - Create the virtual environment open Command Prompt and enter : ``` virtualenv \path\to\my_env -p path\to\new_python.exe ```
 
    >Unlike most Unix systems and services, Windows does not include a system supported installation of Python. [#Windows Python installation and Creation of virtual environments](https://docs.python.org/3/using/windows.html#using-on-windows)
 
-    Activate the virtual environment: ``` .\my_venv\Scripts\activate.bat ```
+   - Activate the virtual environment: ``` .\my_venv\Scripts\activate.bat ```
+   - Deactivate with ``` deactivate ```
 
 2. Install the required packages inside the environment:
 
