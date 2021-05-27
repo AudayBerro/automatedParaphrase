@@ -123,7 +123,12 @@ def get_pinc_score(data):
             tokens_2 = p.split(" ")
             expr_pinc += pinc(tokens_1, tokens_2)
             index += 1
-        expr_pinc = expr_pinc / len(data[expr])
+        
+        #check to avoid zero division
+        if len(data[expr]) != 0:
+            expr_pinc = expr_pinc / len(data[expr])
+        else:
+            continue
         pincs.append(expr_pinc)
         expr_by_pinc.append((expr, expr_pinc))
         total_pinc += expr_pinc
