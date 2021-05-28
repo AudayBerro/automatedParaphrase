@@ -20,7 +20,9 @@ html{
     margin: 30px 0 10px; 
     padding: 0 20px;
 }
-
+.user_sentence{
+    width:800px;
+}
 .result{
     width: 600px;
     min-height: 400px;
