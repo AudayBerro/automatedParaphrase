@@ -101,7 +101,7 @@ def extract_paraphrases(beam_outputs,tokenizer,utterance):
             final_outputs.add(sent)
     return final_outputs
 
-def initialisation(model_name="auday/paraphraser_model2",tokenizer='t5-base',seed=40):
+def initialisation(model_name="auday/paraphraser_model2",tokenizer='t5-base',seed=42):
     """
     This function initialise T5 by loading model and tokenizer
     :param model_name: name of the HuggingFace T5 model to load
@@ -132,7 +132,7 @@ def initialisation(model_name="auday/paraphraser_model2",tokenizer='t5-base',see
     return model,tokenizer,device
 
 
-def t5_paraphraser(sent,model,tokenizer,device,flag=0,num_seq=40,max_len=256):
+def t5_paraphraser(sent,model,tokenizer,device,flag=0,num_seq=20,max_len=256):
     """
     This function generate parpahrases candidates using pretrained Huggingface T5 transformers model
     :param sent: python dictionary, key:initial sentence, value list of paraphrases candidates
