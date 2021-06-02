@@ -125,10 +125,14 @@ def merge_data(dataset1,dataset2):
     :param dataset2: python dictionary
     :return a Python dictionary, Key is the initial expression and value is a list of paraphrases
     """
-    for (k,v), (k2,v2) in zip(dataset1.items(), dataset2.items()):
-        v.add(normalize_text(k2)) # add key of dataset2 to dataset1 list of paraphrases
-        v.update(v2) # add dataset2 paraphrases list to dataset1 paraphrases list
-    return dataset1
+    result = dict()
+    for k,v in dataset1.items():
+        tmp = set()
+        tmp.update(v) # add dataset1 list of paraphrases
+        tmp.update(dataset2[k]) # add dataset2 paraphrases list
+        result[k] = list(tmp)
+    return result
+
 
 def sort_collection(pool):
     """
