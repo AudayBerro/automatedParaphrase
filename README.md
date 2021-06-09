@@ -3,7 +3,9 @@
 
 # Automated Paraphrasing Tool
 
-We propose an extensible and reusable pipeline tool that unifies, integrates and extends various paraphrasing techniques(e.g. Weak-Supervision, Pivot-Translation) to automatically generating paraphrases in English that are  semantically  relevant  and  diverse. In doing so, the pipeline describes as two-step process, including: i) **candidate over-generation**, leveraging techniques that can be combined to generate a large number of diverse but (potentially) noisy candidate paraphrases, and ii) **candidate selection**, with techniques that can be incorporated to discard semantically irrelevant paraphrases and duplicates, thus filtering out low quality paraphrases.
+We propose an extensible and reusable pipeline tool that unifies, integrates and extends various paraphrasing techniques(e.g. Weak-Supervision, Pivot-Translation) to automatically generating paraphrases in English that are  semantically  relevant  and  diverse. In doing so, the pipeline describes as two-step process, including:
+1. **candidate over-generation**, leveraging techniques that can be combined to generate a large number of diverse but (potentially) noisy candidate paraphrases
+2. **candidate selection**, with techniques that can be incorporated to discard semantically irrelevant paraphrases and duplicates, thus filtering out low quality paraphrases.
 
 The pipeline can be run through a command line see `section 6` or by using the pipeline web interface see `section5`.
 
