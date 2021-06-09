@@ -12,6 +12,7 @@ contextvars==2.4
 contractions==0.0.49
 cymem==2.0.5
 dataclasses==0.8
+EasyNMT==2.0.1
 filelock==3.0.12
 Flask==1.1.2
 flatbuffers==1.12
