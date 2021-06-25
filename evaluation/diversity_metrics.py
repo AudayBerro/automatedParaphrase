@@ -62,11 +62,16 @@ def get_ttr_score(data):
     mean_ttr = 0
     counter = 0
     for expr in data.keys():
-        vset = set()
+        vset = set() # will contain all UNIQUE words(tokens)
         tlen = 0
+        # add initial expression tokens to vset
+        expr_p = pre_process(expr) #lowercase and lemmatize
+        expr_tokens = expr_p.split(" ") #tokenize
+        vset = vset.union(set(expr_tokens))
+        tlen += len(expr_tokens)
         for p in data[expr]:
             p = pre_process(p)
-            tokens = p.split(" ") # can use SpaCy or NLTK tokenizer insteasd of splitting
+            tokens = p.split(" ") #can use SpaCy or NLTK tokenizer insteasd of splitting
             tlen += len(tokens) 
             vset = vset.union(set(tokens))
         counter += 1
