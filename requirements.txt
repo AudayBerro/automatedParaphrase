@@ -49,7 +49,7 @@ packaging==20.9
 pathy==0.5.2
 plac==0.9.6
 preshed==3.0.5
-protobuf==3.17.0
+protobuf==3.18.3
 pyahocorasick==1.4.2
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
