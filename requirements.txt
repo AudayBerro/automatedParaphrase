@@ -89,7 +89,7 @@ transformers==4.5.1
 typer==0.3.2
 typing-extensions==3.7.4.3
 Unidecode==1.2.0
-urllib3==1.26.4
+urllib3==1.26.5
 wasabi==0.8.2
 Werkzeug==2.0.1
 wrapt==1.12.1
